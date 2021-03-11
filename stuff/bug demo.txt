@@ -1,0 +1,150 @@
+> Executing task in folder WordClock: C:\Users\anto2\.platformio\penv\Scripts\platformio.exe device monitor <
+
+--- Available filters and text transformations: colorize, debug, default, direct, esp8266_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at http://bit.ly/pio-monitor-filters
+--- Miniterm on COM8  9600,8,N,1 ---
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H ---
+scandone
+...........scandone
+state: 0 -> 2 (b0)
+.state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 1
+cnt 
+
+connected with Nicht Verbunden, channel 3
+dhcp client start...
+.....................ip:192.168.2.64,mask:255.255.255.0,gw:192.168.2.1
+.pm open,type:2 0
+fadeColor: 1
+-------------------------
+randomColor: 1
+-------------------------
+staticColor: 1
+-------------------------
+sc_greenval: 0
+-------------------------
+sc_redval: 0
+-------------------------
+sc_blueval: 255
+-------------------------
+sc_redval: 207
+-------------------------
+sc_greenval: 218
+-------------------------
+clocktype: 1
+-------------------------
+clocktype: 1
+-------------------------
+clocktype: 1
+-------------------------
+clocktype: 1
+-------------------------
+clocktype: 1
+-------------------------
+clockType: 1
+-------------------------
+clockType: 1
+-------------------------
+clockType: 1
+-------------------------
+clockType: 1
+-------------------------
+sc_greenval: 209
+-------------------------
+sc_redval: 189
+-------------------------
+sc_redval: 195
+-------------------------
+sc_blueval: 231
+-------------------------
+sc_blueval: 255
+-------------------------
+sc_redval: 227
+-------------------------
+sc_greenval: 233
+-------------------------
+sc_greenval: 255
+-------------------------
+sc_redval: 255
+-------------------------
+sc_blueval: 0
+-------------------------
+sc_greenval: 0
+-------------------------
+sc_redval: 51
+-------------------------
+sc_greenval: 139
+-------------------------
+sc_blueval: 136
+-------------------------
+sc_greenval: 37
+-------------------------
+sc_blueval: 51
+-------------------------
+clockType: 0
+-------------------------
+clockType: 0
+-------------------------
+randomColor: 1
+-------------------------
+clockType: 0
+-------------------------
+dev 1163
+X�␜#�scandone
+scandone
+state: 0 -> 2 (b0)
+state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 1
+cnt
+
+connected with Nicht Verbunden, channel 3
+dhcp client start...
+................ip:192.168.2.64,mask:255.255.255.0,gw:192.168.2.1
+.pm open,type:2 0
+dev 1163
+␒��␓��z^�scandone
+scandone
+state: 0 -> 2 (b0)
+state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 1
+cnt 
+
+connected with Nicht Verbunden, channel 3
+dhcp client start...
+................ip:192.168.2.64,mask:255.255.255.0,gw:192.168.2.1
+.pm open,type:2 0
+dev 1163
+(Z;
+i�O��scandone
+scandone
+state: 0 -> 2 (b0)
+state: 2 -> 3 (0)
+state: 3 -> 5 (10)
+add 0
+aid 1
+cnt
+
+connected with Nicht Verbunden, channel 3
+dhcp client start...
+..............ip:192.168.2.64,mask:255.255.255.0,gw:192.168.2.1
+.pm open,type:2 0
+randomColor: 1
+-------------------------
+fadeColor: 1
+-------------------------
+sc_greenval: 37
+-------------------------
+staticColor: 1
+-------------------------
+sc_redval: 51
+-------------------------
+sc_blueval: 51
+-------------------------
+randomColor: 1
+-------------------------
