@@ -85,6 +85,22 @@ const char SETTINGS_page[] PROGMEM = R"=====(
             xhttp.open("GET", url, true);
             xhttp.send();
         }
+        function handleInput(value){
+            //alert(value);
+            //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+            if (value.endsWith('w') || value.endsWith('W')){
+                commit('snake_dir', '1');
+            }
+            if (value.endsWith('a') || value.endsWith('A')){
+                commit('snake_dir', '2');
+            }
+            if (value.endsWith('s') || value.endsWith('S')){
+                commit('snake_dir', '4');
+            }
+            if (value.endsWith('d') || value.endsWith('D')){
+                commit('snake_dir', '3');
+            }
+        }
     </script>
 
 
@@ -152,6 +168,7 @@ const char SETTINGS_page[] PROGMEM = R"=====(
                     <option value="4">Rainbow Cycle</option>
                     <option value="5">Explosion</option>
                     <option value="6">Spiral</option>
+                    <option value="100">Snake</option>
                     <!--<option value="420">Void</option>-->
                 </select>
             </td>
@@ -296,6 +313,29 @@ const char SETTINGS_page[] PROGMEM = R"=====(
         <tr>
             <td>Crash on purpose</td>
             <td><button onclick="commit('crash',);">Crash</button></td>
+        </tr>
+        <!--Snake-->
+        <tr>
+            <th>Snake</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <!--0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down-->
+            <td>Direction Control</td>
+            <td><button onclick="commit('snake_dir', '1');">Up</button></td>
+        </tr>
+        <tr>
+            <td>Direction Control</td>
+            <td><button onclick="commit('snake_dir', '2');">Left</button>
+            <button onclick="commit('snake_dir', '3');">Right</button></td>
+        </tr>
+        <tr>
+            <td>Direction Control</td>
+            <td><button onclick="commit('snake_dir', '4');">Down</button></td>
+        </tr>
+        <tr>
+            <td>Keycontrol</td>
+            <td><input type="text" onkeyup="handleInput(this.value)"></td>
         </tr>
     </table>
 

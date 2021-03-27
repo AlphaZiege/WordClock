@@ -62,6 +62,6 @@ void Read_write::readAllSettings()
   settings.set_spiral_green2(EEPROM.read(addr_spiral_green2));
   settings.set_spiral_blue2(EEPROM.read(addr_spiral_blue2));
   settings.set_spiral_delay(EEPROM.read(addr_spiral_delay));
-  settings.set_wlan_ssid(String(EEPROM.read(addr_wlan1_ssid)));
-  settings.set_wlan_pw(String(EEPROM.read(addr_wlan1_pw)));
+  settings.set_wlan_ssid(String(readStringFromEEPROM(addr_wlan1_ssid)));
+  settings.set_wlan_pw(String(readStringFromEEPROM(addr_wlan1_pw)));
 }

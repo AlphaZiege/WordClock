@@ -51,6 +51,9 @@ private:
     //wlan
     String wlan1_ssid, wlan1_pw;
 
+    //snake
+    int snake_dir = 0; //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+
 public:
     void update(); //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
 
@@ -327,6 +330,14 @@ public:
     String get_wlan_pw()
     {
         return wlan1_pw;
+    }
+
+    //snake
+    void set_snake_dir(int dir){
+        snake_dir = dir;
+    }
+    int get_snake_dir(){
+        return snake_dir;
     }
 };
 

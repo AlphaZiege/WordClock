@@ -14,6 +14,7 @@
 #include <Effects.h>
 #include <Zeit.h>
 #include <config.h>
+#include <game.h>
 
 #include <index.h>
 
@@ -21,6 +22,7 @@ Settings settings = Settings();
 Read_write storage = Read_write();
 Zeit zeit = Zeit();
 Effects effects = Effects();
+Snake snake;
 
 //uhrzeit
 WiFiUDP ntpUDP;
@@ -238,6 +240,11 @@ public:
         }
       }
 
+      else if (inputName == "snake_dir"){
+        settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+
       else
       {
         request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
@@ -419,6 +426,16 @@ void loop()
     effects.spiral();
     break;
 
+  case 100:
+    snake = Snake();
+    snake.init();
+    settings.set_colorMode(101);
+    break;
+
+  case 101:
+    snake.loop();
+    break;
+    
   case 420:
     break;
   }

@@ -40,7 +40,7 @@ String Zeit::update()
 {
     String table = "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
     make_betterhours();
-    if (settings.get_clockType() == 0) //buchstaben uhr
+    if (settings.get_clockType() == 0 && settings.get_colorMode() < 100) //buchstaben uhr
     {
         table[0] = '1'; //es ist
         table[1] = '1';
@@ -309,7 +309,7 @@ String Zeit::update()
         }
     }
 
-    else if (settings.get_clockType() == 1) //lampe uhr
+    else /*if (settings.get_clockType() == 1)*/ //lampe uhr
     {
         return "11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111";
     }
