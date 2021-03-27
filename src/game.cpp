@@ -52,8 +52,10 @@ void Snake::Clear()
     }
 }
 
-void Snake::Gameover()
+void Snake::initGameover()
 {
     Serial.println("Game over, Score: " + String(score));
+    timestamp = millis();
     settings.set_colorMode(100);
 }
+

@@ -33,7 +33,7 @@ private:
 
     void Clear();
 
-    void Gameover();
+    void initGameover();
 
     Pixel head;
     Pixel food;
@@ -75,7 +75,7 @@ public:
         {
             Clear();
 
-            gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
+            //gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
 
             for (int i = 0; i < bodyLenght; i++)
             {
@@ -93,7 +93,7 @@ public:
 
             if (gameover)
             {
-                Gameover();
+                initGameover();
             }
 
             DrawPixel(head);
@@ -116,9 +116,9 @@ public:
             body[bodyLenght] = Pixel();
             body[bodyLenght].XPos = head.XPos;
             body[bodyLenght].YPos = head.YPos;
-            body[bodyLenght].r = 34;
-            body[bodyLenght].g = 200;
-            body[bodyLenght].b = 34;
+            body[bodyLenght].r = 0;
+            body[bodyLenght].g = 0;
+            body[bodyLenght].b = 255;
             body[bodyLenght].who = 'b';
             bodyLenght++;
 
@@ -126,15 +126,23 @@ public:
             {
             case Up:
                 head.YPos--;
+                if (head.YPos < 0)
+                    head.YPos = height - 1;
                 break;
             case Down:
                 head.YPos++;
+                if (head.YPos > height - 1)
+                    head.YPos = 0;
                 break;
             case Left:
                 head.XPos--;
+                if (head.XPos < 0)
+                    head.XPos = width - 1;
                 break;
             case Right:
                 head.XPos++;
+                if (head.XPos > width - 1)
+                    head.XPos = 0;
                 break;
             }
 
