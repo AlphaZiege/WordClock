@@ -6,14 +6,12 @@
 #include <EEPROM.h>
 #include <DNSServer.h>
 
-#include <TimeLib.h>
-#include <DCF77.h>
-
 #include <Settings.h>
 #include <Read_Write.h>
 #include <Effects.h>
 #include <Zeit.h>
 #include <config.h>
+#include <game.h>
 
 #include <index.h>
 
@@ -21,21 +19,22 @@ Settings settings = Settings();
 Read_write storage = Read_write();
 Zeit zeit = Zeit();
 Effects effects = Effects();
+Snake snake;
 
 //uhrzeit
 WiFiUDP ntpUDP;
-DCF77 DCF = DCF77(DCF_Pin, digitalPinToInterrupt(DCF_Pin));
+//DCF77 DCF = DCF77(DCF_Pin, digitalPinToInterrupt(DCF_Pin));
 NTPClient timeClient(ntpUDP, "pool.ntp.org", utc);
 
 //irwas für dcf von ewald
-/*#define ok 2
+#define ok 2
 #define wait_for_DCF 0
 #define synchronisiere 1
 int sekunde = 0;
 bool Signal;
 unsigned long steigend = 0, fallend = 0;
 uint8_t Zustand = wait_for_DCF;
-bool Kodierung[62];*/
+bool Kodierung[62];
 
 //rgb leds ansteuern
 const int led_count = 110;
@@ -46,6 +45,14 @@ DNSServer dnsServer;
 AsyncWebServer server(80); // 80 = http traffic // SKETCH BEGIN, für den Webserver
 String inputVar;
 String inputName;
+
+void Clear()
+{
+  for (int i = 0; i < 110; i++)
+  {
+    strip.setPixelColor(i, 0, 0, 0);
+  }
+}
 
 class CaptiveRequestHandler : public AsyncWebHandler
 {
@@ -238,6 +245,12 @@ public:
         }
       }
 
+      else if (inputName == "snake_dir")
+      {
+        settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+
       else
       {
         request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
@@ -304,7 +317,6 @@ void setup()
     {
       settings.set_DcfWlanMode(0);
       Serial.println("Couldn't connect to any wireless network, switching to DCF");
-      DCF.Start();
       WiFi.mode(WIFI_AP);
       WiFi.softAP(hostString);
       dnsServer.start(53, "*", WiFi.softAPIP());
@@ -368,17 +380,61 @@ void loop()
   //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
   if (settings.get_DcfWlanMode() == 0)
   {
-    dnsServer.processNextRequest();
-    time_t DCFtime = DCF.getTime();
-    zeit.set_seconds(second(DCFtime));
-    zeit.set_minutes(minute(DCFtime));
-    zeit.set_hours(hour(DCFtime));
-    zeit.set_dayMonth(day(DCFtime));
-    zeit.set_dayWeek(dayOfWeek(DCFtime));
-    zeit.set_month(month(DCFtime));
-    zeit.set_calendarYear(year(DCFtime));
+    if (digitalRead(DCF_Pin) != Signal)
+    {                   // wenn sich das Signal geändert hat:
+      Signal = !Signal; // Merker für Signalzustand invertieren
+      if (!Signal)
+        fallend = millis();
+      else
+      { // steigende Flanke (Signal ging von LOW auf HIGH)
+        unsigned long diff = fallend - steigend;
+        Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
+        steigend = millis();
+
+        switch (Zustand)
+        {
+        case wait_for_DCF:
+          Zustand = synchronisiere;
+          strip.setPixelColor(0, 255, 0, 0);
+          break;
+        case synchronisiere:
+          if (steigend - fallend > 1300)
+          { // ein Signal ist ausgefallen => die Neue Minute beginnt.
+            Zustand = ok;
+            sekunde = 0;
+            strip.setPixelColor(1, 0, 255, 0);
+            break;
+          }
+        case ok:
+          if (steigend - fallend > 1300)
+          { // ein Signal ist ausgefallen => die Neue Minute beginnt.
+            sekunde = 0;
+            String Wetter = String(Kodierung[2]) + String(Kodierung[3]) + String(Kodierung[4]) + String(Kodierung[5]) + String(Kodierung[6]) + String(Kodierung[7]) + String(Kodierung[8]) + String(Kodierung[9]) + String(Kodierung[10]) + String(Kodierung[11]) + String(Kodierung[12]) + String(Kodierung[13]) + String(Kodierung[14]) + String(Kodierung[15]);
+            String Zeitsystem = String(Kodierung[16]) + String(Kodierung[17]) + String(Kodierung[18]) + String(Kodierung[19]) + String(Kodierung[20]) + String(Kodierung[21]);
+            int Minute = Kodierung[22] + 2 * Kodierung[23] + 4 * Kodierung[24] + 8 * Kodierung[25] + 10 * Kodierung[26] + 20 * Kodierung[27] + 40 * Kodierung[28];
+            int Stunde = Kodierung[30] + 2 * Kodierung[31] + 4 * Kodierung[32] + 8 * Kodierung[33] + 10 * Kodierung[34] + 20 * Kodierung[35];
+            int Tag = Kodierung[37] + 2 * Kodierung[38] + 4 * Kodierung[39] + 8 * Kodierung[40] + 10 * Kodierung[41] + 20 * Kodierung[42];
+            int WochenTag = Kodierung[43] + 2 * Kodierung[44] + 4 * Kodierung[45];
+            int Monat = Kodierung[46] + 2 * Kodierung[47] + 4 * Kodierung[48] + 8 * Kodierung[49] + 10 * Kodierung[50];
+            int Jahr = Kodierung[51] + 2 * Kodierung[52] + 4 * Kodierung[53] + 8 * Kodierung[54] + 10 * Kodierung[55] + 20 * Kodierung[56] + 40 * Kodierung[57] + 80 * Kodierung[58];
+
+            zeit.set_weather(Wetter);
+            zeit.set_zeitsystem(Zeitsystem);
+            zeit.set_minutes(Minute);
+            zeit.set_hours(Stunde);
+            zeit.set_dayMonth(Tag);
+            zeit.set_dayWeek(WochenTag);
+            zeit.set_month(Monat);
+            zeit.set_calendarYear(Jahr);
+          }
+          break;
+        }
+        sekunde++;
+        zeit.set_seconds(sekunde);
+      }
+    }
   }
-  else if (settings.get_DcfWlanMode() == 1)
+  else if (settings.get_DcfWlanMode() != 0)
   {
     timeClient.update();
 
@@ -392,31 +448,48 @@ void loop()
   switch (settings.get_colorMode())
   {
   case 0:
+    //Clear();
     effects.staticColor();
     break;
 
   case 1:
+    //Clear();
     effects.breathe();
     break;
 
   case 2:
+    //Clear();
     effects.colorCycle();
     break;
 
   case 3:
+    //Clear();
     effects.saison("Halloween");
     break;
 
   case 4:
+    //Clear();
     effects.rainbowCycle();
     break;
 
   case 5:
+    //Clear();
     effects.explosion();
     break;
 
   case 6:
+    //Clear();
     effects.spiral();
+    break;
+
+  case 100:
+    snake = Snake();
+    snake.init();
+    settings.set_colorMode(101);
+    break;
+
+  case 101:
+    snake.loop();
     break;
 
   case 420:
