@@ -37,6 +37,9 @@ private:
     int explosion_red,
         explosion_green,
         explosion_blue,
+        explosion_red2,
+        explosion_green2,
+        explosion_blue2,
         explosion_delay;
 
     //spiral
@@ -247,6 +250,30 @@ public:
     {
         return explosion_blue;
     }
+    void set_explosion_red2(int red)
+    {
+        explosion_red2 = red;
+    }
+    void set_explosion_green2(int green)
+    {
+        explosion_green2 = green;
+    }
+    void set_explosion_blue2(int blue)
+    {
+        explosion_blue2 = blue;
+    }
+    int get_explosion_red2()
+    {
+        return explosion_red2;
+    }
+    int get_explosion_green2()
+    {
+        return explosion_green2;
+    }
+    int get_explosion_blue2()
+    {
+        return explosion_blue2;
+    }
     void set_explosion_delay(int delay)
     {
         explosion_delay = delay;
@@ -333,10 +360,12 @@ public:
     }
 
     //snake
-    void set_snake_dir(int dir){
+    void set_snake_dir(int dir)
+    {
         snake_dir = dir;
     }
-    int get_snake_dir(){
+    int get_snake_dir()
+    {
         return snake_dir;
     }
 };

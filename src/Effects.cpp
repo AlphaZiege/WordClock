@@ -241,13 +241,13 @@ void Effects::explosion()
             if (explosion_j >= 0)
             {
                 for (int explosion_b = 1 + 12 * explosion_j; explosion_b <= 9 + 10 * explosion_j; explosion_b++)
-                    strip.setPixelColor(explosion_b, 0, 0, 0);
+                    strip.setPixelColor(explosion_b, settings.get_explosion_red2(), settings.get_explosion_green2(), settings.get_explosion_blue2());
                 for (int explosion_b = 100 - 10 * explosion_j; explosion_b <= 108 - 12 * explosion_j; explosion_b++)
-                    strip.setPixelColor(explosion_b, 0, 0, 0);
+                    strip.setPixelColor(explosion_b, settings.get_explosion_red2(), settings.get_explosion_green2(), settings.get_explosion_blue2());
                 for (int explosion_b = 12 * explosion_j; explosion_b <= 99 - 10 * explosion_j; explosion_b += 11)
-                    strip.setPixelColor(explosion_b, 0, 0, 0);
+                    strip.setPixelColor(explosion_b, settings.get_explosion_red2(), settings.get_explosion_green2(), settings.get_explosion_blue2());
                 for (int explosion_b = 10 + 10 * explosion_j; explosion_b <= 109 - 12 * explosion_j; explosion_b += 11)
-                    strip.setPixelColor(explosion_b, 0, 0, 0);
+                    strip.setPixelColor(explosion_b, settings.get_explosion_red2(), settings.get_explosion_green2(), settings.get_explosion_blue2());
                 if (explosion_j == 0 && !explosion_p)
                 {
                     explosion_timestamp2_enabled = true;

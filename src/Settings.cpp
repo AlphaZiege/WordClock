@@ -35,6 +35,9 @@ String Settings::get_settings(String wer)
         data += "ExplosionRed: " + String(explosion_red) + "\n";
         data += "ExplosionGreen: " + String(explosion_green) + "\n";
         data += "ExplosionBlue: " + String(explosion_blue) + "\n";
+        data += "ExplosionRed2: " + String(explosion_red2) + "\n";
+        data += "ExplosionGreen2: " + String(explosion_green2) + "\n";
+        data += "ExplosionBlue2: " + String(explosion_blue2) + "\n";
         data += "ExplosionDelay: " + String(explosion_delay) + "\n";
         data += "SpiralRed: " + String(spiral_red) + "\n";
         data += "SpiralGreen: " + String(spiral_green) + "\n";
@@ -64,6 +67,9 @@ String Settings::get_settings(String wer)
         data += "ExplosionRed: " + String(storage.get_explosion_red()) + "\n";
         data += "ExplosionGreen: " + String(storage.get_explosion_green()) + "\n";
         data += "ExplosionBlue: " + String(storage.get_explosion_blue()) + "\n";
+        data += "ExplosionRed2: " + String(storage.get_explosion_red2()) + "\n";
+        data += "ExplosionGreen2: " + String(storage.get_explosion_green2()) + "\n";
+        data += "ExplosionBlue2: " + String(storage.get_explosion_blue2()) + "\n";
         data += "ExplosionDelay: " + String(storage.get_explosion_delay()) + "\n";
         data += "SpiralRed: " + String(storage.get_spiral_red()) + "\n";
         data += "SpiralGreen: " + String(storage.get_spiral_green()) + "\n";

@@ -26,6 +26,9 @@ private:
 #define addr_explosion_red 14
 #define addr_explosion_green 15
 #define addr_explosion_blue 16
+#define addr_explosion_red2 25
+#define addr_explosion_green2 26
+#define addr_explosion_blue2 27
 #define addr_explosion_delay 17
 #define addr_spiral_red 18
 #define addr_spiral_green 19
@@ -141,6 +144,18 @@ public:
   uint8_t get_explosion_blue()
   {
     return EEPROM.read(addr_explosion_blue);
+  }
+  uint8_t get_explosion_red2()
+  {
+    return EEPROM.read(addr_explosion_red2);
+  }
+  uint8_t get_explosion_green2()
+  {
+    return EEPROM.read(addr_explosion_green2);
+  }
+  uint8_t get_explosion_blue2()
+  {
+    return EEPROM.read(addr_explosion_blue2);
   }
   uint8_t get_explosion_delay()
   {

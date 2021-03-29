@@ -246,6 +246,18 @@ const char SETTINGS_page[] PROGMEM = R"=====(
             <td><input onChange="commit('explosion_blueval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
+            <td>Red Secondary</td>
+            <td><input onChange="commit('explosion_redval2', this.value);" type="number" min="0" max="255"></td>
+        </tr>
+        <tr>
+            <td>Green Secondary</td>
+            <td><input onChange="commit('explosion_greenval2', this.value);" type="number" min="0" max="255"></td>
+        </tr>
+        <tr>
+            <td>Blue Secondary</td>
+            <td><input onChange="commit('explosion_blueval2', this.value);" type="number" min="0" max="255"></td>
+        </tr>
+        <tr>
             <td>Delay</td>
             <td><input onChange="commit('explosion_delay', this.value);" type="number" min="0"></td>
         </tr>

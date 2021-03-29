@@ -135,6 +135,21 @@ public:
         settings.set_explosion_blue(inputVar.toInt());
         request->send(200, "text/plain", inputName + "set to: " + inputVar);
       }
+      else if (inputName == "explosion_redval2")
+      {
+        settings.set_explosion_red2(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "explosion_greenval2")
+      {
+        settings.set_explosion_green2(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "explosion_blueval2")
+      {
+        settings.set_explosion_blue2(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
       else if (inputName == "explosion_delay")
       {
         settings.set_explosion_delay(inputVar.toInt());

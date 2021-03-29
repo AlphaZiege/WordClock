@@ -23,6 +23,9 @@ void Read_write::saveAllSettings()
   EEPROM.write(addr_explosion_red, (uint8_t)settings.get_explosion_red());
   EEPROM.write(addr_explosion_green, (uint8_t)settings.get_explosion_green());
   EEPROM.write(addr_explosion_blue, (uint8_t)settings.get_explosion_blue());
+  EEPROM.write(addr_explosion_red2, (uint8_t)settings.get_explosion_red2());
+  EEPROM.write(addr_explosion_green2, (uint8_t)settings.get_explosion_green2());
+  EEPROM.write(addr_explosion_blue2, (uint8_t)settings.get_explosion_blue2());
   EEPROM.write(addr_explosion_delay, (uint8_t)settings.get_explosion_delay());
   EEPROM.write(addr_spiral_red, (uint8_t)settings.get_spiral_red());
   EEPROM.write(addr_spiral_green, (uint8_t)settings.get_spiral_green());
@@ -54,6 +57,9 @@ void Read_write::readAllSettings()
   settings.set_explosion_red(EEPROM.read(addr_explosion_red));
   settings.set_explosion_green(EEPROM.read(addr_explosion_green));
   settings.set_explosion_blue(EEPROM.read(addr_explosion_blue));
+  settings.set_explosion_red2(EEPROM.read(addr_explosion_red2));
+  settings.set_explosion_green2(EEPROM.read(addr_explosion_green2));
+  settings.set_explosion_blue2(EEPROM.read(addr_explosion_blue2));
   settings.set_explosion_delay(EEPROM.read(addr_explosion_delay));
   settings.set_spiral_red(EEPROM.read(addr_spiral_red));
   settings.set_spiral_green(EEPROM.read(addr_spiral_green));
