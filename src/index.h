@@ -85,19 +85,19 @@ const char SETTINGS_page[] PROGMEM = R"=====(
             xhttp.open("GET", url, true);
             xhttp.send();
         }
-        function handleInput(value){
+        function handleInput(value) {
             //alert(value);
             //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
-            if (value.endsWith('w') || value.endsWith('W')){
+            if (value.endsWith('w') || value.endsWith('W')) {
                 commit('snake_dir', '1');
             }
-            if (value.endsWith('a') || value.endsWith('A')){
+            if (value.endsWith('a') || value.endsWith('A')) {
                 commit('snake_dir', '2');
             }
-            if (value.endsWith('s') || value.endsWith('S')){
+            if (value.endsWith('s') || value.endsWith('S')) {
                 commit('snake_dir', '4');
             }
-            if (value.endsWith('d') || value.endsWith('D')){
+            if (value.endsWith('d') || value.endsWith('D')) {
                 commit('snake_dir', '3');
             }
         }
@@ -169,6 +169,7 @@ const char SETTINGS_page[] PROGMEM = R"=====(
                     <option value="5">Explosion</option>
                     <option value="6">Spiral</option>
                     <option value="100">Snake</option>
+                    <option value="103">TicTacToe</option>
                     <!--<option value="420">Void</option>-->
                 </select>
             </td>
@@ -295,7 +296,7 @@ const char SETTINGS_page[] PROGMEM = R"=====(
             <td>Delay</td>
             <td><input onChange="commit('spiral_delay', this.value);" type="number" min="0"></td>
         </tr>
-        
+
         <!--Wlan Zugangsdaten-->
         <tr>
             <th>Wlan Information</th>
@@ -339,7 +340,8 @@ const char SETTINGS_page[] PROGMEM = R"=====(
         <tr>
             <td>Direction Control</td>
             <td><button onclick="commit('snake_dir', '2');">Left</button>
-            <button onclick="commit('snake_dir', '3');">Right</button></td>
+                <button onclick="commit('snake_dir', '3');">Right</button>
+            </td>
         </tr>
         <tr>
             <td>Direction Control</td>
@@ -348,6 +350,32 @@ const char SETTINGS_page[] PROGMEM = R"=====(
         <tr>
             <td>Keycontrol</td>
             <td><input type="text" onkeyup="handleInput(this.value)"></td>
+        </tr>
+        <!--TicTacToe-->
+        <tr>
+            <th>TicTacToe</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Field 1-3</td>
+            <td><button onclick="commit('tictactoe_field', '1');">1</button>
+                <button onclick="commit('tictactoe_field', '2');">2</button>
+                <button onclick="commit('tictactoe_field', '3');">3</button>
+            </td>
+        </tr>
+        <tr>
+            <td>Field 4-6</td>
+            <td><button onclick="commit('tictactoe_field', '4');">4</button>
+                <button onclick="commit('tictactoe_field', '5');">5</button>
+                <button onclick="commit('tictactoe_field', '6');">6</button>
+            </td>
+        </tr>
+        <tr>
+            <td>Field 7-9</td>
+            <td><button onclick="commit('tictactoe_field', '7');">7</button>
+                <button onclick="commit('tictactoe_field', '8');">8</button>
+                <button onclick="commit('tictactoe_field', '9');">9</button>
+            </td>
         </tr>
     </table>
 

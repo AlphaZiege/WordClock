@@ -56,6 +56,7 @@ private:
 
     //snake
     int snake_dir = 0; //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+    int tictactoe_field = 0;
 
 public:
     void update(); //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
@@ -368,6 +369,18 @@ public:
     {
         return snake_dir;
     }
+
+    //tictactoe
+    void set_tictactoe_field(int dir)
+    {
+        tictactoe_field = dir;
+    }
+    int get_tictactoe_field()
+    {
+        return tictactoe_field;
+    }
+
+
 };
 
 #endif

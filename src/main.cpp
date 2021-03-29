@@ -20,6 +20,7 @@ Read_write storage = Read_write();
 Zeit zeit = Zeit();
 Effects effects = Effects();
 Snake snake;
+TicTacToe tictactoe;
 
 //uhrzeit
 WiFiUDP ntpUDP;
@@ -264,6 +265,10 @@ public:
         settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
         request->send(200, "text/plain", inputName + "set to: " + inputVar);
       }
+      else if (inputName == "tictactoe_field"){
+        settings.set_tictactoe_field(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
 
       else
       {
@@ -298,7 +303,7 @@ void setup()
   delay(100);
   Serial.setDebugOutput(true);
 
-  //Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand
+  Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand
 
   EEPROM.begin(1024);
   storage.readAllSettings();
@@ -508,6 +513,17 @@ void loop()
 
   case 102:
     snake.GameoverLoop();
+    break;
+
+  case 103:
+    tictactoe = TicTacToe();
+    tictactoe.Init();
+    settings.set_tictactoe_field(0);
+    settings.set_colorMode(104);
+    break;
+
+  case 104:
+    tictactoe.Loop();
     break;
 
   case 420:
