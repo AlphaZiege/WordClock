@@ -52,10 +52,34 @@ void Snake::Clear()
     }
 }
 
-void Snake::initGameover()
+void Snake::Gameover()
 {
     Serial.println("Game over, Score: " + String(score));
     timestamp = millis();
-    settings.set_colorMode(100);
+    settings.set_colorMode(102);
 }
 
+void Snake::GameoverLoop()
+{
+    //Serial.println("Gameover Loop: timestamp:" + String(timestamp) + " millis(): " + String(millis()));
+    if (timestamp + 1000 > millis() and timestamp + 500 < millis()){
+        strip.setBrightness(1);
+    }
+    if (timestamp + 1500 > millis() and timestamp + 1000 < millis()){
+        strip.setBrightness(settings.get_brightness());
+    }
+    if (timestamp + 2000 > millis() and timestamp + 1500 < millis()){
+        strip.setBrightness(1);
+    }
+    if (timestamp + 2500 > millis() and timestamp + 2000 < millis()){
+        strip.setBrightness(settings.get_brightness());
+    }
+    if (timestamp + 3000 > millis() and timestamp + 2500 < millis()){
+        strip.setBrightness(1);
+    }
+    if (timestamp + 3500 > millis() and timestamp + 3000 < millis()){
+        strip.setBrightness(settings.get_brightness());
+        settings.set_colorMode(100);
+    }
+    Serial.println(String(strip.getBrightness()));
+}

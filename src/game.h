@@ -33,7 +33,7 @@ private:
 
     void Clear();
 
-    void initGameover();
+    void Gameover();
 
     Pixel head;
     Pixel food;
@@ -93,7 +93,7 @@ public:
 
             if (gameover)
             {
-                initGameover();
+                Gameover();
             }
 
             DrawPixel(head);
@@ -156,6 +156,8 @@ public:
             }
         }
     }
+
+    void GameoverLoop();
 };
 
 #endif

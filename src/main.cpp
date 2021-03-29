@@ -23,8 +23,7 @@ Snake snake;
 
 //uhrzeit
 WiFiUDP ntpUDP;
-//DCF77 DCF = DCF77(DCF_Pin, digitalPinToInterrupt(DCF_Pin));
-NTPClient timeClient(ntpUDP, "pool.ntp.org", utc);
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600+3600);
 
 //irwas für dcf von ewald
 #define ok 2
@@ -374,7 +373,7 @@ void setup()
 
 void loop()
 {
-  //Serial.println("kkfkfkfkfkf"); //ohne dem funkt das programm nicht idk why
+  //Serial.println("kkfkfkfkfkf");
   MDNS.update();
 
   //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
@@ -490,6 +489,10 @@ void loop()
 
   case 101:
     snake.loop();
+    break;
+
+  case 102:
+    snake.GameoverLoop();
     break;
 
   case 420:
