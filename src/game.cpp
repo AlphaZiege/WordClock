@@ -36,6 +36,7 @@ Direction Snake::ReadMovement(Direction movement)
         {
             movement = Right;
         }
+        Calc();
         settings.set_snake_dir(0);
         //Serial.println("snake movement: " + String(movement));
     }
@@ -88,6 +89,18 @@ void Snake::GameoverLoop()
         settings.set_colorMode(100);
     }
     Serial.println(String(strip.getBrightness()));
+}
+
+void Snake::Calc(){
+
+    if (settings.get_SC_DELAY() == 333){
+        settings.set_SC_DELAY(0);
+        Serial.println("sssss");
+    }
+    if (head.XPos == 0 && head.YPos == 0){
+        settings.set_SC_DELAY(420);
+        Serial.println("yyyy");
+    }
 }
 
 void TicTacToe::DrawGrid(int r, int g, int b)

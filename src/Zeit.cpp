@@ -1,7 +1,9 @@
 #include <Zeit.h>
 #include <Settings.h>
+#include <NTPClient.h>
 
 extern Settings settings;
+extern NTPClient timeClient;
 
 void Zeit::make_betterhours() //wenn 1:30 dann muss halb *2* und nicht halb 1 stehen
 {
@@ -315,3 +317,4 @@ String Zeit::update()
     }
     return table;
 }
+

@@ -7,7 +7,6 @@ extern Adafruit_NeoPixel strip;
 
 const int led_count = 110;
 
-
 //rainbowcycle
 struct colors
 {
@@ -18,11 +17,234 @@ struct colors
 colors Pixel_0;
 //Adafruit_NeoPixel strip(settings.get_LedCount(), settings.get_LedPin(), NEO_GRB + NEO_KHZ800);
 
-void Effects::staticColor()
+void Effects::setAllLEDs(int r, int g, int b)
 {
     for (int i = 0; i < led_count; i++)
     {
-        strip.setPixelColor(i, settings.get_SC_RED(), settings.get_SC_GREEN(), settings.get_SC_BLUE());
+        strip.setPixelColor(i, r, g, b);
+    }
+}
+
+void Effects::staticColor()
+{
+    if (settings.get_SC_DELAY() == 420)
+    {
+        timestamp = millis();
+        settings.set_SC_DELAY(4200);
+        settings.set_clockType(1);
+    }
+    else if (settings.get_SC_DELAY() == 4200)
+    {
+        if (timestamp + 200 > millis() and timestamp + 100 < millis())
+        {
+            setAllLEDs(255, 255, 255);
+        }
+        if (timestamp + 300 > millis() and timestamp + 200 < millis())
+        {
+            setAllLEDs(0, 0, 0);
+        }
+        if (timestamp + 400 > millis() and timestamp + 300 < millis())
+        {
+            setAllLEDs(255, 255, 255);
+        }
+        if (timestamp + 500 > millis() and timestamp + 400 < millis())
+        {
+            setAllLEDs(0, 0, 0);
+        }
+        if (timestamp + 1500 > millis() and timestamp + 500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 255 - (i * 2.34), 255 - (i * 2.34));
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 2500 > millis() and timestamp + 1500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 200 - (i * 1.83), 200 - (i * 1.83));
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 3500 > millis() and timestamp + 2500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 150 - (i * 1.38), 150 - (i * 1.38));
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 4500 > millis() and timestamp + 3500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 100 - (i * 0.92), 100 - (i * 0.92));
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 5500 > millis() and timestamp + 4500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 50 - (i * 0.46), 50 - (i * 0.46));
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 9500 > millis() and timestamp + 5500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(2) == 1)
+                {
+                    strip.setPixelColor(i, 255, 0, 0);
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 10500 > millis() and timestamp + 9500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(3) == 1)
+                {
+                    strip.setPixelColor(i, 255, 0, 0);
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 11500 > millis() and timestamp + 10500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(4) == 1)
+                {
+                    strip.setPixelColor(i, 255, 0, 0);
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 12500 > millis() and timestamp + 11500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(6) == 1)
+                {
+                    strip.setPixelColor(i, 255, 0, 0);
+                }
+                if (random(20) == 1)
+                {
+                    setAllLEDs(0, 255, 0);
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 11500 > millis() and timestamp + 10500 < millis())
+        {
+            for (int i = 0; i < led_count; i++)
+            {
+                if (random(10) == 1)
+                {
+                    strip.setPixelColor(i, 255, 0, 0);
+                }
+                else
+                    strip.setPixelColor(i, 0, 0, 0);
+            }
+        }
+        if (timestamp + 11800 > millis() and timestamp + 11500 < millis())
+        {
+            strip.setPixelColor(25, 255, 0, 0, 0);
+            strip.setPixelColor(29, 255, 0, 0, 0);
+            strip.setPixelColor(68, 255, 0, 0, 0);
+            strip.setPixelColor(80, 255, 0, 0, 0);
+            strip.setPixelColor(92, 255, 0, 0, 0);
+            strip.setPixelColor(93, 255, 0, 0, 0);
+            strip.setPixelColor(94, 255, 0, 0, 0);
+            strip.setPixelColor(84, 255, 0, 0, 0);
+            strip.setPixelColor(74, 255, 0, 0, 0);
+        }
+        if (timestamp + 12000 > millis() and timestamp + 11800 < millis())
+        {
+            setAllLEDs(0, 0, 0);
+        }
+        if (timestamp + 14800 > millis() and timestamp + 12000 < millis())
+        {
+            strip.setPixelColor(25, 255, 0, 0, 0);
+            strip.setPixelColor(29, 255, 0, 0, 0);
+            strip.setPixelColor(68, 255, 0, 0, 0);
+            strip.setPixelColor(80, 255, 0, 0, 0);
+            strip.setPixelColor(92, 255, 0, 0, 0);
+            strip.setPixelColor(93, 255, 0, 0, 0);
+            strip.setPixelColor(94, 255, 0, 0, 0);
+            strip.setPixelColor(84, 255, 0, 0, 0);
+            strip.setPixelColor(74, 255, 0, 0, 0);
+        }
+        if (timestamp + 14900 > millis() and timestamp + 14800 < millis())
+        {
+            setAllLEDs(0, 0, 0);
+        }
+        if (timestamp + 15000 > millis() and timestamp + 14900 < millis())
+        {
+            strip.setPixelColor(25, 255, 0, 0, 0);
+            strip.setPixelColor(29, 255, 0, 0, 0);
+            strip.setPixelColor(68, 255, 0, 0, 0);
+            strip.setPixelColor(80, 255, 0, 0, 0);
+            strip.setPixelColor(92, 255, 0, 0, 0);
+            strip.setPixelColor(93, 255, 0, 0, 0);
+            strip.setPixelColor(94, 255, 0, 0, 0);
+            strip.setPixelColor(84, 255, 0, 0, 0);
+            strip.setPixelColor(74, 255, 0, 0, 0);
+        }
+        if (timestamp + 15100 > millis() and timestamp + 15000 < millis())
+        {
+            setAllLEDs(0, 0, 0);
+        }
+        if (timestamp + 18000 > millis() and timestamp + 15100 < millis())
+        {
+            strip.setPixelColor(25, 255, 0, 0, 0);
+            strip.setPixelColor(29, 255, 0, 0, 0);
+            strip.setPixelColor(68, 255, 0, 0, 0);
+            strip.setPixelColor(80, 255, 0, 0, 0);
+            strip.setPixelColor(92, 255, 0, 0, 0);
+            strip.setPixelColor(93, 255, 0, 0, 0);
+            strip.setPixelColor(94, 255, 0, 0, 0);
+            strip.setPixelColor(84, 255, 0, 0, 0);
+            strip.setPixelColor(74, 255, 0, 0, 0);
+        }
+        if (timestamp + 20000 > millis() and timestamp + 18000 < millis())
+        {
+            settings.set_SC_DELAY(0);
+            settings.set_clockType(0);
+        }
+
+    }
+    else
+    {
+        setAllLEDs(settings.get_SC_RED(), settings.get_SC_GREEN(), settings.get_SC_BLUE());
     }
 }
 
@@ -41,8 +263,7 @@ void Effects::breathe()
         if (fade_in)
         {
             strip.setBrightness(breathe_index);
-            for (int b = 0; b < led_count; b++)
-                strip.setPixelColor(b, settings.get_breathe_RED() * breath_multiplikator, settings.get_breathe_GREEN() * breath_multiplikator, settings.get_breathe_BLUE() * breath_multiplikator);
+            setAllLEDs(settings.get_breathe_RED() * breath_multiplikator, settings.get_breathe_GREEN() * breath_multiplikator, settings.get_breathe_BLUE() * breath_multiplikator);
             breathe_index++;
             if (breathe_index >= settings.get_brightestBreatheColor())
                 fade_in = false;
@@ -50,8 +271,7 @@ void Effects::breathe()
         else
         {
             strip.setBrightness(breathe_index);
-            for (int b = 0; b < led_count; b++)
-                strip.setPixelColor(b, settings.get_breathe_RED() * breath_multiplikator, settings.get_breathe_GREEN() * breath_multiplikator, settings.get_breathe_BLUE() * breath_multiplikator);
+            setAllLEDs(settings.get_breathe_RED() * breath_multiplikator, settings.get_breathe_GREEN() * breath_multiplikator, settings.get_breathe_BLUE() * breath_multiplikator);
             breathe_index--;
             if (breathe_index <= 1)
                 fade_in = true;
@@ -105,7 +325,7 @@ void Effects::colorCycle()
 
     for (int i = 0; i < led_count; i++)
     {
-        strip.setPixelColor(i, R, G, B);
+        setAllLEDs(R, G, B);
     }
 }
 

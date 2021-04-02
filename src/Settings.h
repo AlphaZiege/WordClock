@@ -19,7 +19,8 @@ private:
     //solid color
     int SC_RED,
         SC_GREEN,
-        SC_BLUE;
+        SC_BLUE,
+        SC_DELAY;
 
     //uint32_t solidColor = 155255255;
 
@@ -159,6 +160,12 @@ public:
     int get_SC_BLUE()
     {
         return SC_BLUE;
+    }
+    void set_SC_DELAY(int delay){
+        SC_DELAY = delay;
+    }
+    int get_SC_DELAY(){
+        return SC_DELAY;
     }
 
     //breathe

@@ -44,6 +44,7 @@ private:
     int bodyLenght = 0;
     bool loopAllowed;
     unsigned long timestamp;
+    void Calc();
 
 public:
     void init()
@@ -74,7 +75,6 @@ public:
         if (loopAllowed)
         {
             Clear();
-            //penis
             //gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
 
             for (int i = 0; i < bodyLenght; i++)

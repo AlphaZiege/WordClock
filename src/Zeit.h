@@ -14,6 +14,9 @@ private:
 
     void make_betterhours(); //wenn 1:30 dann muss halb *2* und nicht halb 1 stehen
 
+    unsigned long epochTime;
+    struct tm *ptm;
+
 public:
     //geheimnisprinzip
     void set_weather(String yes)
@@ -88,6 +91,21 @@ public:
     int get_calendarYear()
     {
         return calendarYear;
+    }
+
+    boolean summertime_EU(int year, byte month, byte day, byte hour, byte tzHours)
+    // European Daylight Savings Time calculation by "jurs" for German Arduino Forum
+    // input parameters: "normal time" for year, month, day, hour and tzHours (0=UTC, 1=MEZ)
+    // return value: returns true during Daylight Saving Time, false otherwise
+    {
+        if (month < 3 || month > 10)
+            return false; // keine Sommerzeit in Jan, Feb, Nov, Dez
+        if (month > 3 && month < 10)
+            return true; // Sommerzeit in Apr, Mai, Jun, Jul, Aug, Sep
+        if (month == 3 && (hour + 24 * day) >= (1 + tzHours + 24 * (31 - (5 * year / 4 + 4) % 7)) || month == 10 && (hour + 24 * day) < (1 + tzHours + 24 * (31 - (5 * year / 4 + 1) % 7)))
+            return true;
+        else
+            return false;
     }
 
     String update();

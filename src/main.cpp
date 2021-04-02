@@ -24,7 +24,9 @@ TicTacToe tictactoe;
 
 //uhrzeit
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", 3600+3600);
+NTPClient timeClient(ntpUDP);
+unsigned long epochTime;
+struct tm *ptm;
 
 //irwas für dcf von ewald
 #define ok 2
@@ -251,6 +253,10 @@ public:
       else if (inputName == "getALL")
       {
         request->send(200, "text/plain", settings.get_all());
+        if (inputVar == "pudding")
+        {
+          settings.set_SC_DELAY(333);
+        }
       }
       else if (inputName == "crash")
       {
@@ -265,7 +271,8 @@ public:
         settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
         request->send(200, "text/plain", inputName + "set to: " + inputVar);
       }
-      else if (inputName == "tictactoe_field"){
+      else if (inputName == "tictactoe_field")
+      {
         settings.set_tictactoe_field(inputVar.toInt());
         request->send(200, "text/plain", inputName + "set to: " + inputVar);
       }
@@ -296,7 +303,7 @@ void setup()
 {
   int i = 0;                //boot animation
   pinMode(LED_PIN, OUTPUT); // Led als Ausgang definiereyn
-  pinMode(DCF_Pin, INPUT);
+  pinMode(DCF_Pin, INPUT);  //DCF Pin als Eingang
 
   //Serial.begin(9600); //115200 : 9600
   Serial.begin(115200); //115200 : 9600
@@ -309,6 +316,7 @@ void setup()
   storage.readAllSettings();
 
   timeClient.begin();
+  timeClient.setTimeOffset(3600);
 
   //Led's Setup Stuff
   strip.begin();
@@ -387,7 +395,7 @@ void setup()
   strip.show();
   server.begin(); // Webserver starten
   delay(100);
-  Serial.println(String(settings.get_DcfWlanMode()));
+  //Serial.println(String(settings.get_DcfWlanMode()));
   strip.setBrightness(settings.get_brightness());
 }
 
@@ -455,12 +463,24 @@ void loop()
   }
   else if (settings.get_DcfWlanMode() != 0)
   {
-    timeClient.update();
-
+    epochTime = timeClient.getEpochTime();
+    tm *ptm = gmtime((time_t *)&epochTime);
+    
     zeit.set_seconds(timeClient.getSeconds());
     zeit.set_minutes(timeClient.getMinutes());
     zeit.set_hours(timeClient.getHours());
     zeit.set_dayMonth(timeClient.getDay());
+
+    if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
+    {
+      timeClient.setTimeOffset(7200);
+    }
+    while (!timeClient.update())
+    {
+      timeClient.forceUpdate();
+    }
+
+    Serial.println(timeClient.getFormattedTime());
   }
 
   //lichteffekte
