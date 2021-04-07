@@ -11,7 +11,6 @@
 #include <config.h>
 #include <Effects.h>
 #include <game.h>
-//#include <index.h>
 #include <Read_Write.h>
 #include <Settings.h>
 #include <Zeit.h>
@@ -23,7 +22,7 @@ Snake snake;
 TicTacToe tictactoe;
 Zeit zeit = Zeit();
 
-DynamicJsonDocument doc(1024);
+DynamicJsonDocument doc(512);
 
 //uhrzeit
 WiFiUDP ntpUDP;
