@@ -78,7 +78,7 @@ public:
 
         return data;
     }
-    String get_time();
+    String get_stuff();
 
     String get_all()
     {
@@ -87,10 +87,12 @@ public:
         data += "Settings in Ram: \n" + get_settings("ram") + "\n";
         data += "Settings in Rom: \n" + get_settings("rom") + "\n";
         data += "Network Info: \n" + get_networkInfo() + "\n";
-        data += "Time: \n" + get_time() + "\n";
+        data += "Stuff: \n" + get_stuff() + "\n";
 
         return data;
     }
+
+    void readAllJson();
 
     //modes z.B. breathe oder rainbow
     void set_colorMode(int yes)
@@ -161,10 +163,12 @@ public:
     {
         return SC_BLUE;
     }
-    void set_SC_DELAY(int delay){
+    void set_SC_DELAY(int delay)
+    {
         SC_DELAY = delay;
     }
-    int get_SC_DELAY(){
+    int get_SC_DELAY()
+    {
         return SC_DELAY;
     }
 
@@ -386,8 +390,6 @@ public:
     {
         return tictactoe_field;
     }
-
-
 };
 
 #endif

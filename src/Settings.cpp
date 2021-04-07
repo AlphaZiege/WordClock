@@ -1,12 +1,14 @@
+#include <Adafruit_NeoPixel.h>
+#include <ArduinoJson.h>
+#include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
-#include <Adafruit_NeoPixel.h>
-#include <NTPClient.h>
 #include <Zeit.h>
 
-extern Read_write storage;
 extern Adafruit_NeoPixel strip;
+extern DynamicJsonDocument doc;
 extern NTPClient timeClient;
+extern Read_write storage;
 extern Zeit zeit;
 
 void Settings::update() //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
@@ -86,7 +88,7 @@ String Settings::get_settings(String wer)
     return data;
 }
 
-String Settings::get_time()
+String Settings::get_stuff()
 {
     String data;
 
@@ -96,6 +98,41 @@ String Settings::get_time()
     data += "Datum: " + String(zeit.get_calendarYear());
     data += ":" + String(zeit.get_month());
     data += ":" + String(zeit.get_dayMonth()) + "\n";
+    data += "Free Memory: " + String(ESP.getFreeHeap()) + "B \n";
+    data += "CPU Speed: " + String(ESP.getCpuFreqMHz()) + "MHz \n";
 
     return data;
+}
+
+void Settings::readAllJson()
+{
+    doc["ColorMode"] = colorMode;
+    doc["timeType"] = timeType;
+    doc["clockType"] = clockType;
+    doc["DcfWlanMode"] = DcfWlanMode;
+    doc["Brightness"] = brigthness;
+    doc["SolidColorRed"] = SC_RED;
+    doc["SolidColorGreen"] = SC_GREEN;
+    doc["SolidColorBlue"] = SC_BLUE;
+    doc["BreatheColorRed"] = breathe_red;
+    doc["BreatheColorGreen"] = breathe_green;
+    doc["BreatheColorBlue"] = breathe_blue;
+    doc["BreatheColorDelay"] = breathe_delay;
+    doc["RainbowCycleDelay"] = rainbowcycle_verzoegerung;
+    doc["RainbowCycleFarbsprung"] = rainbowcycle_farbsprung;
+    doc["ExplosionRed"] = explosion_red;
+    doc["ExplosionGreen"] = explosion_green;
+    doc["ExplosionBlue"] = explosion_blue;
+    doc["ExplosionRed2"] = explosion_red2;
+    doc["ExplosionGreen2"] = explosion_green2;
+    doc["ExplosionBlue2"] = explosion_blue2;
+    doc["ExplosionDelay"] = explosion_delay;
+    doc["SpiralRed"] = spiral_red;
+    doc["SpiralGreen"] = spiral_green;
+    doc["SpiralBlue"] = spiral_blue;
+    doc["SpiralRed2"] = spiral_red2;
+    doc["SpiralGreen2"] = spiral_green2;
+    doc["SpiralBlue2"] = spiral_blue2;
+    doc["SpiralDelay"] = spiral_delay;
+    doc["Wlan_ssid"] = wlan1_ssid;
 }

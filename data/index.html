@@ -1,11 +1,10 @@
-const char SETTINGS_page[] PROGMEM = R"=====(
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
+    <title>Better Settings</title>
     <style>
         body {
             background-color: #f1faee;
@@ -324,6 +323,14 @@ const char SETTINGS_page[] PROGMEM = R"=====(
             <td><button onclick="redirect('/data?getALL');">Get</button></td>
         </tr>
         <tr>
+            <td>Get JSON</td>
+            <td><button onclick="redirect('/data?getJSON');">Get</button></td>
+        </tr>
+        <tr>
+            <td>Get JSON (prettyfied)</td>
+            <td><button onclick="redirect('/data?getJSON=1');">Get</button></td>
+        </tr>
+        <tr>
             <td>Crash on purpose</td>
             <td><button onclick="commit('crash',);">Crash</button></td>
         </tr>
@@ -380,119 +387,3 @@ const char SETTINGS_page[] PROGMEM = R"=====(
     </table>
 
 </html>
-)=====";
-
-const char WLAN_page[] PROGMEM = R"=====(
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wlan</title>
-    <style>
-        body {
-            background-color: #f1faee;
-        }
-
-        button {
-            background-color: #457b9d;
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-        }
-
-        select {
-            background-color: #457b9d;
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-        }
-
-        input {
-            border: none;
-            border-bottom: 2px solid #457b9d;
-            color: black;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 16em;
-        }
-
-        table {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td,
-        th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #1d3557;
-            color: white;
-        }
-    </style>
-</head>
-
-<body>
-    <script type="text/javascript">
-        function redirect(url) {
-            window.location.href = url;
-        }
-        function commit(variable, value) {
-            var xhttp = new XMLHttpRequest();
-            var url = "/data?" + variable + "=" + value;
-            console.log(url);
-            xhttp.open("GET", url, true);
-            xhttp.send();
-        }
-    </script>
-
-
-    <table>  
-        <!--Wlan Zugangsdaten-->
-        <tr>
-            <th>Wlan Information</th>
-            <th>Value</th>
-        </tr>
-        <tr>
-            <td>SSID</td>
-            <td><input onChange="commit('wlan_ssid', this.value);"></td>
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td><input type="password" onChange="commit('wlan_pw', this.value);"></td>
-        </tr>
-        <tr>
-            <td>Save login credentials</td>
-            <td><button onclick="commit('save_wlan',);">Save</button></td>
-        </tr>
-    </table>
-
-    <button onclick="redirect('/');">Go on main Page</button>
-
-</html>
-)=====";

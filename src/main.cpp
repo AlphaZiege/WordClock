@@ -1,26 +1,29 @@
-#include <Arduino.h>
-#include <ESPAsyncWebServer.h>
 #include <Adafruit_NeoPixel.h>
-#include <ESP8266mDNS.h>
-#include <NTPClient.h>
-#include <EEPROM.h>
+#include <Arduino.h>
+#include <ArduinoJson.h>
 #include <DNSServer.h>
+#include <EEPROM.h>
+#include <ESP8266mDNS.h>
+#include <ESPAsyncWebServer.h>
+#include <FS.h>
+#include <NTPClient.h>
 
-#include <Settings.h>
-#include <Read_Write.h>
-#include <Effects.h>
-#include <Zeit.h>
 #include <config.h>
+#include <Effects.h>
 #include <game.h>
+//#include <index.h>
+#include <Read_Write.h>
+#include <Settings.h>
+#include <Zeit.h>
 
-#include <index.h>
-
-Settings settings = Settings();
-Read_write storage = Read_write();
-Zeit zeit = Zeit();
 Effects effects = Effects();
+Read_write storage = Read_write();
+Settings settings = Settings();
 Snake snake;
 TicTacToe tictactoe;
+Zeit zeit = Zeit();
+
+DynamicJsonDocument doc(1024);
 
 //uhrzeit
 WiFiUDP ntpUDP;
@@ -28,10 +31,13 @@ NTPClient timeClient(ntpUDP);
 unsigned long epochTime;
 struct tm *ptm;
 
+//filesystem
+FS *filesystem = &SPIFFS;
+
 //dcf
-#define ok 2
 #define wait_for_DCF 0
 #define synchronisiere 1
+#define ok 2
 int sekunde = 0;
 bool Signal;
 unsigned long steigend = 0, fallend = 0;
@@ -62,7 +68,7 @@ public:
   CaptiveRequestHandler()
   {
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-      request->send(200, "text/html", SETTINGS_page);
+      request->send(SPIFFS, "/index.html");
     });
     server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
       inputVar = request->getParam(0)->value();
@@ -258,6 +264,21 @@ public:
           settings.set_SC_DELAY(333);
         }
       }
+      else if (inputName == "getJSON")
+      {
+        settings.readAllJson();
+        String output;
+        if (inputVar.toInt() == 1)
+        {
+          serializeJsonPretty(doc, output);
+        }
+        else
+        {
+          serializeJson(doc, output);
+        }
+          request->send(200, "application/json", output);
+      }
+
       else if (inputName == "crash")
       {
         //request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
@@ -295,7 +316,7 @@ public:
 
   void handleRequest(AsyncWebServerRequest *request)
   {
-    request->send(200, "text/html", WLAN_page);
+    request->send(SPIFFS, "/wlan.html");
   }
 };
 
@@ -311,6 +332,8 @@ void setup()
   Serial.setDebugOutput(true);
 
   Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
+
+  filesystem->begin();
 
   EEPROM.begin(1024);        //EEPROM initialisieren
   storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
@@ -331,8 +354,8 @@ void setup()
   Serial.println(hostString);
   WiFi.hostname(hostString);
   WiFi.mode(WIFI_STA);
-  //WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-  WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+  WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+  //WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(250);

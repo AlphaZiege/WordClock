@@ -1,8 +1,8 @@
 #ifndef READ_WRITE_H
 #define READ_WRITE_H
 
-#include <EEPROM.h>
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <Settings.h>
 
 extern Settings settings;
