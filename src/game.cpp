@@ -150,7 +150,7 @@ bool TicTacToe::Play(int where, int who)
 
 void TicTacToe::Win(int who)
 {
-    int r = 10, g = 10, b = 10;
+    int r = 0, g = 255, b = 0;
     if (who == 1)
     {
         r = P1.r;

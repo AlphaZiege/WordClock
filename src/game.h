@@ -222,6 +222,10 @@ public:
                 Win(1);
             }
         }
+        else if (field[0][0] != 0 && field[1][0] != 0 && field[2][0] != 0 && field[3][0] != 0 && field[4][0] != 0 && field[5][0] != 0 && field[6][0] != 0 && field[7][0] != 0 && field[8][0] != 0)
+        {
+            Win(3);
+        }
         else if (Field() != 0)
         {
             if (Play(Field(), player))
