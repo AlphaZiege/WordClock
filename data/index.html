@@ -6,14 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
     <style>
+        @media (prefers-color-scheme: light) {
+            html {
+                --text-color: #222;
+                --text2-color: #eee;
+                --bkg-color: #ECEFF1;
+                --accent: #1d3557;
+                --accent2: #457b9d;
+                --highlight: #ddd;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            html {
+                --text-color: #eee;
+                --text2-color: #222;
+                --bkg-color: #121212;
+                --accent: #218B82;
+                --accent2: #98D4BB;
+                --highlight: #222222;
+            }
+        }
+
         body {
-            background-color: #f1faee;
+            background-color: var(--bkg-color);
         }
 
         button {
-            background-color: #457b9d;
+            background-color: var(--accent2);
             border: none;
-            color: white;
+            color: var(--text2-color);
             padding: 10px 32px;
             text-align: center;
             text-decoration: none;
@@ -23,21 +45,23 @@
         }
 
         select {
-            background-color: #457b9d;
+            background-color: var(--accent2);
             border: none;
-            color: white;
+            color: var(--text2-color);
             padding: 10px 32px;
             text-align: center;
             text-decoration: none;
             display: inline-block;
             font-size: 16px;
             width: 20em;
+            user-select: var(--accent);
         }
 
         input {
             border: none;
-            border-bottom: 2px solid #457b9d;
-            color: black;
+            border-bottom: 2px solid var(--accent2);
+            color: var(--text-color);
+            background-color: var(--bkg-color);
             padding: 10px 32px;
             text-align: center;
             text-decoration: none;
@@ -54,20 +78,21 @@
 
         td,
         th {
-            border: 1px solid #ddd;
+            border: 1px solid var(--highlight);
             padding: 8px;
+            color: var(--text-color)
         }
 
         tr:hover {
-            background-color: #ddd;
+            background-color: var(--highlight);
         }
 
         th {
             padding-top: 12px;
             padding-bottom: 12px;
             text-align: left;
-            background-color: #1d3557;
-            color: white;
+            background-color: var(--accent);
+            color: #eee;
         }
     </style>
 </head>
@@ -139,6 +164,7 @@
                 })
                 .catch(err => { throw err });
         }
+
     </script>
 
 
@@ -177,7 +203,8 @@
         </tr>
         <tr>
             <td>Brightness</td>
-            <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
         <tr>
             <td>Save all Settings from Ram</td>
@@ -220,15 +247,18 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input id="SolidColorRed" onChange="commit('sc_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorRed" onChange="commit('sc_redval', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input id="SolidColorGreen" onChange="commit('sc_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorGreen" onChange="commit('sc_greenval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input id="SolidColorBlue" onChange="commit('sc_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorBlue" onChange="commit('sc_blueval', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
 
         <!--Breathe Color-->
@@ -238,19 +268,23 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input id="BreatheColorRed" onChange="commit('breathe_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorRed" onChange="commit('breathe_redval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input id="BreatheColorGreen" onChange="commit('breathe_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorGreen" onChange="commit('breathe_greenval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input id="BreatheColorBlue" onChange="commit('breathe_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorBlue" onChange="commit('breathe_blueval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
-            <td><input id="BreatheColorDelay" onChange="commit('breathe_delay', this.value);" type="number" min="0"></td>
+            <td><input id="BreatheColorDelay" onChange="commit('breathe_delay', this.value);" type="number" min="0">
+            </td>
         </tr>
 
         <!--Rainbow Cycle-->
@@ -260,11 +294,13 @@
         </tr>
         <tr>
             <td>Verzögerung</td>
-            <td><input id="RainbowCycleDelay" onChange="commit('rainbowcycle_verzoegerung', this.value);" type="number" min="0"></td>
+            <td><input id="RainbowCycleDelay" onChange="commit('rainbowcycle_verzoegerung', this.value);" type="number"
+                    min="0"></td>
         </tr>
         <tr>
             <td>Farbsprung</td>
-            <td><input id="RainbowCycleFarbsprung" onChange="commit('rainbowcycle_farbsprung', this.value);" type="number" min="0"></td>
+            <td><input id="RainbowCycleFarbsprung" onChange="commit('rainbowcycle_farbsprung', this.value);"
+                    type="number" min="0"></td>
         </tr>
 
         <!--Explosion Color-->
@@ -274,27 +310,33 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input id="ExplosionRed" onChange="commit('explosion_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionRed" onChange="commit('explosion_redval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input id="ExplosionGreen" onChange="commit('explosion_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionGreen" onChange="commit('explosion_greenval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input id="ExplosionBlue" onChange="commit('explosion_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionBlue" onChange="commit('explosion_blueval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Red Secondary</td>
-            <td><input id="ExplosionRed2" onChange="commit('explosion_redval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionRed2" onChange="commit('explosion_redval2', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Green Secondary</td>
-            <td><input id="ExplosionGreen2" onChange="commit('explosion_greenval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionGreen2" onChange="commit('explosion_greenval2', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue Secondary</td>
-            <td><input id="ExplosionBlue2" onChange="commit('explosion_blueval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionBlue2" onChange="commit('explosion_blueval2', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
@@ -308,27 +350,33 @@
         </tr>
         <tr>
             <td>Red Primary</td>
-            <td><input id="SpiralRed" onChange="commit('spiral_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralRed" onChange="commit('spiral_redval', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
         <tr>
             <td>Green Primary</td>
-            <td><input id="SpiralGreen" onChange="commit('spiral_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralGreen" onChange="commit('spiral_greenval', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue Primary</td>
-            <td><input id="SpiralBlue" onChange="commit('spiral_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralBlue" onChange="commit('spiral_blueval', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
         <tr>
             <td>Red Secondary</td>
-            <td><input id="SpiralRed2" onChange="commit('spiral_redval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralRed2" onChange="commit('spiral_redval2', this.value);" type="number" min="0" max="255">
+            </td>
         </tr>
         <tr>
             <td>Green Secondary</td>
-            <td><input id="SpiralGreen2" onChange="commit('spiral_greenval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralGreen2" onChange="commit('spiral_greenval2', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Blue Secondary</td>
-            <td><input id="SpiralBlue2" onChange="commit('spiral_blueval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralBlue2" onChange="commit('spiral_blueval2', this.value);" type="number" min="0"
+                    max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
