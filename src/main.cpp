@@ -28,7 +28,7 @@ NTPClient timeClient(ntpUDP);
 unsigned long epochTime;
 struct tm *ptm;
 
-//irwas für dcf von ewald
+//dcf
 #define ok 2
 #define wait_for_DCF 0
 #define synchronisiere 1
@@ -310,10 +310,10 @@ void setup()
   delay(100);
   Serial.setDebugOutput(true);
 
-  Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand
+  Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
 
-  EEPROM.begin(1024);
-  storage.readAllSettings();
+  EEPROM.begin(1024);        //EEPROM initialisieren
+  storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
 
   timeClient.begin();
   timeClient.setTimeOffset(3600);
@@ -331,9 +331,9 @@ void setup()
   Serial.println(hostString);
   WiFi.hostname(hostString);
   WiFi.mode(WIFI_STA);
-  WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-  //WiFi.begin(ssid, password); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-  while (WiFi.status() != WL_CONNECTED && settings.get_DcfWlanMode() == 1)
+  //WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+  WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+  while (WiFi.status() != WL_CONNECTED)
   {
     delay(250);
     Serial.print(".");
@@ -417,47 +417,43 @@ void loop()
         unsigned long diff = fallend - steigend;
         Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
         steigend = millis();
+        Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
 
         switch (Zustand)
         {
         case wait_for_DCF:
           Zustand = synchronisiere;
-          strip.setPixelColor(0, 255, 0, 0);
+          Serial.println("sync");
           break;
         case synchronisiere:
           if (steigend - fallend > 1300)
           { // ein Signal ist ausgefallen => die Neue Minute beginnt.
             Zustand = ok;
             sekunde = 0;
-            strip.setPixelColor(1, 0, 255, 0);
+            Serial.println("run ");
             break;
           }
         case ok:
           if (steigend - fallend > 1300)
           { // ein Signal ist ausgefallen => die Neue Minute beginnt.
             sekunde = 0;
-            String Wetter = String(Kodierung[2]) + String(Kodierung[3]) + String(Kodierung[4]) + String(Kodierung[5]) + String(Kodierung[6]) + String(Kodierung[7]) + String(Kodierung[8]) + String(Kodierung[9]) + String(Kodierung[10]) + String(Kodierung[11]) + String(Kodierung[12]) + String(Kodierung[13]) + String(Kodierung[14]) + String(Kodierung[15]);
-            String Zeitsystem = String(Kodierung[16]) + String(Kodierung[17]) + String(Kodierung[18]) + String(Kodierung[19]) + String(Kodierung[20]) + String(Kodierung[21]);
             int Minute = Kodierung[22] + 2 * Kodierung[23] + 4 * Kodierung[24] + 8 * Kodierung[25] + 10 * Kodierung[26] + 20 * Kodierung[27] + 40 * Kodierung[28];
             int Stunde = Kodierung[30] + 2 * Kodierung[31] + 4 * Kodierung[32] + 8 * Kodierung[33] + 10 * Kodierung[34] + 20 * Kodierung[35];
             int Tag = Kodierung[37] + 2 * Kodierung[38] + 4 * Kodierung[39] + 8 * Kodierung[40] + 10 * Kodierung[41] + 20 * Kodierung[42];
-            int WochenTag = Kodierung[43] + 2 * Kodierung[44] + 4 * Kodierung[45];
             int Monat = Kodierung[46] + 2 * Kodierung[47] + 4 * Kodierung[48] + 8 * Kodierung[49] + 10 * Kodierung[50];
             int Jahr = Kodierung[51] + 2 * Kodierung[52] + 4 * Kodierung[53] + 8 * Kodierung[54] + 10 * Kodierung[55] + 20 * Kodierung[56] + 40 * Kodierung[57] + 80 * Kodierung[58];
-
-            zeit.set_weather(Wetter);
-            zeit.set_zeitsystem(Zeitsystem);
+            Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr) + " " + String(Stunde) + "." + String(Minute) + " Uhr");
+            zeit.set_calendarYear(Jahr + 2000);
+            zeit.set_month(Monat);
+            zeit.set_dayMonth(Tag);
             zeit.set_minutes(Minute);
             zeit.set_hours(Stunde);
-            zeit.set_dayMonth(Tag);
-            zeit.set_dayWeek(WochenTag);
-            zeit.set_month(Monat);
-            zeit.set_calendarYear(Jahr);
           }
           break;
         }
-        sekunde++;
         zeit.set_seconds(sekunde);
+        sekunde++;
+        Serial.println("sec:" + String(sekunde) + " ");
       }
     }
   }
@@ -465,7 +461,10 @@ void loop()
   {
     epochTime = timeClient.getEpochTime();
     tm *ptm = gmtime((time_t *)&epochTime);
-    
+
+    zeit.set_calendarYear(ptm->tm_year + 1900);
+    zeit.set_month(ptm->tm_mon + 1);
+    zeit.set_dayMonth(ptm->tm_mday);
     zeit.set_seconds(timeClient.getSeconds());
     zeit.set_minutes(timeClient.getMinutes());
     zeit.set_hours(timeClient.getHours());
@@ -479,8 +478,6 @@ void loop()
     {
       timeClient.forceUpdate();
     }
-
-    Serial.println(timeClient.getFormattedTime());
   }
 
   //lichteffekte
@@ -523,7 +520,6 @@ void loop()
 
   case 100:
     snake = Snake();
-    snake.init();
     settings.set_colorMode(101);
     break;
 
@@ -537,7 +533,6 @@ void loop()
 
   case 103:
     tictactoe = TicTacToe();
-    tictactoe.Init();
     settings.set_tictactoe_field(0);
     settings.set_colorMode(104);
     break;

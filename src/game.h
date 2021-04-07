@@ -47,7 +47,7 @@ private:
     void Calc();
 
 public:
-    void init()
+    Snake()
     {
         head = Pixel();
         food = Pixel();
@@ -183,7 +183,7 @@ private:
     Color Cgrid;
 
 public:
-    void Init()
+    TicTacToe()
     {
         P1 = Color();
         P1.r = 255;

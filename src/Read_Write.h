@@ -10,37 +10,37 @@ extern Settings settings;
 class Read_write
 {
 private:
+#define addr_colorMode 0
 #define addr_SC_RED 1
 #define addr_SC_GREEN 2
 #define addr_SC_BLUE 3
 #define addr_clockType 4
-#define addr_timeType 11
 #define addr_DcfWlanMode 5
 #define addr_brightness 6
 #define addr_breatheDelay 7
 #define addr_breatheRed 8
 #define addr_breatheGreen 9
 #define addr_breatheBlue 10
+#define addr_timeType 11
 #define addr_rainbowcycle_verzoegerung 12
 #define addr_rainbowcycle_farbsprung 13
 #define addr_explosion_red 14
 #define addr_explosion_green 15
 #define addr_explosion_blue 16
-#define addr_explosion_red2 25
-#define addr_explosion_green2 26
-#define addr_explosion_blue2 27
 #define addr_explosion_delay 17
 #define addr_spiral_red 18
 #define addr_spiral_green 19
 #define addr_spiral_blue 20
+#define addr_spiral_delay 21
 #define addr_spiral_red2 22
 #define addr_spiral_green2 23
 #define addr_spiral_blue2 24
-#define addr_spiral_delay 21
+#define addr_explosion_red2 25
+#define addr_explosion_green2 26
+#define addr_explosion_blue2 27
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
-#define addr_colorMode 0
 
   String readStringFromEEPROM(int addrOffset)
   {

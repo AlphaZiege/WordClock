@@ -2,10 +2,12 @@
 #include <Settings.h>
 #include <Adafruit_NeoPixel.h>
 #include <NTPClient.h>
+#include <Zeit.h>
 
 extern Read_write storage;
 extern Adafruit_NeoPixel strip;
 extern NTPClient timeClient;
+extern Zeit zeit;
 
 void Settings::update() //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
 {
@@ -88,9 +90,12 @@ String Settings::get_time()
 {
     String data;
 
-    data += "Stunden: " + String(timeClient.getHours()) + "\n";
-    data += "Minuten: " + String(timeClient.getMinutes()) + "\n";
-    data += "Sekunden: " + String(timeClient.getSeconds()) + "\n";
+    data += "Uhrzeit: " + String(zeit.get_hours());
+    data += ":" + String(zeit.get_minutes());
+    data += ":" + String(zeit.get_seconds()) + "\n";
+    data += "Datum: " + String(zeit.get_calendarYear());
+    data += ":" + String(zeit.get_month());
+    data += ":" + String(zeit.get_dayMonth()) + "\n";
 
     return data;
 }
