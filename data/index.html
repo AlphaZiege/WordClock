@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Better Settings</title>
+    <title>Settings</title>
     <style>
         body {
             background-color: #f1faee;
@@ -72,7 +72,7 @@
     </style>
 </head>
 
-<body>
+<body onload="load()">
     <script type="text/javascript">
         function redirect(url) {
             window.location.href = url;
@@ -100,6 +100,45 @@
                 commit('snake_dir', '3');
             }
         }
+        function load() {
+            let url = '/data?getJSON=1';
+
+            fetch(url)
+                .then(res => res.json())
+                .then((out) => {
+                    console.log('Checkout this JSON! ', out);
+                    document.getElementById('ColorMode').value = out.ColorMode;
+                    document.getElementById('timeType').value = out.timeType;
+                    document.getElementById('clockType').value = out.clockType;
+                    document.getElementById('DcfWlanMode').value = out.DcfWlanMode;
+                    document.getElementById('Brightness').value = out.Brightness;
+                    document.getElementById('SolidColorRed').value = out.SolidColorRed;
+                    document.getElementById('SolidColorGreen').value = out.SolidColorGreen;
+                    document.getElementById('SolidColorBlue').value = out.SolidColorBlue;
+                    document.getElementById('BreatheColorRed').value = out.BreatheColorRed;
+                    document.getElementById('BreatheColorGreen').value = out.BreatheColorGreen;
+                    document.getElementById('BreatheColorBlue').value = out.BreatheColorBlue;
+                    document.getElementById('BreatheColorDelay').value = out.BreatheColorDelay;
+                    document.getElementById('RainbowCycleDelay').value = out.RainbowCycleDelay;
+                    document.getElementById('RainbowCycleFarbsprung').value = out.RainbowCycleFarbsprung;
+                    document.getElementById('ExplosionRed').value = out.ExplosionRed;
+                    document.getElementById('ExplosionGreen').value = out.ExplosionGreen;
+                    document.getElementById('ExplosionBlue').value = out.ExplosionBlue;
+                    document.getElementById('ExplosionRed2').value = out.ExplosionRed2;
+                    document.getElementById('ExplosionGreen2').value = out.ExplosionGreen2;
+                    document.getElementById('ExplosionBlue2').value = out.ExplosionBlue2;
+                    document.getElementById('ExplosionDelay').value = out.ExplosionDelay;
+                    document.getElementById('SpiralRed').value = out.SpiralRed;
+                    document.getElementById('SpiralGreen').value = out.SpiralGreen;
+                    document.getElementById('SpiralBlue').value = out.SpiralBlue;
+                    document.getElementById('SpiralRed2').value = out.SpiralRed2;
+                    document.getElementById('SpiralGreen2').value = out.SpiralGreen2;
+                    document.getElementById('SpiralBlue2').value = out.SpiralBlue2;
+                    document.getElementById('SpiralDelay').value = out.SpiralDelay;
+                    document.getElementById('Wlan_ssid').value = out.Wlan_ssid;
+                })
+                .catch(err => { throw err });
+        }
     </script>
 
 
@@ -112,7 +151,7 @@
         <tr>
             <td>Clock Type</td>
             <td>
-                <select onChange="commit('clockType', this.value);">
+                <select id="clockType" onChange="commit('clockType', this.value);">
                     <option value="0">Letters</option>
                     <option value="1">Lamp</option>
                 </select>
@@ -121,7 +160,7 @@
         <tr>
             <td>Time Type</td>
             <td>
-                <select onChange="commit('timeType', this.value);">
+                <select id="timeType" onChange="commit('timeType', this.value);">
                     <option value="0">15 nach x</option>
                     <option value="1">viertel x+1</option>
                 </select>
@@ -130,7 +169,7 @@
         <tr>
             <td>Timesource</td>
             <td>
-                <select onChange="commit('DcfWlanMode', this.value);">
+                <select id="DcfWlanMode" onChange="commit('DcfWlanMode', this.value);">
                     <option value="1">WLAN</option>
                     <option value="0">DCF77</option>
                 </select>
@@ -138,7 +177,7 @@
         </tr>
         <tr>
             <td>Brightness</td>
-            <td><input onChange="commit('brightness', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Save all Settings from Ram</td>
@@ -159,7 +198,7 @@
                 <label>Choose a Colormode</label>
             </td>
             <td>
-                <select name="colormode" onChange="commit('colorMode', this.value);">
+                <select id="ColorMode" onChange="commit('colorMode', this.value);">
                     <option value="0">Static Color</option>
                     <option value="1">Breathe</option>
                     <option value="2">Color Cycle</option>
@@ -181,15 +220,15 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input onChange="commit('sc_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorRed" onChange="commit('sc_redval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input onChange="commit('sc_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorGreen" onChange="commit('sc_greenval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input onChange="commit('sc_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SolidColorBlue" onChange="commit('sc_blueval', this.value);" type="number" min="0" max="255"></td>
         </tr>
 
         <!--Breathe Color-->
@@ -199,19 +238,19 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input onChange="commit('breathe_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorRed" onChange="commit('breathe_redval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input onChange="commit('breathe_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorGreen" onChange="commit('breathe_greenval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input onChange="commit('breathe_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="BreatheColorBlue" onChange="commit('breathe_blueval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
-            <td><input onChange="commit('breathe_delay', this.value);" type="number" min="0"></td>
+            <td><input id="BreatheColorDelay" onChange="commit('breathe_delay', this.value);" type="number" min="0"></td>
         </tr>
 
         <!--Rainbow Cycle-->
@@ -221,11 +260,11 @@
         </tr>
         <tr>
             <td>Verzögerung</td>
-            <td><input onChange="commit('rainbowcycle_verzoegerung', this.value);" type="number" min="0"></td>
+            <td><input id="RainbowCycleDelay" onChange="commit('rainbowcycle_verzoegerung', this.value);" type="number" min="0"></td>
         </tr>
         <tr>
             <td>Farbsprung</td>
-            <td><input onChange="commit('rainbowcycle_farbsprung', this.value);" type="number" min="0"></td>
+            <td><input id="RainbowCycleFarbsprung" onChange="commit('rainbowcycle_farbsprung', this.value);" type="number" min="0"></td>
         </tr>
 
         <!--Explosion Color-->
@@ -235,31 +274,31 @@
         </tr>
         <tr>
             <td>Red</td>
-            <td><input onChange="commit('explosion_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionRed" onChange="commit('explosion_redval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green</td>
-            <td><input onChange="commit('explosion_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionGreen" onChange="commit('explosion_greenval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue</td>
-            <td><input onChange="commit('explosion_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionBlue" onChange="commit('explosion_blueval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Red Secondary</td>
-            <td><input onChange="commit('explosion_redval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionRed2" onChange="commit('explosion_redval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green Secondary</td>
-            <td><input onChange="commit('explosion_greenval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionGreen2" onChange="commit('explosion_greenval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue Secondary</td>
-            <td><input onChange="commit('explosion_blueval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="ExplosionBlue2" onChange="commit('explosion_blueval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
-            <td><input onChange="commit('explosion_delay', this.value);" type="number" min="0"></td>
+            <td><input id="ExplosionDelay" onChange="commit('explosion_delay', this.value);" type="number" min="0"></td>
         </tr>
 
         <!--Spiral Color-->
@@ -269,31 +308,31 @@
         </tr>
         <tr>
             <td>Red Primary</td>
-            <td><input onChange="commit('spiral_redval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralRed" onChange="commit('spiral_redval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green Primary</td>
-            <td><input onChange="commit('spiral_greenval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralGreen" onChange="commit('spiral_greenval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue Primary</td>
-            <td><input onChange="commit('spiral_blueval', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralBlue" onChange="commit('spiral_blueval', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Red Secondary</td>
-            <td><input onChange="commit('spiral_redval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralRed2" onChange="commit('spiral_redval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Green Secondary</td>
-            <td><input onChange="commit('spiral_greenval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralGreen2" onChange="commit('spiral_greenval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Blue Secondary</td>
-            <td><input onChange="commit('spiral_blueval2', this.value);" type="number" min="0" max="255"></td>
+            <td><input id="SpiralBlue2" onChange="commit('spiral_blueval2', this.value);" type="number" min="0" max="255"></td>
         </tr>
         <tr>
             <td>Delay</td>
-            <td><input onChange="commit('spiral_delay', this.value);" type="number" min="0"></td>
+            <td><input id="SpiralDelay" onChange="commit('spiral_delay', this.value);" type="number" min="0"></td>
         </tr>
 
         <!--Wlan Zugangsdaten-->
@@ -303,7 +342,7 @@
         </tr>
         <tr>
             <td>SSID</td>
-            <td><input onChange="commit('wlan_ssid', this.value);"></td>
+            <td><input id="Wlan_ssid" onChange="commit('wlan_ssid', this.value);"></td>
         </tr>
         <tr>
             <td>Password</td>
