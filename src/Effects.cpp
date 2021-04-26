@@ -240,8 +240,8 @@ void Effects::staticColor()
             settings.set_SC_DELAY(0);
             settings.set_clockType(0);
         }
-
     }
+
     else
     {
         setAllLEDs(settings.get_SC_RED(), settings.get_SC_GREEN(), settings.get_SC_BLUE());
@@ -545,5 +545,72 @@ void Effects::spiral()
         timestamp = millis();
         if (spiral_timestamp2_enabled == true)
             timestamp2 = millis();
+    }
+}
+
+void Effects::rain()
+{
+    if (timestamp + 100 < millis())
+    {
+        // for (int j = 0; j < 110; j++)
+        // {
+        //     strip.setPixelColor(j, 0, 0, 0);
+        // }
+
+        //runterschieben
+        bool rain_arr_speichern[11][10];
+
+        for (int i = 0; i < 10; i++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                rain_arr_speichern[x][i + 1] = rain_arr[x][i];
+            }
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            for (int x = 0; x < 11; x++)
+            {
+                rain_arr[x][i] = rain_arr_speichern[x][i];
+            }
+        }
+
+        for (int x = 0; x < 11; x++)
+        {
+            rain_arr[x][0] = false;
+        }
+
+        for (int i = 0; i < 11; i++)
+        {
+            int y = 0;
+            int rand = random(11);
+            if (0 == random(15))
+            {
+                rain_arr[rand][y] = true;
+                for (int j = 0; j <= random(0, 2); j++)
+                {
+                    y++;
+                    rain_arr[rand][y] = true;
+                }
+            }
+        }
+
+        //anzeigen
+        for (int x = 0; x < 11; x++)
+        {
+            for (int y = 0; y < 10; y++)
+            {
+                if (rain_arr[x][y])
+                {
+                    strip.setPixelColor(y * 11 + x, 255, 0, 255);
+                }
+                else
+                {
+                    strip.setPixelColor(y * 11 + x, 0, 0, 0);
+                }
+            }
+        }
+
+        timestamp = millis();
     }
 }

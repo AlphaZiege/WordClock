@@ -104,7 +104,7 @@ String Settings::get_stuff()
     return data;
 }
 
-void Settings::readAllJson()
+void Settings::generateJson()
 {
     doc["ColorMode"] = colorMode;
     doc["timeType"] = timeType;
@@ -135,4 +135,9 @@ void Settings::readAllJson()
     doc["SpiralBlue2"] = spiral_blue2;
     doc["SpiralDelay"] = spiral_delay;
     doc["Wlan_ssid"] = wlan1_ssid;
+
+    doc["local_time"] =  String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds());
+    doc["local_date"] = String(zeit.get_calendarYear()) + ":" + String(zeit.get_month()) + ":" + String(zeit.get_dayMonth());
+    doc["Free Memory"] = String(ESP.getFreeHeap()) + "B";
+    doc["CPU Speed"] = String(ESP.getCpuFreqMHz()) + "MHz";
 }

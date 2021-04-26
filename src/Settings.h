@@ -92,7 +92,7 @@ public:
         return data;
     }
 
-    void readAllJson();
+    void generateJson();
 
     //modes z.B. breathe oder rainbow
     void set_colorMode(int yes)

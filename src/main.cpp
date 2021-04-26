@@ -6,7 +6,10 @@
 #include <ESP8266mDNS.h>
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
+#include <MySQL_Connection.h>
+#include <MySQL_Cursor.h>
 #include <NTPClient.h>
+#include <ESP8266WiFi.h>
 
 #include <config.h>
 #include <Effects.h>
@@ -22,7 +25,7 @@ Snake snake;
 TicTacToe tictactoe;
 Zeit zeit = Zeit();
 
-DynamicJsonDocument doc(512);
+DynamicJsonDocument doc(1024);
 
 //uhrzeit
 WiFiUDP ntpUDP;
@@ -52,6 +55,12 @@ DNSServer dnsServer;
 AsyncWebServer server(80); // 80 = http traffic // SKETCH BEGIN, für den Webserver
 String inputVar;
 String inputName;
+
+WiFiClient client;
+
+//mysql
+MySQL_Connection conn(&client);
+MySQL_Cursor *cursor;
 
 void Clear()
 {
@@ -265,7 +274,7 @@ public:
       }
       else if (inputName == "getJSON")
       {
-        settings.readAllJson();
+        settings.generateJson();
         String output;
         if (inputVar.toInt() == 1)
         {
@@ -275,15 +284,13 @@ public:
         {
           serializeJson(doc, output);
         }
-          request->send(200, "application/json", output);
+        request->send(200, "application/json", output);
       }
 
       else if (inputName == "crash")
       {
         //request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
-        while (true)
-        {
-        }
+        ESP.reset();
       }
 
       else if (inputName == "snake_dir")
@@ -327,7 +334,8 @@ void setup()
 
   //Serial.begin(9600); //115200 : 9600
   Serial.begin(115200); //115200 : 9600
-  delay(100);
+  while (!Serial)
+    ;
   Serial.setDebugOutput(true);
 
   Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
@@ -418,12 +426,53 @@ void setup()
   server.begin(); // Webserver starten
   delay(100);
   //Serial.println(String(settings.get_DcfWlanMode()));
+
+  //db mysql
+  Serial.print("Connecting to SQL...  ");
+  if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
+  {
+    Serial.println("OK.");
+    strip.setPixelColor(i, 0, 255, 0);
+    i++;
+    strip.show();
+  }
+  else
+  {
+    Serial.println("FAILED.");
+    strip.setPixelColor(i, 255, 0, 0);
+    i++;
+    strip.show();
+  }
+
+  // create MySQL cursor object
+  cursor = new MySQL_Cursor(&conn);
+  if (conn.connected())
+  {
+    while (!timeClient.update())
+    {
+      timeClient.forceUpdate();
+    }
+    epochTime = timeClient.getEpochTime();
+    tm *ptm = gmtime((time_t *)&epochTime);
+
+    String datetime;
+    datetime += String(ptm->tm_year + 1900);
+    datetime += "-" + String(ptm->tm_mon + 1);
+    datetime += "-" + String(ptm->tm_mday);
+    datetime += " " + String(timeClient.getFormattedTime());
+    String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
+    cursor->execute(INSERT_SQL.c_str());
+  }
+
+  strip.setPixelColor(i, 255, 0, 255);
+  i++;
+  strip.show();
+  delay(100);
   strip.setBrightness(settings.get_brightness());
 }
 
 void loop()
 {
-  //Serial.println("kkfkfkfkfkf");
   MDNS.update();
 
   //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
@@ -490,7 +539,7 @@ void loop()
     zeit.set_seconds(timeClient.getSeconds());
     zeit.set_minutes(timeClient.getMinutes());
     zeit.set_hours(timeClient.getHours());
-    zeit.set_dayMonth(timeClient.getDay());
+    //zeit.set_dayMonth(timeClient.getDay());
 
     if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
     {
@@ -538,6 +587,10 @@ void loop()
   case 6:
     //Clear();
     effects.spiral();
+    break;
+
+  case 7:
+    effects.rain();
     break;
 
   case 100:
