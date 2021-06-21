@@ -34,6 +34,11 @@ Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
 #define addr_explosion_red2 25
 #define addr_explosion_green2 26
 #define addr_explosion_blue2 27
+#define addr_offhours_begin_h 28
+#define addr_offhours_end_h 29
+#define addr_offhours_brightness 30
+#define addr_offhours_begin_m 31
+#define addr_offhours_end_m 32
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
@@ -70,6 +75,11 @@ void setup()
     EEPROM.write(addr_spiral_green2, 255);
     EEPROM.write(addr_spiral_blue2, 255);
     EEPROM.write(addr_spiral_delay, 10);
+    EEPROM.write(addr_offhours_brightness, 10);
+    EEPROM.write(addr_offhours_begin_h, 23);
+    EEPROM.write(addr_offhours_begin_m, 30);
+    EEPROM.write(addr_offhours_end_h, 8);
+    EEPROM.write(addr_offhours_end_m, 0);
 
     EEPROM.commit();
 }
