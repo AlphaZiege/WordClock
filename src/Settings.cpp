@@ -51,6 +51,11 @@ String Settings::get_settings(String wer)
         data += "SpiralBlue2: " + String(spiral_blue2) + "\n";
         data += "SpiralDelay: " + String(spiral_delay) + "\n";
         data += "Wlan_ssid: " + wlan1_ssid + "\n";
+        data += "OffHoursBegin_h: " + String(offhours_begin_h) + "\n";
+        data += "OffHoursEnd_h: " + String(offhours_end_h) + "\n";
+        data += "OffHoursBegin_m: " + String(offhours_begin_m) + "\n";
+        data += "OffHoursEnd_m: " + String(offhours_end_m) + "\n";
+        data += "OffHoursBrightness: " + String(offhours_brightness) + "\n";
     }
     else if (wer == "rom")
     {
@@ -83,6 +88,11 @@ String Settings::get_settings(String wer)
         data += "SpiralBlue2: " + String(storage.get_spiral_blue2()) + "\n";
         data += "SpiralDelay: " + String(storage.get_spiral_delay()) + "\n";
         data += "Wlan_ssid: " + String(storage.get_wlan_ssid()) + "\n";
+        data += "OffHoursBegin_h: " + String(storage.get_offhours_begin_h()) + "\n";
+        data += "OffHoursEnd_h: " + String(storage.get_offhours_end_h()) + "\n";
+        data += "OffHoursBegin_m: " + String(storage.get_offhours_begin_m()) + "\n";
+        data += "OffHoursEnd_m: " + String(storage.get_offhours_end_m()) + "\n";
+        data += "OffHoursBrightness: " + String(storage.get_offhours_brightness()) + "\n";
     }
 
     return data;
@@ -135,6 +145,11 @@ void Settings::generateJson()
     doc["SpiralBlue2"] = spiral_blue2;
     doc["SpiralDelay"] = spiral_delay;
     doc["Wlan_ssid"] = wlan1_ssid;
+    doc["OffhoursBegin_h"] = offhours_begin_h;
+    doc["OffhoursEnd_h"] = offhours_end_h;
+    doc["OffhoursBegin_m"] = offhours_begin_m;
+    doc["OffhoursEnd_m"] = offhours_end_m;
+    doc["OffhoursBrightness"] = offhours_brightness;
 
     doc["local_time"] =  String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds());
     doc["local_date"] = String(zeit.get_calendarYear()) + ":" + String(zeit.get_month()) + ":" + String(zeit.get_dayMonth());

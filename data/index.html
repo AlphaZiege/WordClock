@@ -161,6 +161,11 @@
                     document.getElementById('SpiralBlue2').value = out.SpiralBlue2;
                     document.getElementById('SpiralDelay').value = out.SpiralDelay;
                     document.getElementById('Wlan_ssid').value = out.Wlan_ssid;
+                    document.getElementById('OffhoursBegin_h').value = out.OffhoursBegin_h;
+                    document.getElementById('OffhoursBegin_m').value = out.OffhoursBegin_m;
+                    document.getElementById('OffhoursEnd_h').value = out.OffhoursEnd_h;
+                    document.getElementById('OffhoursEnd_m').value = out.OffhoursEnd_m;
+                    document.getElementById('OffhoursBrightness').value = out.OffhoursBrightness;
                 })
                 .catch(err => { throw err });
         }
@@ -204,6 +209,21 @@
         <tr>
             <td>Brightness</td>
             <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255">
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours Brightness</td>
+            <td><input id="OffhoursBrightness" onChange="commit('offhour_brightness', this.value);" type="number" min="0" max="255">
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours Begin</td>
+            <td><input id="OffhoursBegin_h" onChange="commit('offhour_begin_h', this.value);" type="number" min="0" max="23">h<input id="OffhoursBegin_m" onChange="commit('offhour_begin_m', this.value);" type="number" min="0" max="59">m
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours End</td>
+            <td><input id="OffhoursEnd_h" onChange="commit('offhour_end_h', this.value);" type="number" min="0" max="23">h<input id="OffhoursEnd_m" onChange="commit('offhour_end_m', this.value);" type="number" min="0" max="59">m
             </td>
         </tr>
         <tr>

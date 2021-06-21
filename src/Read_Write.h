@@ -38,6 +38,11 @@ private:
 #define addr_explosion_red2 25
 #define addr_explosion_green2 26
 #define addr_explosion_blue2 27
+#define addr_offhours_begin_h 28
+#define addr_offhours_end_h 29
+#define addr_offhours_brightness 30
+#define addr_offhours_begin_m 31
+#define addr_offhours_end_m 32
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
@@ -196,6 +201,26 @@ public:
   String get_wlan_pw()
   {
     return readStringFromEEPROM(addr_wlan1_pw);
-  }};
-
+  }
+  uint8_t get_offhours_begin_h()
+  {
+    return EEPROM.read(addr_offhours_begin_h);
+  }
+  uint8_t get_offhours_end_h()
+  {
+    return EEPROM.read(addr_offhours_end_h);
+  }
+  uint8_t get_offhours_begin_m()
+  {
+    return EEPROM.read(addr_offhours_begin_m);
+  }
+  uint8_t get_offhours_end_m()
+  {
+    return EEPROM.read(addr_offhours_end_m);
+  }
+  uint8_t get_offhours_brightness()
+  {
+    return EEPROM.read(addr_offhours_brightness);
+  }
+};
 #endif

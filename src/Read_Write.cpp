@@ -34,6 +34,11 @@ void Read_write::saveAllSettings()
   EEPROM.write(addr_spiral_green2, (uint8_t)settings.get_spiral_green2());
   EEPROM.write(addr_spiral_blue2, (uint8_t)settings.get_spiral_blue2());
   EEPROM.write(addr_spiral_delay, (uint8_t)settings.get_spiral_delay());
+  EEPROM.write(addr_offhours_begin_h, (uint8_t)settings.get_offhours_begin_h());
+  EEPROM.write(addr_offhours_end_h, (uint8_t)settings.get_offhours_end_h());
+  EEPROM.write(addr_offhours_begin_m, (uint8_t)settings.get_offhours_begin_m());
+  EEPROM.write(addr_offhours_end_m, (uint8_t)settings.get_offhours_end_m());
+  EEPROM.write(addr_offhours_brightness, (uint8_t)settings.get_offhours_brightness());
 
   EEPROM.commit();
 }
@@ -70,4 +75,9 @@ void Read_write::readAllSettings()
   settings.set_spiral_delay(EEPROM.read(addr_spiral_delay));
   settings.set_wlan_ssid(String(readStringFromEEPROM(addr_wlan1_ssid)));
   settings.set_wlan_pw(String(readStringFromEEPROM(addr_wlan1_pw)));
+  settings.set_offhours_begin_h(EEPROM.read(addr_offhours_begin_h));
+  settings.set_offhours_end_h(EEPROM.read(addr_offhours_end_h));
+  settings.set_offhours_begin_m(EEPROM.read(addr_offhours_begin_m));
+  settings.set_offhours_end_m(EEPROM.read(addr_offhours_end_m));
+  settings.set_offhours_brightness(EEPROM.read(addr_offhours_brightness));
 }

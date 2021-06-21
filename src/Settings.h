@@ -14,7 +14,12 @@ private:
     int timeType /*timos kack oder normal*/,
         clockType /*analog / digital idk*/,
         DcfWlanMode /*dcf oder wlan als Uhrzeitsquelle*/,
-        brigthness /*allgemeine Helligkeit*/;
+        brigthness /*allgemeine Helligkeit*/,
+        offhours_begin_h /*nachtzeit ein hours*/,
+        offhours_end_h /*nachtzeit aus*/,
+        offhours_begin_m /*nachtzeit ein minutes*/,
+        offhours_end_m /*nachtzeit aus*/,
+        offhours_brightness /*alternative helligkeit für nachtzeit*/;
 
     //solid color
     int SC_RED,
@@ -137,6 +142,49 @@ public:
     {
         return brigthness;
     }
+    void set_offhours_begin_h(int yes)
+    {
+        offhours_begin_h = yes;
+    }
+    int get_offhours_begin_h()
+    {
+        return offhours_begin_h;
+    }
+    void set_offhours_end_h(int yes)
+    {
+        offhours_end_h = yes;
+    }
+    int get_offhours_end_h()
+    {
+        return offhours_end_h;
+    }
+    
+    void set_offhours_begin_m(int yes)
+    {
+        offhours_begin_m = yes;
+    }
+    int get_offhours_begin_m()
+    {
+        return offhours_begin_m;
+    }
+    void set_offhours_end_m(int yes)
+    {
+        offhours_end_m = yes;
+    }
+    int get_offhours_end_m()
+    {
+        return offhours_end_m;
+    }
+    void set_offhours_brightness(int yes)
+    {
+        offhours_brightness = yes;
+    }
+    int get_offhours_brightness()
+    {
+        return offhours_brightness;
+    }
+
+
 
     //solid color vars
     void set_SC_RED(int red)

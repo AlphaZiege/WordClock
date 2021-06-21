@@ -75,9 +75,8 @@ class CaptiveRequestHandler : public AsyncWebHandler
 public:
   CaptiveRequestHandler()
   {
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-      request->send(SPIFFS, "/index.html");
-    });
+    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/index.html"); });
     server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
       inputVar = request->getParam(0)->value();
       inputName = request->getParam(0)->name();
@@ -251,6 +250,31 @@ public:
       else if (inputName == "brightness")
       {
         settings.set_brightness(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "offhour_brightness")
+      {
+        settings.set_offhours_brightness(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "offhour_begin_h")
+      {
+        settings.set_offhours_begin_h(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "offhour_end_h")
+      {
+        settings.set_offhours_end_h(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "offhour_begin_m")
+      {
+        settings.set_offhours_begin_m(inputVar.toInt());
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+      }
+      else if (inputName == "offhour_end_m")
+      {
+        settings.set_offhours_end_m(inputVar.toInt());
         request->send(200, "text/plain", inputName + "set to: " + inputVar);
       }
       else if (inputName == "saveALL")
@@ -619,6 +643,25 @@ void loop()
   case 420:
     break;
   }
+
+  //offhours
+  uint16_t curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
+  uint16_t offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
+  uint16_t offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
+
+  if (curr_time > offBegin_time && curr_time < offEnd_time)
+  {
+    strip.setBrightness(settings.get_offhours_brightness());
+  }
+  else if (offBegin_time > offEnd_time)
+  {
+    if (curr_time > offBegin_time || curr_time < offEnd_time)
+    {
+      strip.setBrightness(settings.get_offhours_brightness());
+    }
+  }
+  else
+    strip.setBrightness(settings.get_brightness());
 
   //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
   for (int i = 0; i <= led_count - 1; i++)
