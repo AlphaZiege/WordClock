@@ -45,13 +45,17 @@ Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 void setup()
 {
+    strip.begin();
+    Serial.begin(115200); //115200 : 9600
+    while (!Serial);
+    Serial.println("kekw");
     EEPROM.begin(1024);
 
     EEPROM.write(addr_SC_RED, 255);
     EEPROM.write(addr_SC_GREEN, 0);
     EEPROM.write(addr_SC_BLUE, 0);
-    EEPROM.write(addr_colorMode, 0);
-    EEPROM.write(addr_DcfWlanMode, 0);
+    EEPROM.write(addr_colorMode, 4);
+    EEPROM.write(addr_DcfWlanMode, 1);
     EEPROM.write(addr_clockType, 0);
     EEPROM.write(addr_brightness, 100);
     EEPROM.write(addr_breatheDelay, 1);
@@ -86,7 +90,7 @@ void setup()
 
 void loop()
 {
-    if (EEPROM.read(addr_colorMode) == 0 && EEPROM.read(addr_brightness) == 100 && EEPROM.read(addr_DcfWlanMode) == 0 && EEPROM.read(addr_timeType) == 0)
+    if (EEPROM.read(addr_colorMode) == 4 && EEPROM.read(addr_brightness) == 100 && EEPROM.read(addr_DcfWlanMode) == 1 && EEPROM.read(addr_timeType) == 0)
     {
         strip.setPixelColor(25, 0, 255, 0, 0);
         strip.setPixelColor(29, 0, 255, 0, 0);
@@ -97,6 +101,7 @@ void loop()
         strip.setPixelColor(94, 0, 255, 0, 0);
         strip.setPixelColor(84, 0, 255, 0, 0);
         strip.setPixelColor(74, 0, 255, 0, 0);
+        Serial.println("hs");
     }
     else
     {
@@ -109,5 +114,7 @@ void loop()
         strip.setPixelColor(94, 255, 0, 0, 0);
         strip.setPixelColor(84, 255, 0, 0, 0);
         strip.setPixelColor(74, 255, 0, 0, 0);
+        Serial.println("hs2");
     }
+    strip.show();
 }

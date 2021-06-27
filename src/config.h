@@ -6,6 +6,6 @@ const char *hostString = "WordClock_0";
 #define DCF_Pin D5 //DCF-Pin
 
 //mysql
-IPAddress server_addr(192,168,178,61);
-char mysql_user[] = "anto";
-char mysql_password[] = "doener";        // MySQL user login password
+IPAddress server_addr(0,0,0,0);
+char mysql_user[] = "";
+char mysql_password[] = "";        // MySQL user login password

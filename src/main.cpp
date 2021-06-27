@@ -33,6 +33,11 @@ NTPClient timeClient(ntpUDP);
 unsigned long epochTime;
 struct tm *ptm;
 
+//offhours
+uint16_t curr_time;
+uint16_t offBegin_time;
+uint16_t offEnd_time;
+
 //filesystem
 FS *filesystem = &SPIFFS;
 
@@ -451,45 +456,44 @@ void setup()
   delay(100);
   //Serial.println(String(settings.get_DcfWlanMode()));
 
-  //db mysql
-  Serial.print("Connecting to SQL...  ");
-  if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
-  {
-    Serial.println("OK.");
-    strip.setPixelColor(i, 0, 255, 0);
-    i++;
-    strip.show();
-  }
-  else
-  {
-    Serial.println("FAILED.");
-    strip.setPixelColor(i, 255, 0, 0);
-    i++;
-    strip.show();
-  }
+  // //db mysql
+  // Serial.print("Connecting to SQL...  ");
+  // if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
+  // {
+  //   Serial.println("OK.");
+  //   strip.setPixelColor(i, 0, 255, 0);
+  //   i++;
+  //   strip.show();
+  // }
+  // else
+  // {
+  //   Serial.println("FAILED.");
+  //   strip.setPixelColor(i, 255, 0, 0);
+  //   i++;
+  //   strip.show();
+  // }
 
-  // create MySQL cursor object
-  cursor = new MySQL_Cursor(&conn);
-  if (conn.connected())
-  {
-    while (!timeClient.update())
-    {
-      timeClient.forceUpdate();
-    }
-    epochTime = timeClient.getEpochTime();
-    tm *ptm = gmtime((time_t *)&epochTime);
+  // // create MySQL cursor object
+  // cursor = new MySQL_Cursor(&conn);
+  // if (conn.connected())
+  // {
+  //   while (!timeClient.update())
+  //   {
+  //     timeClient.forceUpdate();
+  //   }
+  //   epochTime = timeClient.getEpochTime();
+  //   tm *ptm = gmtime((time_t *)&epochTime);
 
-    String datetime;
-    datetime += String(ptm->tm_year + 1900);
-    datetime += "-" + String(ptm->tm_mon + 1);
-    datetime += "-" + String(ptm->tm_mday);
-    datetime += " " + String(timeClient.getFormattedTime());
-    String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
-    cursor->execute(INSERT_SQL.c_str());
-  }
+  //   String datetime;
+  //   datetime += String(ptm->tm_year + 1900);
+  //   datetime += "-" + String(ptm->tm_mon + 1);
+  //   datetime += "-" + String(ptm->tm_mday);
+  //   datetime += " " + String(timeClient.getFormattedTime());
+  //   String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
+  //   cursor->execute(INSERT_SQL.c_str());
+  // }
 
   strip.setPixelColor(i, 255, 0, 255);
-  i++;
   strip.show();
   delay(100);
   strip.setBrightness(settings.get_brightness());
@@ -502,6 +506,7 @@ void loop()
   //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
   if (settings.get_DcfWlanMode() == 0)
   {
+    //Serial.println(String(digitalRead(DCF_Pin)));
     if (digitalRead(DCF_Pin) != Signal)
     {                   // wenn sich das Signal geändert hat:
       Signal = !Signal; // Merker für Signalzustand invertieren
@@ -645,23 +650,22 @@ void loop()
   }
 
   //offhours
-  uint16_t curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
-  uint16_t offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
-  uint16_t offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
+  curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
+  offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
+  offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
 
   if (curr_time > offBegin_time && curr_time < offEnd_time)
   {
     strip.setBrightness(settings.get_offhours_brightness());
   }
-  else if (offBegin_time > offEnd_time)
+  else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
   {
-    if (curr_time > offBegin_time || curr_time < offEnd_time)
-    {
       strip.setBrightness(settings.get_offhours_brightness());
-    }
   }
   else
+  {
     strip.setBrightness(settings.get_brightness());
+  }
 
   //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
   for (int i = 0; i <= led_count - 1; i++)

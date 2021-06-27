@@ -1,11 +1,11 @@
-#include <LiquidCrystal_I2C.h>
-#define DCF_Pin 14
+//#include <LiquidCrystal_I2C.h>
+#define DCF_Pin D5
 // Es folgen drei Zustände für die Variable Zustand:
 # define wait_for_DCF 0
 # define synchronisiere 1
 # define ok 2
 
-LiquidCrystal_I2C lcd(0x27, 20, 4);
+//LiquidCrystal_I2C lcd(0x27, 20, 4);
 
 int sekunde = 0;
 bool Signal;
@@ -33,15 +33,16 @@ void Spiele_Lied(uint8_t Songnumber) {
 }
 
 void schreibe(int column, int row, String text) {
-  lcd.setCursor(column, row);
-  lcd.print(text);
+  //lcd.setCursor(column, row);
+  //lcd.print(text);
+  Serial.println(String(text));
 }
 
 void setup() {
   Serial.begin(9600, SERIAL_8N1); // Serielle Kommunikation mit dem MP3-Player einstellen
-  lcd.init();
-  lcd.clear();
-  lcd.backlight();
+  //lcd.init();
+  //lcd.clear();
+  //lcd.backlight();
   schreibe(0, 0, "wait");
   pinMode(DCF_Pin, INPUT);
   Signal = digitalRead(DCF_Pin);            // globaler Merker für den Signalzustand
