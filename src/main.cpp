@@ -6,8 +6,6 @@
 #include <ESP8266mDNS.h>
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
-#include <MySQL_Connection.h>
-#include <MySQL_Cursor.h>
 #include <NTPClient.h>
 #include <ESP8266WiFi.h>
 
@@ -62,10 +60,6 @@ String inputVar;
 String inputName;
 
 WiFiClient client;
-
-//mysql
-MySQL_Connection conn(&client);
-MySQL_Cursor *cursor;
 
 void Clear()
 {
@@ -151,133 +145,108 @@ void setup()
         if (inputName == "colorMode") //sortiert nach Variablen und macht mit denen dann was
         {
             settings.set_colorMode(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "sc_redval")
         {
             settings.set_SC_RED(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "sc_greenval")
         {
             settings.set_SC_GREEN(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "sc_blueval")
         {
             settings.set_SC_BLUE(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "breathe_redval")
         {
             settings.set_breathe_RED(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "breathe_greenval")
         {
             settings.set_breathe_GREEN(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "breathe_blueval")
         {
             settings.set_breathe_BLUE(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "breathe_delay")
         {
             settings.set_breathe_delay(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "rainbowcycle_verzoegerung")
         {
             settings.set_rainbowcycle_verzoegerung(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "rainbowcycle_farbsprung")
         {
             settings.set_rainbowcycle_farbsprung(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "explosion_redval")
         {
             settings.set_explosion_red(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_greenval")
         {
             settings.set_explosion_green(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_blueval")
         {
             settings.set_explosion_blue(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_redval2")
         {
             settings.set_explosion_red2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_greenval2")
         {
             settings.set_explosion_green2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_blueval2")
         {
             settings.set_explosion_blue2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "explosion_delay")
         {
             settings.set_explosion_delay(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "spiral_redval")
         {
             settings.set_spiral_red(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_greenval")
         {
             settings.set_spiral_green(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_blueval")
         {
             settings.set_spiral_blue(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_redval2")
         {
             settings.set_spiral_red2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_greenval2")
         {
             settings.set_spiral_green2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_blueval2")
         {
             settings.set_spiral_blue2(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "spiral_delay")
         {
             settings.set_spiral_delay(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else if (inputName == "wlan_ssid")
         {
             settings.set_wlan_ssid(inputVar);
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "wlan_pw")
         {
@@ -301,47 +270,38 @@ void setup()
         else if (inputName == "clockType")
         {
             settings.set_clockType(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "timeType")
         {
             settings.set_timeType(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "DcfWlanMode")
         {
             settings.set_DcfWlanMode(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "brightness")
         {
             settings.set_brightness(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "offhour_brightness")
         {
             settings.set_offhours_brightness(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "offhour_begin_h")
         {
             settings.set_offhours_begin_h(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "offhour_end_h")
         {
             settings.set_offhours_end_h(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "offhour_begin_m")
         {
             settings.set_offhours_begin_m(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "offhour_end_m")
         {
             settings.set_offhours_end_m(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "saveALL")
         {
@@ -386,18 +346,17 @@ void setup()
         else if (inputName == "snake_dir")
         {
             settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
         else if (inputName == "tictactoe_field")
         {
             settings.set_tictactoe_field(inputVar.toInt());
-            request->send(200, "text/plain", inputName + "set to: " + inputVar);
         }
 
         else
         {
             request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
         }
+        request->send(200, "text/plain", inputName + "set to: " + inputVar);
         settings.update();
         Serial.println("-------------------------");
     });
@@ -446,43 +405,6 @@ void setup()
     server.begin(); // Webserver starten
     delay(100);
     //Serial.println(String(settings.get_DcfWlanMode()));
-
-    // //db mysql
-    // Serial.print("Connecting to SQL...  ");
-    // if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
-    // {
-    //   Serial.println("OK.");
-    //   strip.setPixelColor(i, 0, 255, 0);
-    //   i++;
-    //   strip.show();
-    // }
-    // else
-    // {
-    //   Serial.println("FAILED.");
-    //   strip.setPixelColor(i, 255, 0, 0);
-    //   i++;
-    //   strip.show();
-    // }
-
-    // // create MySQL cursor object
-    // cursor = new MySQL_Cursor(&conn);
-    // if (conn.connected())
-    // {
-    //   while (!timeClient.update())
-    //   {
-    //     timeClient.forceUpdate();
-    //   }
-    //   epochTime = timeClient.getEpochTime();
-    //   tm *ptm = gmtime((time_t *)&epochTime);
-
-    //   String datetime;
-    //   datetime += String(ptm->tm_year + 1900);
-    //   datetime += "-" + String(ptm->tm_mon + 1);
-    //   datetime += "-" + String(ptm->tm_mday);
-    //   datetime += " " + String(timeClient.getFormattedTime());
-    //   String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
-    //   cursor->execute(INSERT_SQL.c_str());
-    // }
 
     strip.setPixelColor(i, 255, 255, 255);
     strip.show();
