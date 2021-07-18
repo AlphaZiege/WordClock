@@ -101,7 +101,6 @@ void loop()
         strip.setPixelColor(94, 0, 255, 0, 0);
         strip.setPixelColor(84, 0, 255, 0, 0);
         strip.setPixelColor(74, 0, 255, 0, 0);
-        Serial.println("hs");
     }
     else
     {
@@ -114,7 +113,6 @@ void loop()
         strip.setPixelColor(94, 255, 0, 0, 0);
         strip.setPixelColor(84, 255, 0, 0, 0);
         strip.setPixelColor(74, 255, 0, 0, 0);
-        Serial.println("hs2");
     }
     strip.show();
 }

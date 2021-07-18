@@ -69,614 +69,625 @@ MySQL_Cursor *cursor;
 
 void Clear()
 {
-  for (int i = 0; i < 110; i++)
-  {
-    strip.setPixelColor(i, 0, 0, 0);
-  }
+    for (int i = 0; i < 110; i++)
+    {
+        strip.setPixelColor(i, 0, 0, 0);
+    }
 }
 
 class CaptiveRequestHandler : public AsyncWebHandler
 {
 public:
-  CaptiveRequestHandler()
-  {
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->send(SPIFFS, "/index.html"); });
-    server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
-      inputVar = request->getParam(0)->value();
-      inputName = request->getParam(0)->name();
-      Serial.println(inputName + ": " + inputVar);
+    CaptiveRequestHandler()
+    {
+        server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+                  { request->send(SPIFFS, "/index.html"); });
+        server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
+            inputVar = request->getParam(0)->value();
+            inputName = request->getParam(0)->name();
+            Serial.println(inputName + ": " + inputVar);
 
-      if (inputName == "colorMode") //sortiert nach Variablen und macht mit denen dann was
-      {
-        settings.set_colorMode(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            if (inputName == "colorMode") //sortiert nach Variablen und macht mit denen dann was
+            {
+                settings.set_colorMode(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "sc_redval")
-      {
-        settings.set_SC_RED(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "sc_greenval")
-      {
-        settings.set_SC_GREEN(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "sc_blueval")
-      {
-        settings.set_SC_BLUE(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "sc_redval")
+            {
+                settings.set_SC_RED(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "sc_greenval")
+            {
+                settings.set_SC_GREEN(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "sc_blueval")
+            {
+                settings.set_SC_BLUE(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "breathe_redval")
-      {
-        settings.set_breathe_RED(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "breathe_greenval")
-      {
-        settings.set_breathe_GREEN(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "breathe_blueval")
-      {
-        settings.set_breathe_BLUE(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "breathe_delay")
-      {
-        settings.set_breathe_delay(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "breathe_redval")
+            {
+                settings.set_breathe_RED(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "breathe_greenval")
+            {
+                settings.set_breathe_GREEN(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "breathe_blueval")
+            {
+                settings.set_breathe_BLUE(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "breathe_delay")
+            {
+                settings.set_breathe_delay(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "rainbowcycle_verzoegerung")
-      {
-        settings.set_rainbowcycle_verzoegerung(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "rainbowcycle_farbsprung")
-      {
-        settings.set_rainbowcycle_farbsprung(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "rainbowcycle_verzoegerung")
+            {
+                settings.set_rainbowcycle_verzoegerung(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "rainbowcycle_farbsprung")
+            {
+                settings.set_rainbowcycle_farbsprung(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "explosion_redval")
-      {
-        settings.set_explosion_red(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_greenval")
-      {
-        settings.set_explosion_green(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_blueval")
-      {
-        settings.set_explosion_blue(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_redval2")
-      {
-        settings.set_explosion_red2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_greenval2")
-      {
-        settings.set_explosion_green2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_blueval2")
-      {
-        settings.set_explosion_blue2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "explosion_delay")
-      {
-        settings.set_explosion_delay(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "explosion_redval")
+            {
+                settings.set_explosion_red(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_greenval")
+            {
+                settings.set_explosion_green(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_blueval")
+            {
+                settings.set_explosion_blue(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_redval2")
+            {
+                settings.set_explosion_red2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_greenval2")
+            {
+                settings.set_explosion_green2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_blueval2")
+            {
+                settings.set_explosion_blue2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "explosion_delay")
+            {
+                settings.set_explosion_delay(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "spiral_redval")
-      {
-        settings.set_spiral_red(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_greenval")
-      {
-        settings.set_spiral_green(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_blueval")
-      {
-        settings.set_spiral_blue(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_redval2")
-      {
-        settings.set_spiral_red2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_greenval2")
-      {
-        settings.set_spiral_green2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_blueval2")
-      {
-        settings.set_spiral_blue2(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "spiral_delay")
-      {
-        settings.set_spiral_delay(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "spiral_redval")
+            {
+                settings.set_spiral_red(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_greenval")
+            {
+                settings.set_spiral_green(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_blueval")
+            {
+                settings.set_spiral_blue(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_redval2")
+            {
+                settings.set_spiral_red2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_greenval2")
+            {
+                settings.set_spiral_green2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_blueval2")
+            {
+                settings.set_spiral_blue2(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "spiral_delay")
+            {
+                settings.set_spiral_delay(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else if (inputName == "wlan_ssid")
-      {
-        settings.set_wlan_ssid(inputVar);
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "wlan_pw")
-      {
-        settings.set_wlan_pw(inputVar);
-        String var;
-        for (uint8_t i = 0; i < inputVar.length(); i++)
-        {
-          var += "\x95";
-        }
-        request->send(200, "text/plain", inputName + " set to: " + var);
-      }
-      else if (inputName == "save_wlan")
-      {
-        storage.saveWlan();
-        Serial.println("wlan saved or something");
-        while (true)
-        {
-        }
-      }
+            else if (inputName == "wlan_ssid")
+            {
+                settings.set_wlan_ssid(inputVar);
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "wlan_pw")
+            {
+                settings.set_wlan_pw(inputVar);
+                String var;
+                for (uint8_t i = 0; i < inputVar.length(); i++)
+                {
+                    var += "\x95";
+                }
+                request->send(200, "text/plain", inputName + " set to: " + var);
+            }
+            else if (inputName == "save_wlan")
+            {
+                storage.saveWlan();
+                Serial.println("wlan saved or something");
+                while (true)
+                {
+                }
+            }
 
-      else if (inputName == "clockType")
-      {
-        settings.set_clockType(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "timeType")
-      {
-        settings.set_timeType(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "DcfWlanMode")
-      {
-        settings.set_DcfWlanMode(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "brightness")
-      {
-        settings.set_brightness(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "offhour_brightness")
-      {
-        settings.set_offhours_brightness(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "offhour_begin_h")
-      {
-        settings.set_offhours_begin_h(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "offhour_end_h")
-      {
-        settings.set_offhours_end_h(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "offhour_begin_m")
-      {
-        settings.set_offhours_begin_m(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "offhour_end_m")
-      {
-        settings.set_offhours_end_m(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "saveALL")
-      {
-        storage.saveAllSettings();
-        request->send(200, "text/plain", "All Settings are saved");
-      }
-      else if (inputName == "loadALL")
-      {
-        storage.readAllSettings();
-        request->send(200, "text/plain", "All Settings are loaded");
-      }
+            else if (inputName == "clockType")
+            {
+                settings.set_clockType(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "timeType")
+            {
+                settings.set_timeType(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "DcfWlanMode")
+            {
+                settings.set_DcfWlanMode(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "brightness")
+            {
+                settings.set_brightness(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "offhour_brightness")
+            {
+                settings.set_offhours_brightness(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "offhour_begin_h")
+            {
+                settings.set_offhours_begin_h(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "offhour_end_h")
+            {
+                settings.set_offhours_end_h(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "offhour_begin_m")
+            {
+                settings.set_offhours_begin_m(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "offhour_end_m")
+            {
+                settings.set_offhours_end_m(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "saveALL")
+            {
+                storage.saveAllSettings();
+                request->send(200, "text/plain", "All Settings are saved");
+            }
+            else if (inputName == "loadALL")
+            {
+                storage.readAllSettings();
+                request->send(200, "text/plain", "All Settings are loaded");
+            }
 
-      else if (inputName == "getALL")
-      {
-        request->send(200, "text/plain", settings.get_all());
-        if (inputVar == "pudding")
-        {
-          settings.set_SC_DELAY(333);
-        }
-      }
-      else if (inputName == "getJSON")
-      {
-        settings.generateJson();
-        String output;
-        if (inputVar.toInt() == 1)
-        {
-          serializeJsonPretty(doc, output);
-        }
-        else
-        {
-          serializeJson(doc, output);
-        }
-        request->send(200, "application/json", output);
-      }
+            else if (inputName == "getALL")
+            {
+                request->send(200, "text/plain", settings.get_all());
+                if (inputVar == "pudding")
+                {
+                    settings.set_SC_DELAY(333);
+                }
+            }
+            else if (inputName == "getJSON")
+            {
+                settings.generateJson();
+                String output;
+                if (inputVar.toInt() == 1)
+                {
+                    serializeJsonPretty(doc, output);
+                }
+                else
+                {
+                    serializeJson(doc, output);
+                }
+                request->send(200, "application/json", output);
+            }
 
-      else if (inputName == "crash")
-      {
-        //request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
-        ESP.reset();
-      }
+            else if (inputName == "crash")
+            {
+                //request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
+                ESP.reset();
+            }
 
-      else if (inputName == "snake_dir")
-      {
-        settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
-      else if (inputName == "tictactoe_field")
-      {
-        settings.set_tictactoe_field(inputVar.toInt());
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
-      }
+            else if (inputName == "snake_dir")
+            {
+                settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
+            else if (inputName == "tictactoe_field")
+            {
+                settings.set_tictactoe_field(inputVar.toInt());
+                request->send(200, "text/plain", inputName + "set to: " + inputVar);
+            }
 
-      else
-      {
-        request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
-      }
-      settings.update();
-      Serial.println("-------------------------");
-    });
-  }
-  virtual ~CaptiveRequestHandler() {}
+            else
+            {
+                request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
+            }
+            settings.update();
+            Serial.println("-------------------------");
+        });
+    }
+    virtual ~CaptiveRequestHandler() {}
 
-  bool canHandle(AsyncWebServerRequest *request)
-  {
-    //request->addInterestingHeader("ANY");
-    return true;
-  }
+    bool canHandle(AsyncWebServerRequest *request)
+    {
+        //request->addInterestingHeader("ANY");
+        return true;
+    }
 
-  void handleRequest(AsyncWebServerRequest *request)
-  {
-    request->send(SPIFFS, "/wlan.html");
-  }
+    void handleRequest(AsyncWebServerRequest *request)
+    {
+        request->send(SPIFFS, "/wlan.html");
+    }
 };
 
 void setup()
 {
-  int i = 0;                //boot animation
-  pinMode(LED_PIN, OUTPUT); // Led als Ausgang definiereyn
-  pinMode(DCF_Pin, INPUT);  //DCF Pin als Eingang
+    int i = 0;                //boot animation
+    pinMode(LED_PIN, OUTPUT); //Led als Ausgang definiereyn
+    pinMode(DCF_Pin, INPUT);  //DCF Pin als Eingang
 
-  //Serial.begin(9600); //115200 : 9600
-  Serial.begin(115200); //115200 : 9600
-  while (!Serial)
-    ;
-  Serial.setDebugOutput(true);
+    //Serial.begin(9600); //115200 : 9600
+    Serial.begin(115200); //115200 : 9600
+    while (!Serial)
+        ;
+    Serial.setDebugOutput(true);
 
-  Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
+    Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
 
-  filesystem->begin();
+    filesystem->begin();
 
-  EEPROM.begin(1024);        //EEPROM initialisieren
-  storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
+    EEPROM.begin(1024);        //EEPROM initialisieren
+    storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
 
-  timeClient.begin();
-  timeClient.setTimeOffset(3600);
+    //TimeClient für Onlinezeit
+    timeClient.begin();
+    timeClient.setTimeOffset(3600);
 
-  //Led's Setup Stuff
-  strip.begin();
-  strip.setBrightness(storage.get_brightness() + 10);
-  strip.clear();
-  strip.setPixelColor(i, 255, 0, 0);
-  i++;
-  strip.show();
-
-  //Wifi Setup Stuff
-  Serial.print("Hostname: ");
-  Serial.println(hostString);
-  WiFi.hostname(hostString);
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-  //WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(250);
-    Serial.print(".");
+    //Led's Setup Stuff
+    strip.begin();
+    strip.setBrightness(storage.get_brightness() + 10);
+    strip.clear();
     strip.setPixelColor(i, 0, 255, 0);
     i++;
     strip.show();
-    if (i >= 100)
+
+    //Wifi Setup Stuff
+    Serial.print("Hostname: ");
+    Serial.println(hostString);
+    WiFi.hostname(hostString);
+    if (settings.get_DcfWlanMode() != 0)
     {
-      settings.set_DcfWlanMode(0);
-      Serial.println("Couldn't connect to any wireless network, switching to DCF");
-      WiFi.mode(WIFI_AP);
-      WiFi.softAP(hostString);
-      dnsServer.start(53, "*", WiFi.softAPIP());
-      break;
+        strip.setPixelColor(i, 255, 255, 255);
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
     }
-  }
-  server.addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER);
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(WiFi.SSID());
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-
-  //mDNS stuff (hell)
-  if (!MDNS.begin(hostString))
-  {
-    Serial.println("Error setting up MDNS responder!");
-  }
-  Serial.println("mDNS responder started");
-  MDNS.addService("esp", "tcp", 8080); // Announce esp tcp service on port 8080
-
-  Serial.println("Sending mDNS query");
-  int n = MDNS.queryService("esp", "tcp"); // Send out query for esp tcp services
-  Serial.println("mDNS query done");
-  if (n == 0)
-  {
-    Serial.println("no services found");
-  }
-  else
-  {
-    Serial.print(n);
-    Serial.println(" service(s) found");
-    for (int i = 0; i < n; ++i)
+    else
     {
-      // Print details for each service found
-      Serial.print(i + 1);
-      Serial.print(": ");
-      Serial.print(MDNS.hostname(i));
-      Serial.print(" (");
-      Serial.print(MDNS.IP(i));
-      Serial.print(":");
-      Serial.print(MDNS.port(i));
-      Serial.println(")");
+        strip.setPixelColor(i, 0, 0, 255);
     }
-  }
+    strip.show();
+    i++;
+    //WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(250);
+        Serial.print(".");
+        strip.setPixelColor(i, 0, 255, 100);
+        i++;
+        strip.show();
+        if (i >= 10)
+        {
+            settings.set_DcfWlanMode(0);
+            Serial.println("Couldn't connect to any wireless network, switching to DCF");
+            WiFi.mode(WIFI_AP);
+            WiFi.softAP(hostString);
+            dnsServer.start(53, "*", WiFi.softAPIP());
+            break;
+        }
+    }
+    server.addHandler(new CaptiveRequestHandler()).setFilter(ON_AP_FILTER);
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(WiFi.SSID());
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
 
-  strip.setPixelColor(i, 0, 0, 255);
-  i++;
-  strip.show();
-  server.begin(); // Webserver starten
-  delay(100);
-  //Serial.println(String(settings.get_DcfWlanMode()));
+    //mDNS stuff
+    if (!MDNS.begin(hostString))
+    {
+        Serial.println("Error setting up MDNS responder!");
+    }
+    Serial.println("mDNS responder started");
+    MDNS.addService("esp", "tcp", 8080); // Announce esp tcp service on port 8080
 
-  // //db mysql
-  // Serial.print("Connecting to SQL...  ");
-  // if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
-  // {
-  //   Serial.println("OK.");
-  //   strip.setPixelColor(i, 0, 255, 0);
-  //   i++;
-  //   strip.show();
-  // }
-  // else
-  // {
-  //   Serial.println("FAILED.");
-  //   strip.setPixelColor(i, 255, 0, 0);
-  //   i++;
-  //   strip.show();
-  // }
+    Serial.println("Sending mDNS query");
+    int n = MDNS.queryService("esp", "tcp"); // Send out query for esp tcp services
+    Serial.println("mDNS query done");
+    if (n == 0)
+    {
+        Serial.println("no services found");
+    }
+    else
+    {
+        Serial.print(n);
+        Serial.println(" service(s) found");
+        for (int i = 0; i < n; ++i)
+        {
+            // Print details for each service found
+            Serial.print(i + 1);
+            Serial.print(": ");
+            Serial.print(MDNS.hostname(i));
+            Serial.print(" (");
+            Serial.print(MDNS.IP(i));
+            Serial.print(":");
+            Serial.print(MDNS.port(i));
+            Serial.println(")");
+        }
+    }
 
-  // // create MySQL cursor object
-  // cursor = new MySQL_Cursor(&conn);
-  // if (conn.connected())
-  // {
-  //   while (!timeClient.update())
-  //   {
-  //     timeClient.forceUpdate();
-  //   }
-  //   epochTime = timeClient.getEpochTime();
-  //   tm *ptm = gmtime((time_t *)&epochTime);
+    strip.setPixelColor(i, 0, 0, 255);
+    i++;
+    strip.show();
+    server.begin(); // Webserver starten
+    delay(100);
+    //Serial.println(String(settings.get_DcfWlanMode()));
 
-  //   String datetime;
-  //   datetime += String(ptm->tm_year + 1900);
-  //   datetime += "-" + String(ptm->tm_mon + 1);
-  //   datetime += "-" + String(ptm->tm_mday);
-  //   datetime += " " + String(timeClient.getFormattedTime());
-  //   String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
-  //   cursor->execute(INSERT_SQL.c_str());
-  // }
+    // //db mysql
+    // Serial.print("Connecting to SQL...  ");
+    // if (conn.connect(server_addr, 3306, mysql_user, mysql_password))
+    // {
+    //   Serial.println("OK.");
+    //   strip.setPixelColor(i, 0, 255, 0);
+    //   i++;
+    //   strip.show();
+    // }
+    // else
+    // {
+    //   Serial.println("FAILED.");
+    //   strip.setPixelColor(i, 255, 0, 0);
+    //   i++;
+    //   strip.show();
+    // }
 
-  strip.setPixelColor(i, 255, 0, 255);
-  strip.show();
-  delay(100);
-  strip.setBrightness(settings.get_brightness());
+    // // create MySQL cursor object
+    // cursor = new MySQL_Cursor(&conn);
+    // if (conn.connected())
+    // {
+    //   while (!timeClient.update())
+    //   {
+    //     timeClient.forceUpdate();
+    //   }
+    //   epochTime = timeClient.getEpochTime();
+    //   tm *ptm = gmtime((time_t *)&epochTime);
+
+    //   String datetime;
+    //   datetime += String(ptm->tm_year + 1900);
+    //   datetime += "-" + String(ptm->tm_mon + 1);
+    //   datetime += "-" + String(ptm->tm_mday);
+    //   datetime += " " + String(timeClient.getFormattedTime());
+    //   String INSERT_SQL = "INSERT INTO wordclock.restarts (date, user) VALUES ('" + datetime + "', '" + hostString + "')";
+    //   cursor->execute(INSERT_SQL.c_str());
+    // }
+
+    strip.setPixelColor(i, 255, 255, 255);
+    strip.show();
+    delay(100);
+    strip.setBrightness(settings.get_brightness());
 }
 
 void loop()
 {
-  MDNS.update();
+    MDNS.update();
 
-  //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
-  if (settings.get_DcfWlanMode() == 0)
-  {
-    //Serial.println(String(digitalRead(DCF_Pin)));
-    if (digitalRead(DCF_Pin) != Signal)
-    {                   // wenn sich das Signal geändert hat:
-      Signal = !Signal; // Merker für Signalzustand invertieren
-      if (!Signal)
-        fallend = millis();
-      else
-      { // steigende Flanke (Signal ging von LOW auf HIGH)
-        unsigned long diff = fallend - steigend;
-        Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
-        steigend = millis();
-        Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
+    //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
+    if (settings.get_DcfWlanMode() == 0)
+    {
+        //Serial.println(String(digitalRead(DCF_Pin)));
+        if (digitalRead(DCF_Pin) != Signal)
+        {                     // wenn sich das Signal geändert hat:
+            Signal = !Signal; // Merker für Signalzustand invertieren
+            if (!Signal)
+                fallend = millis();
+            else
+            { // steigende Flanke (Signal ging von LOW auf HIGH)
+                unsigned long diff = fallend - steigend;
+                Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
+                steigend = millis();
+                //Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
 
-        switch (Zustand)
-        {
-        case wait_for_DCF:
-          Zustand = synchronisiere;
-          Serial.println("sync");
-          break;
-        case synchronisiere:
-          if (steigend - fallend > 1300)
-          { // ein Signal ist ausgefallen => die Neue Minute beginnt.
-            Zustand = ok;
-            sekunde = 0;
-            Serial.println("run ");
-            break;
-          }
-        case ok:
-          if (steigend - fallend > 1300)
-          { // ein Signal ist ausgefallen => die Neue Minute beginnt.
-            sekunde = 0;
-            int Minute = Kodierung[22] + 2 * Kodierung[23] + 4 * Kodierung[24] + 8 * Kodierung[25] + 10 * Kodierung[26] + 20 * Kodierung[27] + 40 * Kodierung[28];
-            int Stunde = Kodierung[30] + 2 * Kodierung[31] + 4 * Kodierung[32] + 8 * Kodierung[33] + 10 * Kodierung[34] + 20 * Kodierung[35];
-            int Tag = Kodierung[37] + 2 * Kodierung[38] + 4 * Kodierung[39] + 8 * Kodierung[40] + 10 * Kodierung[41] + 20 * Kodierung[42];
-            int Monat = Kodierung[46] + 2 * Kodierung[47] + 4 * Kodierung[48] + 8 * Kodierung[49] + 10 * Kodierung[50];
-            int Jahr = Kodierung[51] + 2 * Kodierung[52] + 4 * Kodierung[53] + 8 * Kodierung[54] + 10 * Kodierung[55] + 20 * Kodierung[56] + 40 * Kodierung[57] + 80 * Kodierung[58];
-            Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr) + " " + String(Stunde) + "." + String(Minute) + " Uhr");
-            zeit.set_calendarYear(Jahr + 2000);
-            zeit.set_month(Monat);
-            zeit.set_dayMonth(Tag);
-            zeit.set_minutes(Minute);
-            zeit.set_hours(Stunde);
-          }
-          break;
+                switch (Zustand)
+                {
+                case wait_for_DCF:
+                    Zustand = synchronisiere;
+                    Serial.println("sync");
+                    break;
+                case synchronisiere:
+                    if (steigend - fallend > 1300)
+                    { // ein Signal ist ausgefallen => die Neue Minute beginnt.
+                        Zustand = ok;
+                        sekunde = 0;
+                        Serial.println("run ");
+                        break;
+                    }
+                case ok:
+                    if (steigend - fallend > 1300)
+                    { // ein Signal ist ausgefallen => die Neue Minute beginnt.
+                        sekunde = 0;
+                        int Minute = Kodierung[22] + 2 * Kodierung[23] + 4 * Kodierung[24] + 8 * Kodierung[25] + 10 * Kodierung[26] + 20 * Kodierung[27] + 40 * Kodierung[28];
+                        int Stunde = Kodierung[30] + 2 * Kodierung[31] + 4 * Kodierung[32] + 8 * Kodierung[33] + 10 * Kodierung[34] + 20 * Kodierung[35];
+                        int Tag = Kodierung[37] + 2 * Kodierung[38] + 4 * Kodierung[39] + 8 * Kodierung[40] + 10 * Kodierung[41] + 20 * Kodierung[42];
+                        int Monat = Kodierung[46] + 2 * Kodierung[47] + 4 * Kodierung[48] + 8 * Kodierung[49] + 10 * Kodierung[50];
+                        int Jahr = Kodierung[51] + 2 * Kodierung[52] + 4 * Kodierung[53] + 8 * Kodierung[54] + 10 * Kodierung[55] + 20 * Kodierung[56] + 40 * Kodierung[57] + 80 * Kodierung[58];
+                        Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr) + " " + String(Stunde) + "." + String(Minute) + " Uhr");
+                        zeit.set_calendarYear(Jahr + 2000);
+                        zeit.set_month(Monat);
+                        zeit.set_dayMonth(Tag);
+                        zeit.set_minutes(Minute);
+                        zeit.set_hours(Stunde);
+                    }
+                    break;
+                }
+                zeit.set_seconds(sekunde);
+                sekunde++;
+                //Serial.println("sec:" + String(sekunde) + " ");
+            }
         }
-        zeit.set_seconds(sekunde);
-        sekunde++;
-        Serial.println("sec:" + String(sekunde) + " ");
-      }
     }
-  }
-  else if (settings.get_DcfWlanMode() != 0)
-  {
-    epochTime = timeClient.getEpochTime();
-    tm *ptm = gmtime((time_t *)&epochTime);
-
-    zeit.set_calendarYear(ptm->tm_year + 1900);
-    zeit.set_month(ptm->tm_mon + 1);
-    zeit.set_dayMonth(ptm->tm_mday);
-    zeit.set_seconds(timeClient.getSeconds());
-    zeit.set_minutes(timeClient.getMinutes());
-    zeit.set_hours(timeClient.getHours());
-    //zeit.set_dayMonth(timeClient.getDay());
-
-    if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
+    else if (settings.get_DcfWlanMode() != 0)
     {
-      timeClient.setTimeOffset(7200);
+        epochTime = timeClient.getEpochTime();
+        tm *ptm = gmtime((time_t *)&epochTime);
+
+        zeit.set_calendarYear(ptm->tm_year + 1900);
+        zeit.set_month(ptm->tm_mon + 1);
+        zeit.set_dayMonth(ptm->tm_mday);
+        zeit.set_seconds(timeClient.getSeconds());
+        zeit.set_minutes(timeClient.getMinutes());
+        zeit.set_hours(timeClient.getHours());
+        //zeit.set_dayMonth(timeClient.getDay());
+
+        if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
+        {
+            timeClient.setTimeOffset(7200);
+        }
+        while (!timeClient.update())
+        {
+            timeClient.forceUpdate();
+        }
     }
-    while (!timeClient.update())
+
+    //offhours
+    curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
+    offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
+    offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
+
+    if (curr_time > offBegin_time && curr_time < offEnd_time)
     {
-      timeClient.forceUpdate();
+        strip.setBrightness(settings.get_offhours_brightness());
     }
-  }
-
-  //lichteffekte
-  switch (settings.get_colorMode())
-  {
-  case 0:
-    //Clear();
-    effects.staticColor();
-    break;
-
-  case 1:
-    //Clear();
-    effects.breathe();
-    break;
-
-  case 2:
-    //Clear();
-    effects.colorCycle();
-    break;
-
-  case 3:
-    //Clear();
-    effects.saison("Halloween");
-    break;
-
-  case 4:
-    //Clear();
-    effects.rainbowCycle();
-    break;
-
-  case 5:
-    //Clear();
-    effects.explosion();
-    break;
-
-  case 6:
-    //Clear();
-    effects.spiral();
-    break;
-
-  case 7:
-    effects.rain();
-    break;
-
-  case 100:
-    snake = Snake();
-    settings.set_colorMode(101);
-    break;
-
-  case 101:
-    snake.loop();
-    break;
-
-  case 102:
-    snake.GameoverLoop();
-    break;
-
-  case 103:
-    tictactoe = TicTacToe();
-    settings.set_tictactoe_field(0);
-    settings.set_colorMode(104);
-    break;
-
-  case 104:
-    tictactoe.Loop();
-    break;
-
-  case 420:
-    break;
-  }
-
-  //offhours
-  curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
-  offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
-  offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
-
-  if (curr_time > offBegin_time && curr_time < offEnd_time)
-  {
-    strip.setBrightness(settings.get_offhours_brightness());
-  }
-  else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
-  {
-      strip.setBrightness(settings.get_offhours_brightness());
-  }
-  else
-  {
-    strip.setBrightness(settings.get_brightness());
-  }
-
-  //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
-  for (int i = 0; i <= led_count - 1; i++)
-  {
-    if (zeit.update()[i] == '0')
+    else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
     {
-      strip.setPixelColor(i, 0, 0, 0);
+        strip.setBrightness(settings.get_offhours_brightness());
     }
-  }
+    else
+    {
+        strip.setBrightness(settings.get_brightness());
+    }
 
-  //Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
-  //zeigt alles an
-  strip.show();
+    //lichteffekte
+    switch (settings.get_colorMode())
+    {
+    case 0:
+        //Clear();
+        effects.staticColor();
+        break;
+
+    case 1:
+        //Clear();
+        effects.breathe();
+        break;
+
+    case 2:
+        //Clear();
+        effects.colorCycle();
+        break;
+
+    case 3:
+        //Clear();
+        effects.saison("Halloween");
+        break;
+
+    case 4:
+        //Clear();
+        effects.rainbowCycle();
+        break;
+
+    case 5:
+        //Clear();
+        effects.explosion();
+        break;
+
+    case 6:
+        //Clear();
+        effects.spiral();
+        break;
+
+    case 7:
+        effects.rain();
+        break;
+
+    case 100:
+        snake = Snake();
+        settings.set_colorMode(101);
+        break;
+
+    case 101:
+        snake.loop();
+        break;
+
+    case 102:
+        snake.GameoverLoop();
+        break;
+
+    case 103:
+        tictactoe = TicTacToe();
+        settings.set_tictactoe_field(0);
+        settings.set_colorMode(104);
+        break;
+
+    case 104:
+        tictactoe.Loop();
+        break;
+
+    case 420:
+        break;
+    }
+
+    //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
+    for (int i = 0; i <= led_count - 1; i++)
+    {
+        if (zeit.update()[i] == '0')
+        {
+            strip.setPixelColor(i, 0, 0, 0);
+        }
+    }
+
+    //Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
+    //zeigt alles an
+    strip.show();
 }
