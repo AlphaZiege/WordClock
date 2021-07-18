@@ -166,6 +166,7 @@
                     document.getElementById('OffhoursEnd_h').value = out.OffhoursEnd_h;
                     document.getElementById('OffhoursEnd_m').value = out.OffhoursEnd_m;
                     document.getElementById('OffhoursBrightness').value = out.OffhoursBrightness;
+                    document.getElementById('version').value = out.version;
                 })
                 .catch(err => { throw err });
         }
@@ -233,6 +234,10 @@
         <tr>
             <td>Load all Settings from Rom</td>
             <td><button onclick="commit('loadALL',);">Load</button></td>
+        </tr>
+        <tr>
+            <td>Version:</td>
+            <td><input readonly id="version"></input></td>
         </tr>
 
         <!--ColorMode-->

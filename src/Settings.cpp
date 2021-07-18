@@ -114,7 +114,7 @@ String Settings::get_stuff()
     return data;
 }
 
-void Settings::generateJson()
+void Settings::generateJson(String version)
 {
     doc["ColorMode"] = colorMode;
     doc["timeType"] = timeType;
@@ -151,6 +151,7 @@ void Settings::generateJson()
     doc["OffhoursEnd_m"] = offhours_end_m;
     doc["OffhoursBrightness"] = offhours_brightness;
 
+    doc["version"] = version;
     doc["local_time"] =  String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds());
     doc["local_date"] = String(zeit.get_calendarYear()) + ":" + String(zeit.get_month()) + ":" + String(zeit.get_dayMonth());
     doc["Free Memory"] = String(ESP.getFreeHeap()) + "B";

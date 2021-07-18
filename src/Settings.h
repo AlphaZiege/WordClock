@@ -97,7 +97,7 @@ public:
         return data;
     }
 
-    void generateJson();
+    void generateJson(String version);
 
     //modes z.B. breathe oder rainbow
     void set_colorMode(int yes)
