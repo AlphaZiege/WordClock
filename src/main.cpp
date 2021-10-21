@@ -36,8 +36,8 @@ uint16_t curr_time;
 uint16_t offBegin_time;
 uint16_t offEnd_time;
 
-//filesystem
-FS *filesystem = &SPIFFS;
+//filesystem 
+//FS &filesystem =SPIFFS;
 
 //dcf
 #define wait_for_DCF 0
@@ -71,6 +71,7 @@ void Clear()
 
 void setup()
 {
+    Serial.println("Hello me Setup");
     int i = 0;                //boot animation
     pinMode(LED_PIN, OUTPUT); //Led als Ausgang definiereyn
     pinMode(DCF_Pin, INPUT);  //DCF Pin als Eingang
@@ -83,7 +84,7 @@ void setup()
 
     Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
 
-    filesystem->begin();
+    SPIFFS.begin();
 
     EEPROM.begin(1024);        //EEPROM initialisieren
     storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
@@ -420,14 +421,17 @@ void loop()
     //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
     if (settings.get_DcfWlanMode() == 0)
     {
+        Serial.println("Hello me 0x00");
         //Serial.println(String(digitalRead(DCF_Pin)));
         if (digitalRead(DCF_Pin) != Signal)
-        {                     // wenn sich das Signal geändert hat:
+        {           
+            Serial.println("Hello me 0x01");          // wenn sich das Signal geändert hat:
             Signal = !Signal; // Merker für Signalzustand invertieren
             if (!Signal)
                 fallend = millis();
             else
             { // steigende Flanke (Signal ging von LOW auf HIGH)
+                Serial.println("Hello me 0x02");
                 unsigned long diff = fallend - steigend;
                 Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
                 steigend = millis();
@@ -438,6 +442,7 @@ void loop()
                 case wait_for_DCF:
                     Zustand = synchronisiere;
                     Serial.println("sync");
+                    Serial.println("Hello me 0x03");
                     break;
                 case synchronisiere:
                     if (steigend - fallend > 1300)
@@ -445,6 +450,7 @@ void loop()
                         Zustand = ok;
                         sekunde = 0;
                         Serial.println("run ");
+                        Serial.println("Hello me 0x04");
                         break;
                     }
                 case ok:
@@ -462,11 +468,13 @@ void loop()
                         zeit.set_dayMonth(Tag);
                         zeit.set_minutes(Minute);
                         zeit.set_hours(Stunde);
+                        Serial.println("Hello me 0x05");
                     }
                     break;
                 }
                 zeit.set_seconds(sekunde);
                 sekunde++;
+                Serial.println("Hello me 0x06");
                 //Serial.println("sec:" + String(sekunde) + " ");
             }
         }
@@ -483,14 +491,18 @@ void loop()
         zeit.set_minutes(timeClient.getMinutes());
         zeit.set_hours(timeClient.getHours());
         //zeit.set_dayMonth(timeClient.getDay());
+        Serial.println("Hello me 0x07");
 
         if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
         {
             timeClient.setTimeOffset(7200);
+            Serial.println("Hello me 0x08");
         }
         while (!timeClient.update())
         {
+            Serial.println("Hello me 0x09");
             timeClient.forceUpdate();
+            Serial.println("Hello me 0x0A");
         }
     }
 
@@ -498,99 +510,122 @@ void loop()
     curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
     offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
     offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
+    Serial.println("Hello me 0x0B");
+
 
     if (curr_time > offBegin_time && curr_time < offEnd_time)
     {
         strip.setBrightness(settings.get_offhours_brightness());
+        Serial.println("Hello me 0x0C");
     }
     else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
     {
         strip.setBrightness(settings.get_offhours_brightness());
+        Serial.println("Hello me 0x0D");
     }
     else
     {
         strip.setBrightness(settings.get_brightness());
+        Serial.println("Hello me 0x0E");
     }
 
+    Serial.println("Hello me 0x0F");
     //lichteffekte
     switch (settings.get_colorMode())
     {
     case 0:
         //Clear();
+        Serial.println("Hello me 0x10");
         effects.staticColor();
         break;
 
     case 1:
         //Clear();
+        Serial.println("Hello me 0x11");
         effects.breathe();
         break;
 
     case 2:
         //Clear();
+        Serial.println("Hello me 0x12");
         effects.colorCycle();
         break;
 
     case 3:
         //Clear();
+        Serial.println("Hello me 0x13");
         effects.saison("Halloween");
         break;
 
     case 4:
         //Clear();
+        Serial.println("Hello me 0x14");
         effects.rainbowCycle();
         break;
 
     case 5:
         //Clear();
+        Serial.println("Hello me 0x15");
         effects.explosion();
         break;
 
     case 6:
         //Clear();
+        Serial.println("Hello me 0x16");
         effects.spiral();
         break;
 
     case 7:
+        Serial.println("Hello me 0x17");
         effects.rain();
         break;
 
     case 100:
+    Serial.println("Hello me 0x18");
         snake = Snake();
         settings.set_colorMode(101);
         break;
 
     case 101:
+        Serial.println("Hello me 0x19");
         snake.loop();
         break;
 
     case 102:
+        Serial.println("Hello me 0x1A");
         snake.GameoverLoop();
         break;
 
     case 103:
+        Serial.println("Hello me 0x1B");
         tictactoe = TicTacToe();
         settings.set_tictactoe_field(0);
         settings.set_colorMode(104);
         break;
 
     case 104:
+        Serial.println("Hello me 0x1C");
         tictactoe.Loop();
         break;
 
     case 420:
+        Serial.println("Hello me 0x1D");
         break;
     }
+    Serial.println("Hello me 0x1E");
 
     //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
     for (int i = 0; i <= led_count - 1; i++)
     {
+        Serial.println("Hello me 0x1F");
         if (zeit.update()[i] == '0')
         {
             strip.setPixelColor(i, 0, 0, 0);
         }
     }
-
+    Serial.println("Hello me 0x20");
     //Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
     //zeigt alles an
     strip.show();
+    Serial.println("Hello me 0x21");
 }

@@ -283,18 +283,9 @@ void Effects::breathe()
 void Effects::colorCycle()
 {
 
-    if (rup)
-    {
-        R++;
-    }
-    else if (gup)
-    {
-        G++;
-    }
-    else if (bup)
-    {
-        B++;
-    }
+    if (rup) R++;
+    else if (gup) G++;
+    else if (bup) B++;
     if (R == 255)
     {
         rup = false;
@@ -310,23 +301,12 @@ void Effects::colorCycle()
         bup = false;
         rup = true;
     }
-    if (!rup && R != 0)
-    {
-        R--;
-    }
-    else if (!gup && G != 0)
-    {
-        G--;
-    }
-    else if (!bup && B != 0)
-    {
-        B--;
-    }
+    if (!rup && R != 0) R--;
+    else if (!gup && G != 0) G--;
+    else if (!bup && B != 0) B--;
 
     for (int i = 0; i < led_count; i++)
-    {
         setAllLEDs(R, G, B);
-    }
 }
 
 void Effects::rainbowCycle()
