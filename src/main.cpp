@@ -617,7 +617,6 @@ void loop()
     //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
     for (int i = 0; i <= led_count - 1; i++)
     {
-        Serial.println("Hello me 0x1F");
         if (zeit.update()[i] == '0')
         {
             strip.setPixelColor(i, 0, 0, 0);

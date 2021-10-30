@@ -1,5 +1,5 @@
 //Name der Uhr
-const char *hostString = "WordClock_0";
+const char *hostString = "Marco_du_gigantischer_Stinker";
 const String version = "0.1.1";
 
 //Pin belegungen

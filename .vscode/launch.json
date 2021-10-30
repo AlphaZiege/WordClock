@@ -29,6 +29,16 @@
             "projectEnvName": "nodemcu",
             "toolchainBinDir": "C:/Users/anto2/.platformio/packages/toolchain-xtensa/bin",
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "type": "platformio-debug",
+            "request": "launch",
+            "name": "PIO Debug (without uploading)",
+            "executable": "E:/Documents/git/WordClock/.pio/build/nodemcu/firmware.elf",
+            "projectEnvName": "nodemcu",
+            "toolchainBinDir": "C:/Users/anto2/.platformio/packages/toolchain-xtensa/bin",
+            "internalConsoleOptions": "openOnSessionStart",
+            "loadMode": "manual"
         }
     ]
 }
