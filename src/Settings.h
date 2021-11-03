@@ -7,6 +7,7 @@
 class Settings
 {
 private:
+    String hostname;
     //modes
     int colorMode;
 
@@ -98,6 +99,14 @@ public:
     }
 
     void generateJson(String version);
+
+    //hostname
+    void set_hostname(String yes){
+        hostname = yes;
+    }
+    String get_hostname(){
+        return hostname;
+    }
 
     //modes z.B. breathe oder rainbow
     void set_colorMode(int yes)

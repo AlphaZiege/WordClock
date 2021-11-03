@@ -4,97 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <style>
-        @media (prefers-color-scheme: light) {
-            html {
-                --text-color: #222;
-                --text2-color: #eee;
-                --bkg-color: #ECEFF1;
-                --accent: #1d3557;
-                --accent2: #457b9d;
-                --highlight: #ddd;
-            }
-        }
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <title>:(</title>
 
-        @media (prefers-color-scheme: dark) {
-            html {
-                --text-color: #eee;
-                --text2-color: #222;
-                --bkg-color: #121212;
-                --accent: #218B82;
-                --accent2: #98D4BB;
-                --highlight: #222222;
-            }
-        }
-
-        body {
-            background-color: var(--bkg-color);
-        }
-
-        button {
-            background-color: var(--accent2);
-            border: none;
-            color: var(--text2-color);
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-        }
-
-        select {
-            background-color: var(--accent2);
-            border: none;
-            color: var(--text2-color);
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-            user-select: var(--accent);
-        }
-
-        input {
-            border: none;
-            border-bottom: 2px solid var(--accent2);
-            color: var(--text-color);
-            background-color: var(--bkg-color);
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 16em;
-        }
-
-        table {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td,
-        th {
-            border: 1px solid var(--highlight);
-            padding: 8px;
-            color: var(--text-color)
-        }
-
-        tr:hover {
-            background-color: var(--highlight);
-        }
-
-        th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: var(--accent);
-            color: #eee;
-        }
-    </style>
 </head>
 
 <body onload="load()">
@@ -102,6 +15,7 @@
         function redirect(url) {
             window.location.href = url;
         }
+
         function commit(variable, value) {
             var xhttp = new XMLHttpRequest();
             var url = "/data?" + variable + "=" + value;
@@ -109,6 +23,7 @@
             xhttp.open("GET", url, true);
             xhttp.send();
         }
+
         function handleInput(value) {
             //alert(value);
             //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
@@ -125,13 +40,13 @@
                 commit('snake_dir', '3');
             }
         }
-        function load() {
+
+        function fillData() {
             let url = '/data?getJSON';
 
             fetch(url)
                 .then(res => res.json())
                 .then((out) => {
-                    console.log('Checkout this JSON! ', out);
                     document.getElementById('ColorMode').value = out.ColorMode;
                     document.getElementById('timeType').value = out.timeType;
                     document.getElementById('clockType').value = out.clockType;
@@ -167,10 +82,43 @@
                     document.getElementById('OffhoursEnd_m').value = out.OffhoursEnd_m;
                     document.getElementById('OffhoursBrightness').value = out.OffhoursBrightness;
                     document.getElementById('version').value = out.version;
+                    document.title = out.ClockName;
+                    return true;
                 })
-                .catch(err => { throw err });
+                .catch(err => {
+                    throw err
+                });
+            return false;
         }
 
+        let status;
+
+        function livesignalListener() {
+            if (this.status == 200) {
+                status = true;
+            }
+        }
+
+        function livesignal() {
+            var http = new XMLHttpRequest();
+            
+            http.addEventListener("load", livesignalListener);
+            http.open("GET", "/live");
+            http.send();
+        }
+
+        function load() {
+            fillData();
+
+            var intervalId = setInterval(function () {
+                if (status){
+                    document.documentElement.style.setProperty('--live-signal', '#0f0');
+                }
+                else document.documentElement.style.setProperty('--live-signal', '#f00');
+                status = false;
+                livesignal();
+            }, 1000);
+        }
     </script>
 
 
@@ -178,7 +126,7 @@
         <!--Overall Settings-->
         <tr>
             <th>Overall Settings</th>
-            <th>Value</th>
+            <th>Value <span id="dot" class="dot"></span></th>
         </tr>
         <tr>
             <td>Clock Type</td>
@@ -214,17 +162,22 @@
         </tr>
         <tr>
             <td>Offhours Brightness</td>
-            <td><input id="OffhoursBrightness" onChange="commit('offhour_brightness', this.value);" type="number" min="0" max="255">
+            <td><input id="OffhoursBrightness" onChange="commit('offhour_brightness', this.value);" type="number"
+                    min="0" max="255">
             </td>
         </tr>
         <tr>
             <td>Offhours Begin</td>
-            <td><input id="OffhoursBegin_h" onChange="commit('offhour_begin_h', this.value);" type="number" min="0" max="23">h<input id="OffhoursBegin_m" onChange="commit('offhour_begin_m', this.value);" type="number" min="0" max="59">m
+            <td><input id="OffhoursBegin_h" onChange="commit('offhour_begin_h', this.value);" type="number" min="0"
+                    max="23">h<input id="OffhoursBegin_m" onChange="commit('offhour_begin_m', this.value);"
+                    type="number" min="0" max="59">m
             </td>
         </tr>
         <tr>
             <td>Offhours End</td>
-            <td><input id="OffhoursEnd_h" onChange="commit('offhour_end_h', this.value);" type="number" min="0" max="23">h<input id="OffhoursEnd_m" onChange="commit('offhour_end_m', this.value);" type="number" min="0" max="59">m
+            <td><input id="OffhoursEnd_h" onChange="commit('offhour_end_h', this.value);" type="number" min="0"
+                    max="23">h<input id="OffhoursEnd_m" onChange="commit('offhour_end_m', this.value);" type="number"
+                    min="0" max="59">m
             </td>
         </tr>
         <tr>
@@ -237,7 +190,8 @@
         </tr>
         <tr>
             <td>Version:</td>
-            <td><input readonly id="version"></input></td>
+            <td><input readonly id="version"></input>
+            </td>
         </tr>
 
         <!--ColorMode-->

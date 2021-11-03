@@ -4,72 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.ico">
     <title>Wlan</title>
-    <style>
-        body {
-            background-color: #f1faee;
-        }
-
-        button {
-            background-color: #457b9d;
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-        }
-
-        select {
-            background-color: #457b9d;
-            border: none;
-            color: white;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 20em;
-        }
-
-        input {
-            border: none;
-            border-bottom: 2px solid #457b9d;
-            color: black;
-            padding: 10px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            width: 16em;
-        }
-
-        table {
-            font-family: Arial, Helvetica, sans-serif;
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        td,
-        th {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        th {
-            padding-top: 12px;
-            padding-bottom: 12px;
-            text-align: left;
-            background-color: #1d3557;
-            color: white;
-        }
-    </style>
 </head>
 
 <body>
@@ -77,6 +14,7 @@
         function redirect(url) {
             window.location.href = url;
         }
+
         function commit(variable, value) {
             var xhttp = new XMLHttpRequest();
             var url = "/data?" + variable + "=" + value;
@@ -87,7 +25,7 @@
     </script>
 
 
-    <table>  
+    <table>
         <!--Wlan Zugangsdaten-->
         <tr>
             <th>Wlan Information</th>

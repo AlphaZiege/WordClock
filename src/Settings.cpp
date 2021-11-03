@@ -116,6 +116,8 @@ String Settings::get_stuff()
 
 void Settings::generateJson(String version)
 {
+    doc["ClockName"] = hostname;
+
     doc["ColorMode"] = colorMode;
     doc["timeType"] = timeType;
     doc["clockType"] = clockType;

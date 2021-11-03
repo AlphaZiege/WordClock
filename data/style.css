@@ -1,0 +1,118 @@
+@media (prefers-color-scheme: light) {
+    html {
+        --text-color: #222;
+        --text2-color: #eee;
+        --bkg-color: #ECEFF1;
+        --accent: #1d3557;
+        --accent2: #457b9d;
+        --highlight: #ddd;
+        --live-signal: #f00;
+        --shadow: rgba(0, 0, 0, 0.24);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        --text-color: #eee;
+        --text2-color: #222;
+        --bkg-color: #121212;
+        --accent: #218B82;
+        --accent2: #98D4BB;
+        --highlight: #222222;
+        --live-signal: #f00;
+        --shadow: rgba(0, 0, 0, 0.24);
+    }
+}
+
+body {
+    background-color: var(--bkg-color);
+}
+
+button {
+    background-color: var(--accent2);
+    border: none;
+    border-radius: 1em;
+    color: var(--text2-color);
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 20em;
+}
+
+button:hover, select:hover {background-color: var(--accent)}
+
+button:active, select:active {
+    transform: scale(0.98);
+    box-shadow: 3px 2px 22px 1px var(--shadow);
+  }
+
+select {
+    background-color: var(--accent2);
+    border: none;
+    border-radius: 1em;
+    color: var(--text2-color);
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 20em;
+    user-select: var(--accent);
+}
+
+input {
+    border: none;
+    border-bottom: 2px solid var(--accent2);
+    color: var(--text-color);
+    background-color: var(--bkg-color);
+    padding: 10px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 16em;
+}
+
+table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td,
+th {
+    border: 1px solid var(--highlight);
+    padding: 8px;
+    color: var(--text-color)
+}
+
+tr:hover {
+    background-color: var(--highlight);
+}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: var(--accent);
+    color: #eee;
+}
+
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: var(--live-signal);
+    border-radius: 50%;
+    float: right;
+
+    opacity: 1;
+    animation: fade 3s linear infinite;
+}
+
+
+@keyframes fade {
+    0%,100% { opacity: 1 }
+    50% { opacity: 0 }
+}

@@ -1,6 +1,6 @@
 //Name der Uhr
-const char *hostString = "Marco_du_gigantischer_Stinker";
-const String version = "0.1.1";
+const char *hostString = "WordClock_0";
+const String version = "0.1.2";
 
 //Pin belegungen
 #define LED_PIN D6 //LED-Pin
