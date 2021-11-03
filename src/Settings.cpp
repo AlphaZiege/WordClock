@@ -1,11 +1,14 @@
-#include <Adafruit_NeoPixel.h>
 #include <ArduinoJson.h>
+#include <FastLED.h>
 #include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
 #include <Zeit.h>
 
-extern Adafruit_NeoPixel strip;
+const int led_count = 110;
+
+extern CFastLED FastLED;
+extern CRGB leds[led_count];
 extern DynamicJsonDocument doc;
 extern NTPClient timeClient;
 extern Read_write storage;
@@ -13,7 +16,7 @@ extern Zeit zeit;
 
 void Settings::update() //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
 {
-    strip.setBrightness(brigthness);
+    FastLED.setBrightness(brigthness);
 }
 
 String Settings::get_settings(String wer)

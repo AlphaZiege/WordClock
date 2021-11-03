@@ -1,17 +1,16 @@
-#include <Adafruit_NeoPixel.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
+#include <config.h>
 #include <DNSServer.h>
 #include <EEPROM.h>
-#include <ESP8266mDNS.h>
-#include <ESPAsyncWebServer.h>
-#include <FS.h>
-#include <NTPClient.h>
-#include <ESP8266WiFi.h>
-
-#include <config.h>
 #include <Effects.h>
+#include <ESP8266mDNS.h>
+#include <ESP8266WiFi.h>
+#include <ESPAsyncWebServer.h>
+#include <FastLED.h>
+#include <FS.h>
 #include <game.h>
+#include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
 #include <Zeit.h>
@@ -51,7 +50,7 @@ bool Kodierung[62];
 
 //rgb leds ansteuern
 const int led_count = 110;
-Adafruit_NeoPixel strip(led_count, LED_PIN, NEO_GRB + NEO_KHZ800); // leds init
+CRGB leds[led_count];
 
 //webserver
 DNSServer dnsServer;
@@ -60,14 +59,6 @@ String inputVar;
 String inputName;
 
 WiFiClient client;
-
-void Clear()
-{
-    for (int i = 0; i < 110; i++)
-    {
-        strip.setPixelColor(i, 0, 0, 0);
-    }
-}
 
 void setup()
 {
@@ -94,12 +85,15 @@ void setup()
     timeClient.setTimeOffset(3600);
 
     //Led's Setup Stuff
-    strip.begin();
-    strip.setBrightness(storage.get_brightness() + 10);
-    strip.clear();
-    strip.setPixelColor(i, 0, 255, 0);
+    FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, led_count);
+    FastLED.setDither(0);
+    
+    FastLED.setBrightness(storage.get_brightness() + 10);
+    FastLED.clear(true);
+    //strip.setPixelColor(i, 0, 255, 0);
+    leds[i] = CRGB::Lime;
+    FastLED.show();
     i++;
-    strip.show();
 
     //Wifi Setup Stuff
     Serial.print("Hostname: ");
@@ -107,24 +101,24 @@ void setup()
     WiFi.hostname(hostString);
     if (settings.get_DcfWlanMode() != 0)
     {
-        strip.setPixelColor(i, 255, 255, 255);
+        leds[i] = CRGB::White;
         WiFi.mode(WIFI_STA);
         WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
     }
     else
     {
-        strip.setPixelColor(i, 0, 0, 255);
+        leds[i] = CRGB::Blue;
     }
-    strip.show();
+    FastLED.show();
     i++;
     //WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
         Serial.print(".");
-        strip.setPixelColor(i, 0, 255, 100);
+        leds[i] = CRGB::Aqua;
         i++;
-        strip.show();
+        FastLED.show();
         if (i >= 60 || settings.get_DcfWlanMode() == 0)
         {
             settings.set_DcfWlanMode(0);
@@ -408,17 +402,17 @@ void setup()
         }
     }
 
-    strip.setPixelColor(i, 0, 0, 255);
+    leds[i] = CRGB::Blue;
     i++;
-    strip.show();
+    FastLED.show();
     server.begin(); // Webserver starten
     delay(100);
     //Serial.println(String(settings.get_DcfWlanMode()));
 
-    strip.setPixelColor(i, 255, 255, 255);
-    strip.show();
+    leds[i] = CRGB::White;
+    FastLED.show();
     delay(100);
-    strip.setBrightness(settings.get_brightness());
+    FastLED.setBrightness(settings.get_brightness());
 }
 
 void loop()
@@ -511,52 +505,45 @@ void loop()
 
     if (curr_time > offBegin_time && curr_time < offEnd_time)
     {
-        strip.setBrightness(settings.get_offhours_brightness());
+        FastLED.setBrightness(settings.get_offhours_brightness());
     }
     else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
     {
-        strip.setBrightness(settings.get_offhours_brightness());
+        FastLED.setBrightness(settings.get_offhours_brightness());
     }
     else
     {
-        strip.setBrightness(settings.get_brightness());
+        FastLED.setBrightness(settings.get_brightness());
     }
 
     //lichteffekte
     switch (settings.get_colorMode())
     {
     case 0:
-        //Clear();
         effects.staticColor();
         break;
 
     case 1:
-        //Clear();
         effects.breathe();
         break;
 
     case 2:
-        //Clear();
         effects.colorCycle();
         break;
 
     case 3:
-        //Clear();
         effects.saison("Halloween");
         break;
 
     case 4:
-        //Clear();
         effects.rainbowCycle();
         break;
 
     case 5:
-        //Clear();
         effects.explosion();
         break;
 
     case 6:
-        //Clear();
         effects.spiral();
         break;
 
@@ -596,10 +583,10 @@ void loop()
     {
         if (zeit.update()[i] == '0')
         {
-            strip.setPixelColor(i, 0, 0, 0);
+            leds[i] = CRGB::Black;
         }
     }
     //Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
     //zeigt alles an
-    strip.show();
+    FastLED.show();
 }
