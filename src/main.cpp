@@ -21,24 +21,23 @@ Settings settings = Settings();
 Snake snake;
 TicTacToe tictactoe;
 Zeit zeit = Zeit();
-
 DynamicJsonDocument doc(1024);
 
-//uhrzeit
+// uhrzeit
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
 unsigned long epochTime;
 struct tm *ptm;
 
-//offhours
+// offhours
 uint16_t curr_time;
 uint16_t offBegin_time;
 uint16_t offEnd_time;
 
-//filesystem
-//FS &filesystem =SPIFFS;
+// filesystem
+// FS &filesystem =SPIFFS;
 
-//dcf
+// dcf
 #define wait_for_DCF 0
 #define synchronisiere 1
 #define ok 2
@@ -48,11 +47,11 @@ unsigned long steigend = 0, fallend = 0;
 uint8_t Zustand = wait_for_DCF;
 bool Kodierung[62];
 
-//rgb leds ansteuern
+// rgb leds ansteuern
 const int led_count = 110;
 CRGB leds[led_count];
 
-//webserver
+// webserver
 DNSServer dnsServer;
 AsyncWebServer server(80); // 80 = http traffic // SKETCH BEGIN, für den Webserver
 String inputVar;
@@ -63,12 +62,12 @@ WiFiClient client;
 void setup()
 {
     settings.set_hostname(hostString);
-    int i = 0;                //boot animation
-    pinMode(LED_PIN, OUTPUT); //Led als Ausgang definieren
-    pinMode(DCF_Pin, INPUT);  //DCF Pin als Eingang
+    int i = 0;                // boot animation
+    pinMode(LED_PIN, OUTPUT); // Led als Ausgang definieren
+    pinMode(DCF_Pin, INPUT);  // DCF Pin als Eingang
 
-    //Serial.begin(9600); //115200 : 9600
-    Serial.begin(115200); //115200 : 9600
+    // Serial.begin(9600); //115200 : 9600
+    Serial.begin(115200); // 115200 : 9600
     while (!Serial)
         ;
     Serial.setDebugOutput(true);
@@ -77,25 +76,25 @@ void setup()
 
     SPIFFS.begin();
 
-    EEPROM.begin(1024);        //EEPROM initialisieren
-    storage.readAllSettings(); //alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
+    EEPROM.begin(1024);        // EEPROM initialisieren
+    storage.readAllSettings(); // alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
 
-    //TimeClient für Onlinezeit
+    // TimeClient für Onlinezeit
     timeClient.begin();
     timeClient.setTimeOffset(3600);
 
-    //Led's Setup Stuff
+    // Led's Setup Stuff
     FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, led_count);
     FastLED.setDither(0);
-    
+
     FastLED.setBrightness(storage.get_brightness() + 10);
     FastLED.clear(true);
-    //strip.setPixelColor(i, 0, 255, 0);
+    // strip.setPixelColor(i, 0, 255, 0);
     leds[i] = CRGB::Lime;
     FastLED.show();
     i++;
 
-    //Wifi Setup Stuff
+    // Wifi Setup Stuff
     Serial.print("Hostname: ");
     Serial.println(hostString);
     WiFi.hostname(hostString);
@@ -111,7 +110,7 @@ void setup()
     }
     FastLED.show();
     i++;
-    //WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+    // WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
@@ -137,7 +136,7 @@ void setup()
         inputName = request->getParam(0)->name();
         Serial.println(inputName + ": " + inputVar);
 
-        if (inputName == "colorMode") //sortiert nach Variablen und macht mit denen dann was
+        if (inputName == "colorMode") // sortiert nach Variablen und macht mit denen dann was
         {
             settings.set_colorMode(inputVar.toInt());
         }
@@ -334,13 +333,13 @@ void setup()
 
         else if (inputName == "crash")
         {
-            //request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
+            // request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
             ESP.reset();
         }
 
         else if (inputName == "snake_dir")
         {
-            settings.set_snake_dir(inputVar.toInt()); //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+            settings.set_snake_dir(inputVar.toInt()); // 0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
         }
         else if (inputName == "tictactoe_field")
         {
@@ -364,12 +363,17 @@ void setup()
     server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/style.css", "text/css"); });
     server.onNotFound([](AsyncWebServerRequest *request)
-                      { request->send(SPIFFS, "/notfound.html"); });
+                      {
+                          if (settings.get_DcfWlanMode() == 0)
+                              request->send(SPIFFS, "/wlan.html");
+                          else
+                              request->send(SPIFFS, "/notfound.html");
+                      });
 
     Serial.print("Connected to " + WiFi.SSID() + " IP address: ");
     Serial.println(WiFi.localIP());
 
-    //mDNS stuff
+    // mDNS stuff
     if (!MDNS.begin(hostString))
     {
         Serial.println("Error setting up MDNS responder!");
@@ -407,7 +411,7 @@ void setup()
     FastLED.show();
     server.begin(); // Webserver starten
     delay(100);
-    //Serial.println(String(settings.get_DcfWlanMode()));
+    // Serial.println(String(settings.get_DcfWlanMode()));
 
     leds[i] = CRGB::White;
     FastLED.show();
@@ -420,10 +424,10 @@ void loop()
     MDNS.update();
     dnsServer.processNextRequest();
 
-    //aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
+    // aktuelle zeit mit dcf77/wlan auslesen und verarbeiten
     if (settings.get_DcfWlanMode() == 0)
     {
-        //Serial.println(String(digitalRead(DCF_Pin)));
+        // Serial.println(String(digitalRead(DCF_Pin)));
         if (digitalRead(DCF_Pin) != Signal)
         {
             // wenn sich das Signal geändert hat:
@@ -435,7 +439,7 @@ void loop()
                 unsigned long diff = fallend - steigend;
                 Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
                 steigend = millis();
-                //Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
+                // Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
 
                 switch (Zustand)
                 {
@@ -471,7 +475,7 @@ void loop()
                 }
                 zeit.set_seconds(sekunde);
                 sekunde++;
-                //Serial.println("sec:" + String(sekunde) + " ");
+                // Serial.println("sec:" + String(sekunde) + " ");
             }
         }
     }
@@ -486,7 +490,7 @@ void loop()
         zeit.set_seconds(timeClient.getSeconds());
         zeit.set_minutes(timeClient.getMinutes());
         zeit.set_hours(timeClient.getHours());
-        //zeit.set_dayMonth(timeClient.getDay());
+        // zeit.set_dayMonth(timeClient.getDay());
 
         if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
         {
@@ -498,7 +502,7 @@ void loop()
         }
     }
 
-    //offhours
+    // offhours
     curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
     offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
     offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
@@ -516,7 +520,7 @@ void loop()
         FastLED.setBrightness(settings.get_brightness());
     }
 
-    //lichteffekte
+    // lichteffekte
     switch (settings.get_colorMode())
     {
     case 0:
@@ -578,7 +582,7 @@ void loop()
         break;
     }
 
-    //blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
+    // blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
     for (int i = 0; i <= led_count - 1; i++)
     {
         if (zeit.update()[i] == '0')
@@ -586,7 +590,7 @@ void loop()
             leds[i] = CRGB::Black;
         }
     }
-    //Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
-    //zeigt alles an
+    // Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
+    // zeigt alles an
     FastLED.show();
 }
