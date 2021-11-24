@@ -223,8 +223,9 @@ public:
   {
     return EEPROM.read(addr_offhours_brightness);
   }
-  String get_hostname{
-    return EEPROM.read(addr_hostname);
+  String get_hostname()
+  {
+    return readStringFromEEPROM(addr_hostname);
   }
 };
 #endif

@@ -35,9 +35,6 @@ uint16_t curr_time;
 uint16_t offBegin_time;
 uint16_t offEnd_time;
 
-// filesystem
-// FS &filesystem =SPIFFS;
-
 // dcf
 #define wait_for_DCF 0
 #define synchronisiere 1
@@ -62,26 +59,24 @@ WiFiClient client;
 
 void setup()
 {
-    if (settings.get_hostname() != hostString){
-        hostString = settings.get_hostname().c_str();
-    }
-    settings.set_hostname(hostString);
     int i = 0;                // boot animation
-    pinMode(LED_PIN, OUTPUT); // Led als Ausgang definieren
-    pinMode(DCF_Pin, INPUT);  // DCF Pin als Eingang
 
-    // Serial.begin(9600); //115200 : 9600
     Serial.begin(115200); // 115200 : 9600
     while (!Serial)
         ;
-    Serial.setDebugOutput(true);
-
-    Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
-
-    SPIFFS.begin();
 
     EEPROM.begin(1024);        // EEPROM initialisieren
     storage.readAllSettings(); // alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
+
+    //hostString = settings.get_hostname().c_str();
+
+    Serial.print("Hostname: ");
+    Serial.println(settings.get_hostname());
+
+    pinMode(LED_PIN, OUTPUT); // Led als Ausgang definieren
+    pinMode(DCF_Pin, INPUT);  // DCF Pin als Eingang
+
+    SPIFFS.begin();
 
     // TimeClient für Onlinezeit
     timeClient.begin();
@@ -93,28 +88,25 @@ void setup()
 
     FastLED.setBrightness(storage.get_brightness() + 10);
     FastLED.clear(true);
-    // strip.setPixelColor(i, 0, 255, 0);
-    leds[i] = CRGB::Lime;
-    FastLED.show();
+    leds[i] = CRGB::Green;
     i++;
+    FastLED.show();
 
     // Wifi Setup Stuff
-    Serial.print("Hostname: ");
-    Serial.println(hostString);
-    WiFi.hostname(hostString);
+    WiFi.hostname(settings.get_hostname());
     if (settings.get_DcfWlanMode() != 0)
     {
-        leds[i] = CRGB::White;
+        leds[i] = CRGB::Lime;
         WiFi.mode(WIFI_STA);
         WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
     }
     else
     {
-        leds[i] = CRGB::Blue;
+        leds[i] = CRGB::Yellow;
     }
-    FastLED.show();
     i++;
-    // WiFi.begin("ssid", "password"); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+    FastLED.show();
+
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
@@ -127,9 +119,15 @@ void setup()
             settings.set_DcfWlanMode(0);
             Serial.println("Couldn't connect to any wireless network, switching to DCF");
             WiFi.mode(WIFI_AP);
-            WiFi.softAP(hostString);
+            WiFi.softAP(settings.get_hostname());
             dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
             dnsServer.start(53, "*", WiFi.softAPIP());
+            
+            leds[i] = CRGB::Yellow;
+            i++;
+            FastLED.show();
+
+            Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
             break;
         }
     }
@@ -348,10 +346,10 @@ void setup()
             settings.set_tictactoe_field(inputVar.toInt());
         }
 
-        else if (inputName == "hoststring")
+        else if (inputName == "hostname")
         {
             settings.set_hostname(inputVar);
-            ESP.restart();
+            Serial.println("my brain just commited suicide");
         }
 
         else
@@ -382,11 +380,12 @@ void setup()
     Serial.println(WiFi.localIP());
 
     // mDNS stuff
-    if (!MDNS.begin(hostString))
-    {
-        Serial.println("Error setting up MDNS responder!");
-    }
-    Serial.println("mDNS responder started");
+    if (!MDNS.begin(settings.get_hostname()))
+        leds[i] = CRGB::Red;
+    else leds[i] = CRGB::Green;
+    i++;
+    FastLED.show();
+
     MDNS.addService("esp", "tcp", 8080); // Announce esp tcp service on port 8080
 
     Serial.println("Sending mDNS query");
@@ -411,12 +410,12 @@ void setup()
             Serial.print(":");
             Serial.print(MDNS.port(i));
             Serial.println(")");
+            leds[i] = CRGB::Purple;
+            i++;
         }
+        FastLED.show();
     }
 
-    leds[i] = CRGB::Blue;
-    i++;
-    FastLED.show();
     server.begin(); // Webserver starten
     delay(100);
     // Serial.println(String(settings.get_DcfWlanMode()));
