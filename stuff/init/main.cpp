@@ -42,6 +42,31 @@ Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
+#define addr_hostname 400
+
+String readStringFromEEPROM(int addrOffset)
+  {
+    int newStrLen = EEPROM.read(addrOffset);
+    char data[newStrLen + 1];
+    for (int i = 0; i < newStrLen; i++)
+    {
+      data[i] = EEPROM.read(addrOffset + 1 + i);
+    }
+    data[newStrLen] = '\0'; // the character may appear in a weird way, you should read: 'only one backslash and 0'
+    return String(data);
+  }
+
+void writeStringToEEPROM(int addrOffset, const String &strToWrite)
+  {
+    byte len = strToWrite.length();
+    EEPROM.write(addrOffset, len);
+
+    for (int i = 0; i < len; i++)
+    {
+      EEPROM.write(addrOffset + 1 + i, strToWrite[i]);
+    }
+    EEPROM.commit();
+  }
 
 void setup()
 {
@@ -84,6 +109,7 @@ void setup()
     EEPROM.write(addr_offhours_begin_m, 30);
     EEPROM.write(addr_offhours_end_h, 8);
     EEPROM.write(addr_offhours_end_m, 0);
+    writeStringToEEPROM(addr_hostname, "WordClock_0");
 
     EEPROM.commit();
 }

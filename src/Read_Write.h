@@ -46,6 +46,7 @@ private:
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
+#define addr_hostname 400
 
   String readStringFromEEPROM(int addrOffset)
   {
@@ -221,6 +222,9 @@ public:
   uint8_t get_offhours_brightness()
   {
     return EEPROM.read(addr_offhours_brightness);
+  }
+  String get_hostname{
+    return EEPROM.read(addr_hostname);
   }
 };
 #endif

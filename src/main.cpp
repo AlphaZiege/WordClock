@@ -21,6 +21,7 @@ Settings settings = Settings();
 Snake snake;
 TicTacToe tictactoe;
 Zeit zeit = Zeit();
+
 DynamicJsonDocument doc(1024);
 
 // uhrzeit
@@ -61,6 +62,9 @@ WiFiClient client;
 
 void setup()
 {
+    if (settings.get_hostname() != hostString){
+        hostString = settings.get_hostname().c_str();
+    }
     settings.set_hostname(hostString);
     int i = 0;                // boot animation
     pinMode(LED_PIN, OUTPUT); // Led als Ausgang definieren
@@ -256,9 +260,7 @@ void setup()
         {
             storage.saveWlan();
             Serial.println("wlan saved or something");
-            while (true)
-            {
-            }
+            ESP.restart();
         }
 
         else if (inputName == "clockType")
@@ -334,7 +336,7 @@ void setup()
         else if (inputName == "crash")
         {
             // request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
-            ESP.reset();
+            ESP.restart();
         }
 
         else if (inputName == "snake_dir")
@@ -346,11 +348,17 @@ void setup()
             settings.set_tictactoe_field(inputVar.toInt());
         }
 
+        else if (inputName == "hoststring")
+        {
+            settings.set_hostname(inputVar);
+            ESP.restart();
+        }
+
         else
         {
             request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
         }
-        request->send(200, "text/plain", inputName + "set to: " + inputVar);
+        request->send(200, "text/plain", inputName + " set to: " + inputVar);
         settings.update();
         Serial.println("-------------------------");
     });

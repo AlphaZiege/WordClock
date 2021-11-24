@@ -39,6 +39,7 @@ void Read_write::saveAllSettings()
   EEPROM.write(addr_offhours_begin_m, (uint8_t)settings.get_offhours_begin_m());
   EEPROM.write(addr_offhours_end_m, (uint8_t)settings.get_offhours_end_m());
   EEPROM.write(addr_offhours_brightness, (uint8_t)settings.get_offhours_brightness());
+  EEPROM.write(addr_hostname, (uint8_t)settings.get_hostname());
 
   EEPROM.commit();
 }
@@ -80,4 +81,5 @@ void Read_write::readAllSettings()
   settings.set_offhours_begin_m(EEPROM.read(addr_offhours_begin_m));
   settings.set_offhours_end_m(EEPROM.read(addr_offhours_end_m));
   settings.set_offhours_brightness(EEPROM.read(addr_offhours_brightness));
+  settings.set_hostname(EEPROM.read(addr_hostname));
 }

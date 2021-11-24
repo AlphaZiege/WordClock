@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/png" href="favicon.ico">
+    <link rel="icon" type="image/png" href="favicon.png">
     <title>:(</title>
 
 </head>
@@ -82,6 +82,7 @@
                     document.getElementById('OffhoursEnd_m').value = out.OffhoursEnd_m;
                     document.getElementById('OffhoursBrightness').value = out.OffhoursBrightness;
                     document.getElementById('version').value = out.version;
+                    document.getElementById('hostname').value = out.ClockName;
                     document.title = out.ClockName;
                     return true;
                 })
@@ -156,31 +157,6 @@
             </td>
         </tr>
         <tr>
-            <td>Brightness</td>
-            <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255">
-            </td>
-        </tr>
-        <tr>
-            <td>Offhours Brightness</td>
-            <td><input id="OffhoursBrightness" onChange="commit('offhour_brightness', this.value);" type="number"
-                    min="0" max="255">
-            </td>
-        </tr>
-        <tr>
-            <td>Offhours Begin</td>
-            <td><input id="OffhoursBegin_h" onChange="commit('offhour_begin_h', this.value);" type="number" min="0"
-                    max="23">h<input id="OffhoursBegin_m" onChange="commit('offhour_begin_m', this.value);"
-                    type="number" min="0" max="59">m
-            </td>
-        </tr>
-        <tr>
-            <td>Offhours End</td>
-            <td><input id="OffhoursEnd_h" onChange="commit('offhour_end_h', this.value);" type="number" min="0"
-                    max="23">h<input id="OffhoursEnd_m" onChange="commit('offhour_end_m', this.value);" type="number"
-                    min="0" max="59">m
-            </td>
-        </tr>
-        <tr>
             <td>Save all Settings from Ram</td>
             <td><button onclick="commit('saveALL',);">Save</button></td>
         </tr>
@@ -189,7 +165,16 @@
             <td><button onclick="commit('loadALL',); fillData();">Load</button></td>
         </tr>
         <tr>
-            <td>Version:</td>
+            <td>Hostname</td>
+            <td>
+                <div class="tooltip">
+                    <input id="hostname" maxlength="28" onchange="commit('hostname', this.value);">
+                    <span class="tooltiptext">⚠️ Restart required ⚠️</span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>Version</td>
             <td><input readonly id="version"></input>
             </td>
         </tr>
@@ -217,6 +202,46 @@
                     <option value="103">TicTacToe</option>
                     <!--<option value="420">Void</option>-->
                 </select>
+            </td>
+        </tr>
+
+        <!--Brightness-->
+        <tr>
+            <th>Brightness</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Brightness</td>
+            <td><input id="Brightness" onChange="commit('brightness', this.value);" type="number" min="0" max="255">
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours Brightness</td>
+            <td><input id="OffhoursBrightness" onChange="commit('offhour_brightness', this.value);" type="number"
+                    min="0" max="255">
+            </td>
+        </tr>
+        <tr>
+            <td>Set offhours begin and end accordingly to Sunrise/Sunset</td>
+            <td>
+                <label class="switch">
+                    <input type="checkbox" id="sunset" onchange="commit('offhour_sunrise', this.value);">
+                    <span class="slider round"></span>
+                </label>
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours Begin</td>
+            <td><input id="OffhoursBegin_h" onChange="commit('offhour_begin_h', this.value);" type="number" min="0"
+                    max="23">h<input id="OffhoursBegin_m" onChange="commit('offhour_begin_m', this.value);"
+                    type="number" min="0" max="59">m
+            </td>
+        </tr>
+        <tr>
+            <td>Offhours End</td>
+            <td><input id="OffhoursEnd_h" onChange="commit('offhour_end_h', this.value);" type="number" min="0"
+                    max="23">h<input id="OffhoursEnd_m" onChange="commit('offhour_end_m', this.value);" type="number"
+                    min="0" max="59">m
             </td>
         </tr>
 
@@ -378,7 +403,12 @@
         </tr>
         <tr>
             <td>Save login credentials</td>
-            <td><button onclick="commit('save_wlan',);">Save</button></td>
+            <td>
+                <div class="tooltip">
+                    <button onclick="commit('save_wlan',);">Save</button>
+                    <span class="tooltiptext">⚠️ Restart required ⚠️</span>
+                </div>
+            </td>
         </tr>
         <!--Debug-->
         <tr>
@@ -398,8 +428,8 @@
             <td><button onclick="redirect('/data?getJSON=1');">Get</button></td>
         </tr>
         <tr>
-            <td>Crash on purpose</td>
-            <td><button onclick="commit('crash',);">Crash</button></td>
+            <td>Restart the Wordclock</td>
+            <td><button onclick="commit('crash',);">Restart</button></td>
         </tr>
         <!--Snake-->
         <tr>
