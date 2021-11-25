@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Restarting...</title>
+</head>
+<body onload="load()">
+    <script type="text/javascript">
+        function redirect(url) {
+            window.location.href = url;
+        }
+
+        function commit(variable, value) {
+            var xhttp = new XMLHttpRequest();
+            var url = "/data?" + variable + "=" + value;
+            console.log(url);
+            xhttp.open("GET", url, true);
+            xhttp.send();
+        }
+
+        let status;
+
+        function livesignalListener() {
+            if (this.status == 200) {
+                status = true;
+            }
+        }
+
+        function livesignal() {
+            var http = new XMLHttpRequest();
+
+            http.addEventListener("load", livesignalListener);
+            http.open("GET", "/live");
+            http.send();
+        }
+
+        function load() {
+            commit('crash',);
+            var intervalId = setInterval(function () {
+                if (status){
+                    document.documentElement.style.setProperty('--live-signal', '#0f0');
+                    redirect("/");
+                }
+                else document.documentElement.style.setProperty('--live-signal', '#f00');
+                status = false;
+                livesignal();
+            }, 1000);
+        }
+    </script>
+    <span id="dot" class="dot"></span>
+    <h1>Restarting...</h1>
+    <div class="loader"></div>
+</body>
+</html>

@@ -26,6 +26,11 @@
 
 body {
     background-color: var(--bkg-color);
+    color: var(--text-color);
+  }
+  
+h1{
+  text-align: center;
 }
 
 button {
@@ -197,4 +202,27 @@ th {
   
   .slider.round:before {
     border-radius: 1em;
+  }
+
+  /* loading circle */
+  .loader {
+    margin: auto;    
+    border: 16px solid var(--text-color);
+    border-radius: 50%;
+    border-top: 16px solid var(--accent);
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+  
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }

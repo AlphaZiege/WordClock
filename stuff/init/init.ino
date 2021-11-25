@@ -109,7 +109,7 @@ void setup()
     EEPROM.write(addr_offhours_begin_m, 30);
     EEPROM.write(addr_offhours_end_h, 8);
     EEPROM.write(addr_offhours_end_m, 0);
-    writeStringToEEPROM(addr_hostname, "WordClock_0");
+    writeStringToEEPROM(addr_hostname, "WordClock_0i");
 
     EEPROM.commit();
 }

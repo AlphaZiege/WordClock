@@ -107,6 +107,7 @@ void setup()
     i++;
     FastLED.show();
 
+    Serial.print("Attempting to connect to " + settings.get_wlan_ssid());
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
@@ -136,6 +137,7 @@ void setup()
     server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
         inputVar = request->getParam(0)->value();
         inputName = request->getParam(0)->name();
+        Serial.println("-------------------------");
         Serial.println(inputName + ": " + inputVar);
 
         if (inputName == "colorMode") // sortiert nach Variablen und macht mit denen dann was
@@ -258,6 +260,7 @@ void setup()
         {
             storage.saveWlan();
             Serial.println("wlan saved or something");
+            request->redirect("/restart");
             ESP.restart();
         }
 
@@ -333,7 +336,6 @@ void setup()
 
         else if (inputName == "crash")
         {
-            // request->redirect("https://youtube.com/watch?dQw4w9WgXcQ");
             ESP.restart();
         }
 
@@ -349,7 +351,6 @@ void setup()
         else if (inputName == "hostname")
         {
             settings.set_hostname(inputVar);
-            Serial.println("my brain just commited suicide");
         }
 
         else
@@ -358,14 +359,15 @@ void setup()
         }
         request->send(200, "text/plain", inputName + " set to: " + inputVar);
         settings.update();
-        Serial.println("-------------------------");
     });
     server.on("/wlan", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/wlan.html"); });
+    server.on("/restart", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/restarting.html"); });
     server.on("/live", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", "yes"); });
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->send(SPIFFS, "/favicon.png", "image/png"); });
+              { request->send(SPIFFS, "/favicon.png", "image/ico"); });
     server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/style.css", "text/css"); });
     server.onNotFound([](AsyncWebServerRequest *request)
@@ -418,7 +420,6 @@ void setup()
 
     server.begin(); // Webserver starten
     delay(100);
-    // Serial.println(String(settings.get_DcfWlanMode()));
 
     leds[i] = CRGB::White;
     FastLED.show();
