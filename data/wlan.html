@@ -6,25 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="favicon.ico">
+    <script src="script.js"></script>
     <title>Wlan</title>
 </head>
 
 <body>
-    <script type="text/javascript">
-        function redirect(url) {
-            window.location.href = url;
-        }
-
-        function commit(variable, value) {
-            var xhttp = new XMLHttpRequest();
-            var url = "/data?" + variable + "=" + value;
-            console.log(url);
-            xhttp.open("GET", url, true);
-            xhttp.send();
-        }
-    </script>
-
-
     <table>
         <!--Wlan Zugangsdaten-->
         <tr>
@@ -42,6 +28,10 @@
         <tr>
             <td>Save login credentials</td>
             <td><button onclick="commit('save_wlan',);">Save</button></td>
+        </tr>
+        <tr>
+            <td>Restart the Wordclock</td>
+            <td><button onclick="redirect('/restart');">Restart</button></td>
         </tr>
     </table>
 

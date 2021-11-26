@@ -68,8 +68,7 @@ void setup()
     EEPROM.begin(1024);        // EEPROM initialisieren
     storage.readAllSettings(); // alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
 
-    //hostString = settings.get_hostname().c_str();
-
+    Serial.println("\n\n\nBooting...");
     Serial.print("Hostname: ");
     Serial.println(settings.get_hostname());
 
@@ -107,7 +106,7 @@ void setup()
     i++;
     FastLED.show();
 
-    Serial.print("Attempting to connect to " + settings.get_wlan_ssid());
+    Serial.print("Attempting to connect to '" + settings.get_wlan_ssid() + "'");
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
@@ -118,7 +117,7 @@ void setup()
         if (i >= 60 || settings.get_DcfWlanMode() == 0)
         {
             settings.set_DcfWlanMode(0);
-            Serial.println("Couldn't connect to any wireless network, switching to DCF");
+            Serial.println("\nCouldn't connect to any wireless network, switching to DCF");
             WiFi.mode(WIFI_AP);
             WiFi.softAP(settings.get_hostname());
             dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
@@ -132,6 +131,11 @@ void setup()
             break;
         }
     }
+    if (WiFi.status() == WL_CONNECTED){
+        Serial.print("\nConnected to '" + WiFi.SSID() + "', IP address: ");
+        Serial.println(WiFi.localIP());
+    }
+
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/index.html"); });
     server.on("/data", HTTP_GET, [](AsyncWebServerRequest *request) { // hört auf /data und macht dann das
@@ -367,9 +371,11 @@ void setup()
     server.on("/live", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(200, "text/plain", "yes"); });
     server.on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->send(SPIFFS, "/favicon.png", "image/ico"); });
+              { request->send(SPIFFS, "/favicon.png", "image/png"); });
     server.on("/style.css", HTTP_GET, [](AsyncWebServerRequest *request)
               { request->send(SPIFFS, "/style.css", "text/css"); });
+    server.on("/script.js", HTTP_GET, [](AsyncWebServerRequest *request)
+              { request->send(SPIFFS, "/script.js", "text/javascript"); });
     server.onNotFound([](AsyncWebServerRequest *request)
                       {
                           if (settings.get_DcfWlanMode() == 0)
@@ -377,9 +383,6 @@ void setup()
                           else
                               request->send(SPIFFS, "/notfound.html");
                       });
-
-    Serial.print("Connected to " + WiFi.SSID() + " IP address: ");
-    Serial.println(WiFi.localIP());
 
     // mDNS stuff
     if (!MDNS.begin(settings.get_hostname()))
@@ -392,7 +395,6 @@ void setup()
 
     Serial.println("Sending mDNS query");
     int n = MDNS.queryService("esp", "tcp"); // Send out query for esp tcp services
-    Serial.println("mDNS query done");
     if (n == 0)
     {
         Serial.println("no services found");
@@ -425,6 +427,7 @@ void setup()
     FastLED.show();
     delay(100);
     FastLED.setBrightness(settings.get_brightness());
+    Serial.println("Setup finished");
 }
 
 void loop()
