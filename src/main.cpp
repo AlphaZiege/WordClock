@@ -264,8 +264,7 @@ void setup()
         {
             storage.saveWlan();
             Serial.println("wlan saved or something");
-            request->redirect("/restart");
-            ESP.restart();
+            request->send(200, "text/plain", "Wlan information saved from RAM, please restart to take effect");
         }
 
         else if (inputName == "clockType")
@@ -403,16 +402,16 @@ void setup()
     {
         Serial.print(n);
         Serial.println(" service(s) found");
-        for (int i = 0; i < n; ++i)
+        for (int j = 0; j < n; ++j)
         {
             // Print details for each service found
-            Serial.print(i + 1);
+            Serial.print(j + 1);
             Serial.print(": ");
-            Serial.print(MDNS.hostname(i));
+            Serial.print(MDNS.hostname(j));
             Serial.print(" (");
-            Serial.print(MDNS.IP(i));
+            Serial.print(MDNS.IP(j));
             Serial.print(":");
-            Serial.print(MDNS.port(i));
+            Serial.print(MDNS.port(j));
             Serial.println(")");
             leds[i] = CRGB::Purple;
             i++;

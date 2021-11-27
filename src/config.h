@@ -1,5 +1,5 @@
 //Name der Uhr
-const String version = "0.2.5";
+const String version = "0.2.5 hotfix";
 
 //Pin belegungen
 #define LED_PIN D6 //LED-Pin
@@ -12,5 +12,5 @@ const String version = "0.2.5";
 /*
 TODO:
 wlan save redirect restart page
-
+make toast notification
 */
