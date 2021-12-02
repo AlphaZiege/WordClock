@@ -1,4 +1,4 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
@@ -55,8 +55,12 @@ class StringCopier {
 
  private:
   MemoryPool* _pool;
+
+  // These fields aren't initialized by the constructor but startString()
+  //
+  // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.UninitializedObject)
   char* _ptr;
-  size_t _size;
-  size_t _capacity;
+  // NOLINTNEXTLINE(clang-analyzer-optin.cplusplus.UninitializedObject)
+  size_t _size, _capacity;
 };
 }  // namespace ARDUINOJSON_NAMESPACE

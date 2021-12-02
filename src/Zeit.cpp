@@ -302,7 +302,7 @@ String Zeit::update()
 
         case 58 ... 62:
             //gleich wie 0 ... 2
-            table[58] = '0'; //bei ein's' dass s (wird nur bei nicht "es ist ein uhr" gebraucht)
+            table[58] = '0'; //bei ein's' das s (wird nur bei nicht "es ist ein uhr" gebraucht)
 
             table[107] = '1';
             table[108] = '1';

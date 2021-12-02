@@ -8,6 +8,7 @@ class Settings
 {
 private:
     String hostname;
+
     //modes
     int colorMode;
 
@@ -67,36 +68,6 @@ private:
 
 public:
     void update(); //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
-
-    String get_settings(String wer);
-
-    String get_networkInfo()
-    {
-        String data;
-
-        data += "SSID: " + WiFi.SSID() + "\n";
-        data += "Hostname: " + String(WiFi.hostname()) + "\n";
-        data += "MacAdress: " + String(WiFi.macAddress()) + "\n";
-        data += "IPAdress: " + WiFi.localIP().toString() + "\n";
-        data += "Gateway: " + WiFi.gatewayIP().toString() + "\n";
-        data += "dnsIP: " + WiFi.dnsIP().toString() + "\n";
-        data += "Saved SSID: " + String(wlan1_ssid) + "\n";
-
-        return data;
-    }
-    String get_stuff();
-
-    String get_all()
-    {
-        String data;
-
-        data += "Settings in Ram: \n" + get_settings("ram") + "\n";
-        data += "Settings in Rom: \n" + get_settings("rom") + "\n";
-        data += "Network Info: \n" + get_networkInfo() + "\n";
-        data += "Stuff: \n" + get_stuff() + "\n";
-
-        return data;
-    }
 
     void generateJson(String version);
 

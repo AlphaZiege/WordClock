@@ -59,7 +59,7 @@ WiFiClient client;
 
 void setup()
 {
-    int i = 0;                // boot animation
+    int i = 0; // boot animation counter
 
     Serial.begin(115200); // 115200 : 9600
     while (!Serial)
@@ -69,13 +69,13 @@ void setup()
     storage.readAllSettings(); // alle gespeicherten Werte einlesen (aktiver Farbmodus usw.)
 
     Serial.println("\n\n\nBooting...");
-    Serial.print("Hostname: ");
+    Serial.print("\nHostname: ");
     Serial.println(settings.get_hostname());
 
     pinMode(LED_PIN, OUTPUT); // Led als Ausgang definieren
     pinMode(DCF_Pin, INPUT);  // DCF Pin als Eingang
 
-    SPIFFS.begin();
+    SPIFFS.begin(); // Filesystem begin
 
     // TimeClient für Onlinezeit
     timeClient.begin();
@@ -83,57 +83,62 @@ void setup()
 
     // Led's Setup Stuff
     FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, led_count);
-    FastLED.setDither(0);
-
+    FastLED.setDither(0); // emulate color with pwm on low brightness, off
     FastLED.setBrightness(storage.get_brightness() + 10);
     FastLED.clear(true);
+
     leds[i] = CRGB::Green;
     i++;
     FastLED.show();
 
     // Wifi Setup Stuff
-    WiFi.hostname(settings.get_hostname());
     if (settings.get_DcfWlanMode() != 0)
     {
         leds[i] = CRGB::Lime;
-        WiFi.mode(WIFI_STA);
-        WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
-    }
-    else
-    {
-        leds[i] = CRGB::Yellow;
-    }
-    i++;
-    FastLED.show();
-
-    Serial.print("Attempting to connect to '" + settings.get_wlan_ssid() + "'");
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(250);
-        Serial.print(".");
-        leds[i] = CRGB::Aqua;
         i++;
         FastLED.show();
-        if (i >= 60 || settings.get_DcfWlanMode() == 0)
+        Serial.print("Attempting to connect to '" + settings.get_wlan_ssid() + "'");
+
+        WiFi.hostname(settings.get_hostname());
+        WiFi.mode(WIFI_STA);
+        WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
+        int waittime = 15 * 4 + i;                                  // timeout for wlan connection in sec
+        while (WiFi.status() != WL_CONNECTED)
         {
-            settings.set_DcfWlanMode(0);
-            Serial.println("\nCouldn't connect to any wireless network, switching to DCF");
-            WiFi.mode(WIFI_AP);
-            WiFi.softAP(settings.get_hostname());
-            dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-            dnsServer.start(53, "*", WiFi.softAPIP());
-            
-            leds[i] = CRGB::Yellow;
+            delay(250);
+            Serial.print(".");
+            leds[i] = CRGB::Aqua;
             i++;
             FastLED.show();
-
-            Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
-            break;
+            if (i >= waittime)
+            {
+                settings.set_DcfWlanMode(0);
+                break;
+                Serial.println("Couldn't connect to WiFi, switching to DCF77"); 
+            }
+        }
+        if (i < waittime)
+        {
+            Serial.print("Connected to '" + WiFi.SSID() + "', IP address: ");
+            Serial.println(WiFi.localIP());
         }
     }
-    if (WiFi.status() == WL_CONNECTED){
-        Serial.print("\nConnected to '" + WiFi.SSID() + "', IP address: ");
-        Serial.println(WiFi.localIP());
+    if (settings.get_DcfWlanMode() == 0)
+    {
+        leds[i] = CRGB::Yellow;
+        i++;
+        FastLED.show();
+        Serial.println("Recieving DCF data...");
+        WiFi.mode(WIFI_AP);
+        WiFi.softAP(settings.get_hostname());
+        dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
+        dnsServer.start(53, "*", WiFi.softAPIP());
+
+        leds[i] = CRGB::Yellow;
+        i++;
+        FastLED.show();
+
+        Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
     }
 
     server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
@@ -316,12 +321,13 @@ void setup()
 
         else if (inputName == "getALL")
         {
-            request->send(200, "text/plain", settings.get_all());
             if (inputVar == "pudding")
             {
                 settings.set_SC_DELAY(333);
             }
+            request->send(404, "text/plain", "pschhh");
         }
+
         else if (inputName == "getJSON")
         {
             settings.generateJson(version);
@@ -380,13 +386,13 @@ void setup()
                           if (settings.get_DcfWlanMode() == 0)
                               request->send(SPIFFS, "/wlan.html");
                           else
-                              request->send(SPIFFS, "/notfound.html");
-                      });
+                              request->send(SPIFFS, "/notfound.html"); });
 
     // mDNS stuff
     if (!MDNS.begin(settings.get_hostname()))
         leds[i] = CRGB::Red;
-    else leds[i] = CRGB::Green;
+    else
+        leds[i] = CRGB::Green;
     i++;
     FastLED.show();
 
@@ -506,6 +512,8 @@ void loop()
         {
             timeClient.setTimeOffset(7200);
         }
+        else
+            timeClient.setTimeOffset(3600);
         while (!timeClient.update())
         {
             timeClient.forceUpdate();
@@ -600,7 +608,5 @@ void loop()
             leds[i] = CRGB::Black;
         }
     }
-    // Serial.println(String(zeit.get_hours()) + ":" + String(zeit.get_minutes()) + ":" + String(zeit.get_seconds()));
-    // zeigt alles an
     FastLED.show();
 }

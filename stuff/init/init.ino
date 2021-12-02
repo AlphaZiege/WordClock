@@ -109,7 +109,14 @@ void setup()
     EEPROM.write(addr_offhours_begin_m, 30);
     EEPROM.write(addr_offhours_end_h, 8);
     EEPROM.write(addr_offhours_end_m, 0);
-    writeStringToEEPROM(addr_hostname, "WordClock_0i");
+    String random4char = String(random(0x0, 0xF), HEX);
+    delay(random(2, 10));
+    random4char += String(random(0x0, 0xF), HEX);
+    delay(random(2, 10));
+    random4char += String(random(0x0, 0xF), HEX);
+    delay(random(2, 10));
+    random4char += String(random(0x0, 0xF), HEX);
+    writeStringToEEPROM(addr_hostname, "WordClock_" + random4char); //4 digit long random hex number
 
     EEPROM.commit();
 }

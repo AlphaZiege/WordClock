@@ -16,6 +16,7 @@
         <tr>
             <th>Overall Settings</th>
             <th>Value <span id="dot" class="dot"></span></th>
+
         </tr>
         <tr>
             <td>Clock Type</td>
@@ -298,14 +299,11 @@
                 </div>
             </td>
         </tr>
+
         <!--Debug-->
         <tr>
             <th>Debug</th>
             <th>Value</th>
-        </tr>
-        <tr>
-            <td>Get All</td>
-            <td><button onclick="redirect('/data?getALL');">Get</button></td>
         </tr>
         <tr>
             <td>Get JSON</td>
@@ -316,9 +314,46 @@
             <td><button onclick="redirect('/data?getJSON=1');">Get</button></td>
         </tr>
         <tr>
+            <td>Uptime</td>
+            <td>
+                <input readonly id="Uptime"></input>
+            </td>
+        </tr>
+        <tr>
             <td>Restart the Wordclock</td>
             <td><button onclick="redirect('/restart');">Restart</button></td>
         </tr>
+        <tr>
+            <td>Internet Time</td>
+            <td>
+                <input readonly id="ntp_time"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>Localtime</td>
+            <td>
+                <input readonly id="Localtime"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>Localdate (only DCF)</td>
+            <td>
+                <input readonly id="Localdate"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>Free Memory</td>
+            <td>
+                <input readonly id="Free_Memory"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>CPU Speed</td>
+            <td>
+                <input readonly id="CPU_Speed"></input>
+            </td>
+        </tr>
+
         <!--Snake-->
         <tr>
             <th>Snake</th>
@@ -343,6 +378,7 @@
             <td>Keycontrol</td>
             <td><input type="text" onkeyup="handleInput(this.value)"></td>
         </tr>
+
         <!--TicTacToe-->
         <tr>
             <th>TicTacToe</th>
@@ -370,4 +406,5 @@
             </td>
         </tr>
     </table>
+
 </html>

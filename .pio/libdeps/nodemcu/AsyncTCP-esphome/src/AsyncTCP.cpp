@@ -82,8 +82,8 @@ static TaskHandle_t _async_service_task_handle = NULL;
 
 SemaphoreHandle_t _slots_lock;
 const int _number_of_closed_slots = CONFIG_LWIP_MAX_ACTIVE_TCP;
-static int _closed_slots[_number_of_closed_slots];
-static int _closed_index = []() {
+static uint32_t _closed_slots[_number_of_closed_slots];
+static uint32_t _closed_index = []() {
     _slots_lock = xSemaphoreCreateBinary();
     xSemaphoreGive(_slots_lock);
     for (int i = 0; i < _number_of_closed_slots; ++ i) {
@@ -152,7 +152,10 @@ static bool _remove_events_with_arg(void * arg){
 }
 
 static void _handle_async_event(lwip_event_packet_t * e){
-    if(e->event == LWIP_TCP_CLEAR){
+    if(e->arg == NULL){
+        // do nothing when arg is NULL
+        //ets_printf("event arg == NULL: 0x%08x\n", e->recv.pcb);
+    } else if(e->event == LWIP_TCP_CLEAR){
         _remove_events_with_arg(e->arg);
     } else if(e->event == LWIP_TCP_RECV){
         //ets_printf("-R: 0x%08x\n", e->recv.pcb);
@@ -572,11 +575,10 @@ AsyncClient::AsyncClient(tcp_pcb* pcb)
 , _pb_cb_arg(0)
 , _timeout_cb(0)
 , _timeout_cb_arg(0)
-, _pcb_busy(false)
-, _pcb_sent_at(0)
 , _ack_pcb(true)
-, _rx_last_packet(0)
-, _rx_since_timeout(0)
+, _tx_last_packet(0)
+, _rx_timeout(0)
+, _rx_last_ack(0)
 , _ack_timeout(ASYNC_MAX_ACK_TIME)
 , _connect_port(0)
 , prev(NULL)
@@ -585,17 +587,7 @@ AsyncClient::AsyncClient(tcp_pcb* pcb)
     _pcb = pcb;
     _closed_slot = -1;
     if(_pcb){
-        xSemaphoreTake(_slots_lock, portMAX_DELAY);
-        int closed_slot_min_index = 0;
-        for (int i = 0; i < _number_of_closed_slots; ++ i) {
-            if ((_closed_slot == -1 || _closed_slots[i] <= closed_slot_min_index) && _closed_slots[i] != 0) {
-                closed_slot_min_index = _closed_slots[i];
-                _closed_slot = i;
-            }
-        }
-        _closed_slots[_closed_slot] = 0;
-        xSemaphoreGive(_slots_lock);
-
+        _allocate_closed_slot();
         _rx_last_packet = millis();
         tcp_arg(_pcb, this);
         tcp_recv(_pcb, &_tcp_recv);
@@ -609,6 +601,7 @@ AsyncClient::~AsyncClient(){
     if(_pcb) {
         _close();
     }
+    _free_closed_slot();
 }
 
 /*
@@ -734,7 +727,6 @@ bool AsyncClient::connect(const char* host, uint16_t port){
     ip_addr_t addr;
     
     if(!_start_async_task()){
-      Serial.println("failed to start task");
       log_e("failed to start task");
       return false;
     }
@@ -790,13 +782,12 @@ size_t AsyncClient::add(const char* data, size_t size, uint8_t apiflags) {
 }
 
 bool AsyncClient::send(){
-    int8_t err = ERR_OK;
-    err = _tcp_output(_pcb, _closed_slot);
-    if(err == ERR_OK){
-        _pcb_busy = true;
-        _pcb_sent_at = millis();
+    auto backup = _tx_last_packet;
+    _tx_last_packet = millis();
+    if (_tcp_output(_pcb, _closed_slot) == ERR_OK) {
         return true;
     }
+    _tx_last_packet = backup;
     return false;
 }
 
@@ -845,6 +836,29 @@ int8_t AsyncClient::_close(){
     return err;
 }
 
+void AsyncClient::_allocate_closed_slot(){
+    xSemaphoreTake(_slots_lock, portMAX_DELAY);
+    uint32_t closed_slot_min_index = 0;
+    for (int i = 0; i < _number_of_closed_slots; ++ i) {
+        if ((_closed_slot == -1 || _closed_slots[i] <= closed_slot_min_index) && _closed_slots[i] != 0) {
+            closed_slot_min_index = _closed_slots[i];
+            _closed_slot = i;
+        }
+    }
+    if (_closed_slot != -1) {
+        _closed_slots[_closed_slot] = 0;
+    }
+    xSemaphoreGive(_slots_lock);
+}
+
+void AsyncClient::_free_closed_slot(){
+    if (_closed_slot != -1) {
+        _closed_slots[_closed_slot] = _closed_index;
+        _closed_slot = -1;
+        ++ _closed_index;
+    }
+}
+
 /*
  * Private Callbacks
  * */
@@ -853,7 +867,6 @@ int8_t AsyncClient::_connected(void* pcb, int8_t err){
     _pcb = reinterpret_cast<tcp_pcb*>(pcb);
     if(_pcb){
         _rx_last_packet = millis();
-        _pcb_busy = false;
 //        tcp_recv(_pcb, &_tcp_recv);
 //        tcp_sent(_pcb, &_tcp_sent);
 //        tcp_poll(_pcb, &_tcp_poll, 1);
@@ -867,10 +880,12 @@ int8_t AsyncClient::_connected(void* pcb, int8_t err){
 void AsyncClient::_error(int8_t err) {
     if(_pcb){
         tcp_arg(_pcb, NULL);
-        tcp_sent(_pcb, NULL);
-        tcp_recv(_pcb, NULL);
-        tcp_err(_pcb, NULL);
-        tcp_poll(_pcb, NULL, 0);
+        if(_pcb->state == LISTEN) {
+            tcp_sent(_pcb, NULL);
+            tcp_recv(_pcb, NULL);
+            tcp_err(_pcb, NULL);
+            tcp_poll(_pcb, NULL, 0);
+        }
         _pcb = NULL;
     }
     if(_error_cb) {
@@ -888,15 +903,16 @@ int8_t AsyncClient::_lwip_fin(tcp_pcb* pcb, int8_t err) {
         return ERR_OK;
     }
     tcp_arg(_pcb, NULL);
-    tcp_sent(_pcb, NULL);
-    tcp_recv(_pcb, NULL);
-    tcp_err(_pcb, NULL);
-    tcp_poll(_pcb, NULL, 0);
+    if(_pcb->state == LISTEN) {
+        tcp_sent(_pcb, NULL);
+        tcp_recv(_pcb, NULL);
+        tcp_err(_pcb, NULL);
+        tcp_poll(_pcb, NULL, 0);
+    }
     if(tcp_close(_pcb) != ERR_OK) {
         tcp_abort(_pcb);
     }
-    _closed_slots[_closed_slot] = _closed_index;
-    ++ _closed_index;
+    _free_closed_slot();
     _pcb = NULL;
     return ERR_OK;
 }
@@ -912,10 +928,10 @@ int8_t AsyncClient::_fin(tcp_pcb* pcb, int8_t err) {
 
 int8_t AsyncClient::_sent(tcp_pcb* pcb, uint16_t len) {
     _rx_last_packet = millis();
+    _rx_last_ack = millis();
     //log_i("%u", len);
-    _pcb_busy = false;
     if(_sent_cb) {
-        _sent_cb(_sent_cb_arg, this, len, (millis() - _pcb_sent_at));
+        _sent_cb(_sent_cb_arg, this, len, (millis() - _tx_last_packet));
     }
     return ERR_OK;
 }
@@ -958,15 +974,18 @@ int8_t AsyncClient::_poll(tcp_pcb* pcb){
     uint32_t now = millis();
 
     // ACK Timeout
-    if(_pcb_busy && _ack_timeout && (now - _pcb_sent_at) >= _ack_timeout){
-        _pcb_busy = false;
-        log_w("ack timeout %d", pcb->state);
-        if(_timeout_cb)
-            _timeout_cb(_timeout_cb_arg, this, (now - _pcb_sent_at));
-        return ERR_OK;
+    if(_ack_timeout){
+        const uint32_t one_day = 86400000;
+        bool last_tx_is_after_last_ack = (_rx_last_ack - _tx_last_packet + one_day) < one_day;
+        if(last_tx_is_after_last_ack && (now - _tx_last_packet) >= _ack_timeout) {
+            log_w("ack timeout %d", pcb->state);
+            if(_timeout_cb)
+                _timeout_cb(_timeout_cb_arg, this, (now - _tx_last_packet));
+            return ERR_OK;
+        }
     }
     // RX Timeout
-    if(_rx_since_timeout && (now - _rx_last_packet) >= (_rx_since_timeout * 1000)){
+    if(_rx_timeout && (now - _rx_last_packet) >= (_rx_timeout * 1000)) {
         log_w("rx timeout %d", pcb->state);
         _close();
         return ERR_OK;
@@ -1025,11 +1044,11 @@ size_t AsyncClient::write(const char* data, size_t size, uint8_t apiflags) {
 }
 
 void AsyncClient::setRxTimeout(uint32_t timeout){
-    _rx_since_timeout = timeout;
+    _rx_timeout = timeout;
 }
 
 uint32_t AsyncClient::getRxTimeout(){
-    return _rx_since_timeout;
+    return _rx_timeout;
 }
 
 uint32_t AsyncClient::getAckTimeout(){

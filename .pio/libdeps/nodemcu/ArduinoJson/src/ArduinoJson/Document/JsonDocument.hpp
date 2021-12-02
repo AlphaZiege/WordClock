@@ -1,4 +1,4 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
@@ -21,18 +21,23 @@ class JsonDocument : public Visitable {
   }
 
   template <typename T>
-  typename VariantAs<T>::type as() {
+  T as() {
     return getVariant().template as<T>();
   }
 
   template <typename T>
-  typename VariantConstAs<T>::type as() const {
+  T as() const {
     return getVariant().template as<T>();
   }
 
   void clear() {
     _pool.clear();
-    _data.setNull();
+    _data.init();
+  }
+
+  template <typename T>
+  bool is() {
+    return getVariant().template is<T>();
   }
 
   template <typename T>
@@ -65,7 +70,7 @@ class JsonDocument : public Visitable {
   }
 
   bool set(const JsonDocument& src) {
-    return to<VariantRef>().set(src.as<VariantRef>());
+    return to<VariantRef>().set(src.as<VariantConstRef>());
   }
 
   template <typename T>
@@ -299,15 +304,15 @@ class JsonDocument : public Visitable {
 
  protected:
   JsonDocument() : _pool(0, 0) {
-    _data.setNull();
+    _data.init();
   }
 
   JsonDocument(MemoryPool pool) : _pool(pool) {
-    _data.setNull();
+    _data.init();
   }
 
   JsonDocument(char* buf, size_t capa) : _pool(buf, capa) {
-    _data.setNull();
+    _data.init();
   }
 
   ~JsonDocument() {}
@@ -331,5 +336,9 @@ class JsonDocument : public Visitable {
   JsonDocument(const JsonDocument&);
   JsonDocument& operator=(const JsonDocument&);
 };
+
+inline void convertToJson(const JsonDocument& src, VariantRef dst) {
+  dst.set(src.as<VariantConstRef>());
+}
 
 }  // namespace ARDUINOJSON_NAMESPACE

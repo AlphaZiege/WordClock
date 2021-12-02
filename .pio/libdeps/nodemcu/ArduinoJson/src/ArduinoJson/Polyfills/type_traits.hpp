@@ -1,4 +1,4 @@
-// ArduinoJson - arduinojson.org
+// ArduinoJson - https://arduinojson.org
 // Copyright Benoit Blanchon 2014-2021
 // MIT License
 
@@ -20,5 +20,6 @@
 #include "type_traits/is_signed.hpp"
 #include "type_traits/is_unsigned.hpp"
 #include "type_traits/make_unsigned.hpp"
+#include "type_traits/make_void.hpp"
 #include "type_traits/remove_const.hpp"
 #include "type_traits/remove_reference.hpp"
