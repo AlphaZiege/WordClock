@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <config.h>
+#include <DCF.h>
 #include <DNSServer.h>
 #include <EEPROM.h>
 #include <Effects.h>
@@ -91,7 +92,7 @@ void setup()
     i++;
     FastLED.show();
 
-    // Wifi Setup Stuff
+    // Setup Wifi/Dcf
     if (settings.get_DcfWlanMode() != 0)
     {
         leds[i] = CRGB::Lime;
@@ -114,7 +115,7 @@ void setup()
             {
                 settings.set_DcfWlanMode(0);
                 break;
-                Serial.println("Couldn't connect to WiFi, switching to DCF77"); 
+                Serial.println("Couldn't connect to WiFi, switching to DCF77");
             }
         }
         if (i < waittime)
@@ -128,7 +129,6 @@ void setup()
         leds[i] = CRGB::Yellow;
         i++;
         FastLED.show();
-        Serial.println("Recieving DCF data...");
         WiFi.mode(WIFI_AP);
         WiFi.softAP(settings.get_hostname());
         dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
@@ -456,42 +456,59 @@ void loop()
                 Kodierung[sekunde] = (diff < 150) ? LOW : HIGH;
                 steigend = millis();
                 // Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
+                if (Kodierung[sekunde])
+                    leds[sekunde] = CRGB::White;
+                else
+                    leds[sekunde] = CRGB::Cyan;
 
                 switch (Zustand)
                 {
                 case wait_for_DCF:
                     Zustand = synchronisiere;
-                    Serial.println("sync");
+                    FastLED.clear();
+                    settings.set_colorMode(420);
+                    Serial.println("preparing to sync");
                     break;
                 case synchronisiere:
                     if (steigend - fallend > 1300)
                     { // ein Signal ist ausgefallen => die Neue Minute beginnt.
                         Zustand = ok;
                         sekunde = 0;
-                        Serial.println("run ");
+                        Serial.println("syncing...");
                         break;
                     }
                 case ok:
                     if (steigend - fallend > 1300)
                     { // ein Signal ist ausgefallen => die Neue Minute beginnt.
+
                         sekunde = 0;
                         int Minute = Kodierung[22] + 2 * Kodierung[23] + 4 * Kodierung[24] + 8 * Kodierung[25] + 10 * Kodierung[26] + 20 * Kodierung[27] + 40 * Kodierung[28];
                         int Stunde = Kodierung[30] + 2 * Kodierung[31] + 4 * Kodierung[32] + 8 * Kodierung[33] + 10 * Kodierung[34] + 20 * Kodierung[35];
                         int Tag = Kodierung[37] + 2 * Kodierung[38] + 4 * Kodierung[39] + 8 * Kodierung[40] + 10 * Kodierung[41] + 20 * Kodierung[42];
                         int Monat = Kodierung[46] + 2 * Kodierung[47] + 4 * Kodierung[48] + 8 * Kodierung[49] + 10 * Kodierung[50];
                         int Jahr = Kodierung[51] + 2 * Kodierung[52] + 4 * Kodierung[53] + 8 * Kodierung[54] + 10 * Kodierung[55] + 20 * Kodierung[56] + 40 * Kodierung[57] + 80 * Kodierung[58];
-                        Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr) + " " + String(Stunde) + "." + String(Minute) + " Uhr");
-                        zeit.set_calendarYear(Jahr + 2000);
-                        zeit.set_month(Monat);
-                        zeit.set_dayMonth(Tag);
-                        zeit.set_minutes(Minute);
-                        zeit.set_hours(Stunde);
+
+                        if (checkValidity(Kodierung))
+                        {
+                            Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr + 2000) + " " + String(Stunde) + "." + String(Minute) + " Uhr");
+                            zeit.set_calendarYear(Jahr + 2000);
+                            zeit.set_month(Monat);
+                            zeit.set_dayMonth(Tag);
+                            zeit.set_minutes(Minute);
+                            zeit.set_hours(Stunde);
+
+                            settings.set_colorMode(storage.get_colorMode());
+                        }
+                        else
+                        {
+                            Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr + 2000) + " " + String(Stunde) + "." + String(Minute) + " Uhr, invalid");
+                            FastLED.clear();
+                        }
                     }
                     break;
                 }
                 zeit.set_seconds(sekunde);
                 sekunde++;
-                // Serial.println("sec:" + String(sekunde) + " ");
             }
         }
     }

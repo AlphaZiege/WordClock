@@ -39,10 +39,13 @@
         <tr>
             <td>Timesource</td>
             <td>
-                <select id="DcfWlanMode" onChange="commit('DcfWlanMode', this.value);">
-                    <option value="1">WLAN</option>
-                    <option value="0">DCF77</option>
-                </select>
+                <div class="tooltip">
+                    <select id="DcfWlanMode" onChange="commit('DcfWlanMode', this.value);">
+                        <option value="1">WLAN</option>
+                        <option value="0">DCF77</option>
+                    </select>
+                    <span class="tooltiptext">⚠️ Restart required ⚠️</span>
+                </div>
             </td>
         </tr>
         <tr>
