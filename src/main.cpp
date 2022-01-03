@@ -362,6 +362,18 @@ void setup()
             settings.set_hostname(inputVar);
         }
 
+        else if (inputName == "forceTime")
+        {
+            settings.set_DcfWlanMode(5);
+            int min, h;
+
+            if (sscanf(inputVar.c_str(), "%d:%d", &h, &min) >= 2)
+            {
+                zeit.set_minutes(min);
+                zeit.set_hours(h);
+            }
+        }
+
         else
         {
             request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
@@ -512,7 +524,7 @@ void loop()
             }
         }
     }
-    else if (settings.get_DcfWlanMode() != 0)
+    else if (settings.get_DcfWlanMode() == 1)
     {
         epochTime = timeClient.getEpochTime();
         tm *ptm = gmtime((time_t *)&epochTime);

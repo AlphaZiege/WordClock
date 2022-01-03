@@ -143,7 +143,7 @@ String Zeit::update()
         switch (minutes)
         {
         case 0 ... 2:
-            if (hours == 1)
+            if (betterhours == 1)
             {
                 table[58] = '0'; //bei ein's' dass s (wird nur bei "es ist ein uhr" nicht gebraucht)
             }

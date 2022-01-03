@@ -43,6 +43,7 @@
                     <select id="DcfWlanMode" onChange="commit('DcfWlanMode', this.value);">
                         <option value="1">WLAN</option>
                         <option value="0">DCF77</option>
+                        <option id="ForceTime" value="5">Force Time</option>
                     </select>
                     <span class="tooltiptext">⚠️ Restart required ⚠️</span>
                 </div>
@@ -85,7 +86,7 @@
                     <option value="0">Static Color</option>
                     <option value="1">Breathe</option>
                     <option value="2">Color Cycle</option>
-                    <option value="3" disabled>Saison</option>
+                    <!--<option value="3" disabled>Saison</option>-->
                     <option value="4">Rainbow Cycle</option>
                     <option value="5">Explosion</option>
                     <option value="6">Spiral</option>
@@ -113,7 +114,7 @@
                     min="0" max="255">
             </td>
         </tr>
-        <tr>
+        <tr hidden>
             <td>Set offhours begin and end accordingly to Sunrise/Sunset</td>
             <td>
                 <label class="switch">

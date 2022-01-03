@@ -36,6 +36,14 @@ function fillData() {
         .then((out) => {
             document.getElementById('ColorMode').value = out.ColorMode;
             document.getElementById('timeType').value = out.timeType;
+            let element = document.getElementById("ForceTime");
+            let hidden = element.getAttribute("hidden");
+
+            if (out.timeType == 5) {
+                element.removeAttribute("hidden");
+            } else {
+                element.setAttribute("hidden", "hidden");
+            }
             document.getElementById('clockType').value = out.clockType;
             document.getElementById('DcfWlanMode').value = out.DcfWlanMode;
             document.getElementById('Brightness').value = out.Brightness;

@@ -13,7 +13,7 @@ bool checkValidity(bool Kodierung[62])
     if (Tag == 0 ||Tag > 31) outside_range = false;
     if (Monat == 0 || Monat > 12) outside_range = false;
     if (Jahr < 2020) outside_range = false;
-*/
+*//*
     // parity check
     bool minute_parity = false;
     bool hour_parity = false;
@@ -34,5 +34,6 @@ bool checkValidity(bool Kodierung[62])
     if (hour_parity == Kodierung[36])
         hour_parity = true;
 
-    return (minute_parity && hour_parity && outside_range);
+    return (minute_parity && hour_parity);*/
+    return 1;
 }
