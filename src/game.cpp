@@ -1,25 +1,42 @@
-#include <FastLED.h>
+#include <Adafruit_NeoPixel.h>
 #include <game.h>
 #include <Settings.h>
 
 const int led_count = 110;
 
-extern CFastLED FastLED;
-extern CRGB leds[led_count];
+extern Adafruit_NeoPixel strip;
 extern Settings settings;
+
+void Snake::Clear()
+{
+    for (int i = 0; i < 110; i++)
+    {
+        strip.setPixelColor(i, 0, 0, 0);
+        //strip.show();
+    }
+}
+
+void TicTacToe::Clear()
+{
+    for (int i = 0; i < 110; i++)
+    {
+        strip.setPixelColor(i, 0, 0, 0);
+        //strip.show();
+    }
+}
 
 void Snake::DrawPixel(Pixel pixel)
 {
     int pixelpos = pixel.YPos * width + pixel.XPos;
-    leds[pixelpos] = CRGB(pixel.r, pixel.g, pixel.b);
-    //Serial.println("Drew " + String(pixel.who) + ": " + String(pixel.YPos * width + pixel.XPos) + " (x: " + String(pixel.XPos) + ", y: " + String(pixel.YPos) + ") with Color: " + String(pixel.color));
+    strip.setPixelColor(pixelpos, pixel.r, pixel.g, pixel.b);
+    // Serial.println("Drew " + String(pixel.who) + ": " + String(pixel.YPos * width + pixel.XPos) + " (x: " + String(pixel.XPos) + ", y: " + String(pixel.YPos) + ") with Color: " + String(pixel.color));
 }
 
 Direction Snake::ReadMovement(Direction movement)
 {
     if (settings.get_snake_dir() != 0)
     {
-        //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+        // 0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
 
         if (settings.get_snake_dir() == 1 && movement != Down)
         {
@@ -39,11 +56,12 @@ Direction Snake::ReadMovement(Direction movement)
         }
         Calc();
         settings.set_snake_dir(0);
-        //Serial.println("snake movement: " + String(movement));
+        // Serial.println("snake movement: " + String(movement));
     }
 
     return movement;
 }
+
 
 void Snake::Gameover()
 {
@@ -54,42 +72,45 @@ void Snake::Gameover()
 
 void Snake::GameoverLoop()
 {
-    //Serial.println("Gameover Loop: timestamp:" + String(timestamp) + " millis(): " + String(millis()));
+    // Serial.println("Gameover Loop: timestamp:" + String(timestamp) + " millis(): " + String(millis()));
     if (timestamp + 1000 > millis() and timestamp + 500 < millis())
     {
-        FastLED.setBrightness(1);
+        strip.setBrightness(1);
     }
     if (timestamp + 1500 > millis() and timestamp + 1000 < millis())
     {
-        FastLED.setBrightness(settings.get_brightness());
+        strip.setBrightness(settings.get_brightness());
     }
     if (timestamp + 2000 > millis() and timestamp + 1500 < millis())
     {
-        FastLED.setBrightness(1);
+        strip.setBrightness(1);
     }
     if (timestamp + 2500 > millis() and timestamp + 2000 < millis())
     {
-        FastLED.setBrightness(settings.get_brightness());
+        strip.setBrightness(settings.get_brightness());
     }
     if (timestamp + 3000 > millis() and timestamp + 2500 < millis())
     {
-        FastLED.setBrightness(1);
+        strip.setBrightness(1);
     }
     if (timestamp + 3500 > millis() and timestamp + 3000 < millis())
     {
-        FastLED.setBrightness(settings.get_brightness());
+        strip.setBrightness(settings.get_brightness());
         settings.set_colorMode(100);
     }
-    //Serial.println(String(FastLED.getBrightness()));
+    // Serial.println(String(strip.getBrightness()));
 }
 
-void Snake::Calc(){
+void Snake::Calc()
+{
 
-    if (settings.get_SC_DELAY() == 333){
+    if (settings.get_SC_DELAY() == 333)
+    {
         settings.set_SC_DELAY(0);
         Serial.println("sssss");
     }
-    if (head.XPos == 0 && head.YPos == 0){
+    if (head.XPos == 0 && head.YPos == 0)
+    {
         settings.set_SC_DELAY(420);
         Serial.println("yyyy");
     }
@@ -99,7 +120,7 @@ void TicTacToe::DrawGrid(int r, int g, int b)
 {
     for (int i = 0; i < 38; i++)
     {
-        leds[grid[i]] = CRGB(r, g, b);
+        strip.setPixelColor(grid[i], r, g, b);
     }
 }
 
@@ -117,18 +138,18 @@ bool TicTacToe::Play(int where, int who)
         {
             if (who == 1)
             {
-                leds[field[where - 1][i]] = CRGB(P1.r, P1.g, P1.b);
+                strip.setPixelColor(field[where - 1][i], P1.r, P1.g, P1.b);
             }
             if (who == 2)
             {
-                leds[field[where - 1][i]] = CRGB(P2.r, P2.g, P2.b);
+                strip.setPixelColor(field[where - 1][i], P2.r, P2.g, P2.b);
             }
         }
         Serial.println("Array: " + String(where - 1) + " set to: " + String(field[where - 1][0]));
         return true;
     }
     else
-        //Serial.println("No Array player set");
+        // Serial.println("No Array player set");
         return false;
 }
 

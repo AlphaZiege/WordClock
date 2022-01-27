@@ -31,7 +31,7 @@ private:
 
     Direction ReadMovement(Direction movement);
 
-    
+    void Clear();
 
     void Gameover();
 
@@ -74,7 +74,7 @@ public:
     {
         if (loopAllowed)
         {
-            FastLED.clear();
+            Clear();
             //gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
 
             for (int i = 0; i < bodyLenght; i++)
@@ -168,6 +168,7 @@ private:
     int player;
     void DrawGrid(int r, int g, int b);
     int Field();
+    void Clear();
     void Win(int who);
     bool Play(int where, int who);
     unsigned long timestamp;
@@ -196,7 +197,7 @@ public:
         Cgrid.r = 255;
         Cgrid.g = 0;
         Cgrid.b = 0;
-        FastLED.clear();
+        Clear();
         DrawGrid(Cgrid.r, Cgrid.g, Cgrid.b); 
         player = 1;
     }

@@ -8,9 +8,9 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WiFi.h>
 #include <ESPAsyncWebServer.h>
-#include <FastLED.h>
 #include <FS.h>
 #include <game.h>
+#include <Adafruit_NeoPixel.h>
 #include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
@@ -48,7 +48,7 @@ bool Kodierung[62];
 
 // rgb leds ansteuern
 const int led_count = 110;
-CRGB leds[led_count];
+Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 // webserver
 DNSServer dnsServer;
@@ -83,21 +83,19 @@ void setup()
     timeClient.setTimeOffset(3600);
 
     // Led's Setup Stuff
-    FastLED.addLeds<NEOPIXEL, LED_PIN>(leds, led_count);
-    FastLED.setDither(0); // emulate color with pwm on low brightness, off
-    FastLED.setBrightness(storage.get_brightness() + 10);
-    FastLED.clear(true);
-
-    leds[i] = CRGB::Green;
+    strip.begin();
+    strip.setBrightness(storage.get_brightness() + 10);
+    strip.clear();
+    strip.setPixelColor(i, 0x10FF10);
     i++;
-    FastLED.show();
+    strip.show();
 
     // Setup Wifi/Dcf
     if (settings.get_DcfWlanMode() != 0)
     {
-        leds[i] = CRGB::Lime;
+        strip.setPixelColor(i, 0x00FF00);
         i++;
-        FastLED.show();
+        strip.show();
         Serial.print("Attempting to connect to '" + settings.get_wlan_ssid() + "'");
 
         WiFi.hostname(settings.get_hostname());
@@ -108,9 +106,9 @@ void setup()
         {
             delay(250);
             Serial.print(".");
-            leds[i] = CRGB::Aqua;
+            strip.setPixelColor(i, 0x00FFFF);
             i++;
-            FastLED.show();
+            strip.show();
             if (i >= waittime)
             {
                 settings.set_DcfWlanMode(0);
@@ -126,17 +124,17 @@ void setup()
     }
     if (settings.get_DcfWlanMode() == 0)
     {
-        leds[i] = CRGB::Yellow;
+        strip.setPixelColor(i, 0xFFFF00);
         i++;
-        FastLED.show();
+        strip.show();
         WiFi.mode(WIFI_AP);
         WiFi.softAP(settings.get_hostname());
         dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
         dnsServer.start(53, "*", WiFi.softAPIP());
 
-        leds[i] = CRGB::Yellow;
+        strip.setPixelColor(i, 0xFFFF00);
         i++;
-        FastLED.show();
+        strip.show();
 
         Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
     }
@@ -402,11 +400,11 @@ void setup()
 
     // mDNS stuff
     if (!MDNS.begin(settings.get_hostname()))
-        leds[i] = CRGB::Red;
+        strip.setPixelColor(i, 0xFF0000);
     else
-        leds[i] = CRGB::Green;
+        strip.setPixelColor(i, 0x00FF00);
     i++;
-    FastLED.show();
+    strip.show();
 
     MDNS.addService("esp", "tcp", 8080); // Announce esp tcp service on port 8080
 
@@ -431,19 +429,19 @@ void setup()
             Serial.print(":");
             Serial.print(MDNS.port(j));
             Serial.println(")");
-            leds[i] = CRGB::Purple;
+            strip.setPixelColor(i, 0x00FFFF);
             i++;
         }
-        FastLED.show();
+        strip.show();
     }
 
     server.begin(); // Webserver starten
     delay(100);
 
-    leds[i] = CRGB::White;
-    FastLED.show();
+    strip.setPixelColor(i, 0xFFFFFF);
+    strip.show();
     delay(100);
-    FastLED.setBrightness(settings.get_brightness());
+    strip.setBrightness(settings.get_brightness());
     Serial.println("Setup finished");
 }
 
@@ -469,15 +467,15 @@ void loop()
                 steigend = millis();
                 // Serial.println(String(diff) + "=>" + String(Kodierung[sekunde]) + "  ");
                 if (Kodierung[sekunde])
-                    leds[sekunde] = CRGB::White;
+                    strip.setPixelColor(sekunde, 0xFFFFFF);
                 else
-                    leds[sekunde] = CRGB::Cyan;
+                    strip.setPixelColor(sekunde, 0xFF00FF);
 
                 switch (Zustand)
                 {
                 case wait_for_DCF:
                     Zustand = synchronisiere;
-                    FastLED.clear();
+                    strip.clear();
                     settings.set_colorMode(420);
                     Serial.println("preparing to sync");
                     break;
@@ -514,7 +512,7 @@ void loop()
                         else
                         {
                             Serial.println(String(Tag) + "." + String(Monat) + "." + String(Jahr + 2000) + " " + String(Stunde) + "." + String(Minute) + " Uhr, invalid");
-                            FastLED.clear();
+                            strip.clear();
                         }
                     }
                     break;
@@ -556,15 +554,15 @@ void loop()
 
     if (curr_time > offBegin_time && curr_time < offEnd_time)
     {
-        FastLED.setBrightness(settings.get_offhours_brightness());
+        strip.setBrightness(settings.get_offhours_brightness());
     }
     else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
     {
-        FastLED.setBrightness(settings.get_offhours_brightness());
+        strip.setBrightness(settings.get_offhours_brightness());
     }
     else
     {
-        FastLED.setBrightness(settings.get_brightness());
+        strip.setBrightness(settings.get_brightness());
     }
 
     // lichteffekte
@@ -634,8 +632,8 @@ void loop()
     {
         if (zeit.update()[i] == '0')
         {
-            leds[i] = CRGB::Black;
+            strip.setPixelColor(i, 0x000000);
         }
     }
-    FastLED.show();
+    strip.show();
 }
