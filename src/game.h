@@ -75,7 +75,7 @@ public:
         if (loopAllowed)
         {
             Clear();
-            //gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
+            // gameover |= (head.XPos == width || head.XPos == -1 || head.YPos == height || head.YPos == -1);
 
             for (int i = 0; i < bodyLenght; i++)
             {
@@ -86,9 +86,20 @@ public:
             if (food.XPos == head.XPos && food.YPos == head.YPos)
             {
                 score++;
-                food.XPos = random(0, width);
-                food.YPos = random(0, height);
-                //maybe add if (food spawned in head or body?) make new food
+                //hier wäre eine do/while schleife cool aber kb jz
+                int x = random(0, width);
+                int y = random(0, height);
+                for (int i = 0; i < bodyLenght; i++)
+                {
+                    while ((x == body[i].XPos && y == body[i].YPos) ||
+                           (x == head.XPos && y == head.YPos))
+                    {
+                        x = random(0, width);
+                        y = random(0, height);
+                    }
+                }
+                food.XPos = x;
+                food.YPos = y;
             }
 
             if (gameover)
@@ -198,7 +209,7 @@ public:
         Cgrid.g = 0;
         Cgrid.b = 0;
         Clear();
-        DrawGrid(Cgrid.r, Cgrid.g, Cgrid.b); 
+        DrawGrid(Cgrid.r, Cgrid.g, Cgrid.b);
         player = 1;
     }
     void Loop()
@@ -233,12 +244,12 @@ public:
                 if (player == 1)
                 {
                     player = 2;
-                    //Serial.println("player set to 2");
+                    // Serial.println("player set to 2");
                 }
                 else if (player == 2)
                 {
                     player = 1;
-                    //Serial.println("player set to 1");
+                    // Serial.println("player set to 1");
                 }
             }
             timestamp = millis();

@@ -1,5 +1,5 @@
 //Name der Uhr
-const String version = "0.2.8b";
+const String version = "0.3";
 
 //Pin belegungen
 #define LED_PIN D6 //LED-Pin

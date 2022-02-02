@@ -16,11 +16,11 @@ void Zeit::make_betterhours() //wenn 1:30 dann muss halb *2* und nicht halb 1 st
         betterhours = hours;
     }
 
-    if (minutes >= 12 && settings.get_timeType() == 1)
+    if (minutes >= 13 && settings.get_timeType() == 1)
     {
         betterhours = hours + 1;
     }
-    else if (minutes < 12 && settings.get_timeType() == 1)
+    else if (minutes < 13 && settings.get_timeType() == 1)
     {
         betterhours = hours;
     }
