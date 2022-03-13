@@ -1,3 +1,4 @@
+#include <Adafruit_NeoPixel.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <config.h>
@@ -10,10 +11,10 @@
 #include <ESPAsyncWebServer.h>
 #include <FS.h>
 #include <game.h>
-#include <Adafruit_NeoPixel.h>
 #include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
+#include <TimeLib.h>
 #include <Zeit.h>
 
 Effects effects = Effects();
@@ -372,6 +373,19 @@ void setup()
             }
         }
 
+        else if (inputName == "forceDate")
+        {
+            settings.set_DcfWlanMode(5);
+            int day, mon, year;
+
+            if (sscanf(inputVar.c_str(), "%d.%d.%d", &day, &mon, &year) >= 3)
+            {
+                zeit.set_dayMonth(day);
+                zeit.set_month(mon);
+                zeit.set_calendarYear(year);
+            }
+        }
+
         else
         {
             request->send(404, "text/plain", "404 NOT FOUND: " + String(inputName));
@@ -525,17 +539,25 @@ void loop()
     else if (settings.get_DcfWlanMode() == 1)
     {
         epochTime = timeClient.getEpochTime();
-        tm *ptm = gmtime((time_t *)&epochTime);
 
-        zeit.set_calendarYear(ptm->tm_year + 1900);
-        zeit.set_month(ptm->tm_mon + 1);
-        zeit.set_dayMonth(ptm->tm_mday);
-        zeit.set_seconds(timeClient.getSeconds());
-        zeit.set_minutes(timeClient.getMinutes());
-        zeit.set_hours(timeClient.getHours());
+        zeit.set_calendarYear(year(epochTime));
+        zeit.set_month(month(epochTime));
+        zeit.set_dayMonth(day(epochTime));
+        zeit.set_dayWeek(weekday(epochTime));
+        zeit.set_seconds(second(epochTime));
+        zeit.set_minutes(minute(epochTime));
+        zeit.set_hours(hour(epochTime));
         // zeit.set_dayMonth(timeClient.getDay());
+        Serial.print("Date: " + String(zeit.get_dayMonth()));
+        Serial.print("." + String(zeit.get_month()));
+        Serial.print("." + String(zeit.get_calendarYear()));
+        Serial.print(" " + String(zeit.get_hours()));
+        Serial.print(":" + String(zeit.get_minutes()));
+        Serial.print(":" + String(zeit.get_seconds()));
+        Serial.println();
 
-        if (zeit.summertime_EU(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, timeClient.getHours(), 1))
+        //if (zeit.summertime_EU(2022, 4, 13, 13, 1))
+        if (zeit.summertime_EU(zeit.get_calendarYear(), zeit.get_month(), zeit.get_dayMonth(), zeit.get_hours(), 1))
         {
             timeClient.setTimeOffset(7200);
         }

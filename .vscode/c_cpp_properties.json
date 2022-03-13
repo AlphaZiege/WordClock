@@ -16,6 +16,7 @@
                 "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/SoftwareSerial/src",
                 "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/SPI",
                 "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/EEPROM",
+                "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/Time",
                 "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/Adafruit NeoPixel",
                 "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/NTPClient",
                 "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/ESPAsyncWebServer-esphome/src",
@@ -73,6 +74,7 @@
                     "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/SoftwareSerial/src",
                     "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/SPI",
                     "/home/anto/.platformio/packages/framework-arduinoespressif8266/libraries/EEPROM",
+                    "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/Time",
                     "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/Adafruit NeoPixel",
                     "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/NTPClient",
                     "/home/anto/Documents/WordClock/.pio/libdeps/nodemcu/ESPAsyncWebServer-esphome/src",
@@ -121,7 +123,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=50204",
+                "PLATFORMIO=50205",
                 "ESP8266",
                 "ARDUINO_ARCH_ESP8266",
                 "ARDUINO_ESP8266_NODEMCU_ESP12E",
