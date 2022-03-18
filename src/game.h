@@ -86,18 +86,27 @@ public:
             if (food.XPos == head.XPos && food.YPos == head.YPos)
             {
                 score++;
-                //hier wäre eine do/while schleife cool aber kb jz
+
                 int x = random(0, width);
                 int y = random(0, height);
-                for (int i = 0; i < bodyLenght; i++)
+
+                bool isFoodValid = false;
+                do
                 {
-                    while ((x == body[i].XPos && y == body[i].YPos) ||
-                           (x == head.XPos && y == head.YPos))
+                    // spawn food
+                    x = random(0, width);
+                    y = random(0, height);
+                    // check if food in snake
+                    for (int i = 0; i < bodyLenght; i++)
                     {
-                        x = random(0, width);
-                        y = random(0, height);
+                        if ((x == body[i].XPos && y == body[i].YPos) ||
+                            (x == head.XPos && y == head.YPos))
+                            isFoodValid = false;
+                        else
+                            isFoodValid = true;
                     }
-                }
+                } while (!isFoodValid);
+
                 food.XPos = x;
                 food.YPos = y;
             }
@@ -222,7 +231,7 @@ public:
             (field[1][0] == field[4][0] && field[4][0] == field[7][0] && field[1][0] != 0) ||
             (field[2][0] == field[5][0] && field[5][0] == field[8][0] && field[2][0] != 0) ||
             (field[0][0] == field[4][0] && field[4][0] == field[8][0] && field[0][0] != 0) ||
-            (field[2][0] == field[4][0] && field[4][0] == field[7][0] && field[2][0] != 0))
+            (field[2][0] == field[4][0] && field[4][0] == field[6][0] && field[2][0] != 0))
         {
             if (player == 1)
             {
