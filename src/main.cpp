@@ -548,13 +548,13 @@ void loop()
         zeit.set_minutes(minute(epochTime));
         zeit.set_hours(hour(epochTime));
         // zeit.set_dayMonth(timeClient.getDay());
-        Serial.print("Date: " + String(zeit.get_dayMonth()));
-        Serial.print("." + String(zeit.get_month()));
-        Serial.print("." + String(zeit.get_calendarYear()));
-        Serial.print(" " + String(zeit.get_hours()));
-        Serial.print(":" + String(zeit.get_minutes()));
-        Serial.print(":" + String(zeit.get_seconds()));
-        Serial.println();
+        //Serial.print("Date: " + String(zeit.get_dayMonth()));
+        //Serial.print("." + String(zeit.get_month()));
+        //Serial.print("." + String(zeit.get_calendarYear()));
+        //Serial.print(" " + String(zeit.get_hours()));
+        //Serial.print(":" + String(zeit.get_seconds()));
+        //Serial.print(":" + String(zeit.get_minutes()));
+        //Serial.println();
 
         //if (zeit.summertime_EU(2022, 4, 13, 13, 1))
         if (zeit.summertime_EU(zeit.get_calendarYear(), zeit.get_month(), zeit.get_dayMonth(), zeit.get_hours(), 1))

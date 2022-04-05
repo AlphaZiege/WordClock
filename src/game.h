@@ -86,24 +86,23 @@ public:
             if (food.XPos == head.XPos && food.YPos == head.YPos)
             {
                 score++;
-
-                int x = random(0, width);
-                int y = random(0, height);
-
+                int x, y;
                 bool isFoodValid = false;
+
                 do
                 {
                     // spawn food
                     x = random(0, width);
                     y = random(0, height);
                     // check if food in snake
-                    for (int i = 0; i < bodyLenght; i++)
+                    for (int i = 0; i <= bodyLenght; i++)
                     {
                         if ((x == body[i].XPos && y == body[i].YPos) ||
                             (x == head.XPos && y == head.YPos))
                             isFoodValid = false;
                         else
                             isFoodValid = true;
+                        Serial.println(isFoodValid);
                     }
                 } while (!isFoodValid);
 
