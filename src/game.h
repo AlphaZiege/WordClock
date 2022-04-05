@@ -89,23 +89,12 @@ public:
                 int x, y;
                 bool isFoodValid = false;
 
-                do
-                {
+                
                     // spawn food
                     x = random(0, width);
                     y = random(0, height);
                     // check if food in snake
-                    for (int i = 0; i <= bodyLenght; i++)
-                    {
-                        if ((x == body[i].XPos && y == body[i].YPos) ||
-                            (x == head.XPos && y == head.YPos))
-                            isFoodValid = false;
-                        else
-                            isFoodValid = true;
-                        Serial.println(isFoodValid);
-                    }
-                } while (!isFoodValid);
-
+              
                 food.XPos = x;
                 food.YPos = y;
             }
