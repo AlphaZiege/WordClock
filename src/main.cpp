@@ -1,3 +1,8 @@
+/*
+toast notification
+mobile support
+multiple themes for day/nightmode
+*/
 #include <Adafruit_NeoPixel.h>
 #include <Arduino.h>
 #include <ArduinoJson.h>
@@ -658,4 +663,5 @@ void loop()
         }
     }
     strip.show();
+    Serial.printf("Free heap: %d\n", ESP.getFreeHeap());
 }
