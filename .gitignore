@@ -29,4 +29,6 @@
 # Executables
 *.exe
 *.out
-*.app
+*.ap
+
+.pio/build/
