@@ -1,0 +1,6 @@
+ottowinter/ESPAsyncWebServer-esphome@^1.2.7
+knolleary/PubSubClient @ ^2.8
+paulstoffregen/Time @ ^1.6.1
+arduino-libraries/NTPClient@^3.1.0
+adafruit/Adafruit NeoPixel @ ^1.10.3
+bblanchon/ArduinoJson @ ^6.17.3

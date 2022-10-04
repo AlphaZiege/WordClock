@@ -50,14 +50,13 @@ bool Kodierung[62];
 // rgb leds ansteuern
 const int led_count = 110;
 Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
+std::array<bool, 110> led_map;
 
 // webserver
 DNSServer dnsServer;
 AsyncWebServer server(80); // 80 = http traffic // SKETCH BEGIN, für den Webserver
 String inputVar;
 String inputName;
-
-WiFiClient client;
 
 void setup()
 {
@@ -87,27 +86,27 @@ void setup()
     strip.begin();
     strip.setBrightness(storage.get_brightness() + 10);
     strip.clear();
-    strip.setPixelColor(i, 0x10FF10);
+    strip.setPixelColor(i, 0xFFFFFF);
     i++;
     strip.show();
 
     // Setup Wifi/Dcf
     if (settings.get_DcfWlanMode() != 0)
     {
-        strip.setPixelColor(i, 0x00FF00);
+        strip.setPixelColor(i, 0x006400); // wlan mode -> green
         i++;
         strip.show();
         Serial.print("Attempting to connect to '" + settings.get_wlan_ssid() + "'");
 
-        WiFi.hostname(settings.get_hostname());
         WiFi.mode(WIFI_STA);
+        WiFi.hostname(settings.get_hostname().c_str());
         WiFi.begin(storage.get_wlan_ssid(), storage.get_wlan_pw()); // Aufbau zum Wlan Netzwerk (mit autoreconnect)
         int waittime = 15 * 4 + i;                                  // timeout for wlan connection in sec
         while (WiFi.status() != WL_CONNECTED)
         {
             delay(250);
             Serial.print(".");
-            strip.setPixelColor(i, 0x00FFFF);
+            strip.setPixelColor(i, 0x00FF00); // waiting for wlan -> lime
             i++;
             strip.show();
             if (i >= waittime)
@@ -125,17 +124,13 @@ void setup()
     }
     if (settings.get_DcfWlanMode() == 0)
     {
-        strip.setPixelColor(i, 0xFFFF00);
+        strip.setPixelColor(i, 0xFF0000); // DCF mode -> red
         i++;
         strip.show();
         WiFi.mode(WIFI_AP);
         WiFi.softAP(settings.get_hostname());
         dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
         dnsServer.start(53, "*", WiFi.softAPIP());
-
-        strip.setPixelColor(i, 0xFFFF00);
-        i++;
-        strip.show();
 
         Signal = digitalRead(DCF_Pin); // globaler Merker für den Signalzustand für DCF
     }
@@ -147,7 +142,7 @@ void setup()
         inputName = request->getParam(0)->name();
         Serial.println("-------------------------");
         Serial.println(inputName + ": " + inputVar);
-
+        
         if (inputName == "colorMode") // sortiert nach Variablen und macht mit denen dann was
         {
             settings.set_colorMode(inputVar.toInt());
@@ -413,13 +408,7 @@ void setup()
                               request->send(SPIFFS, "/notfound.html"); });
 
     // mDNS stuff
-    if (!MDNS.begin(settings.get_hostname()))
-        strip.setPixelColor(i, 0xFF0000);
-    else
-        strip.setPixelColor(i, 0x00FF00);
-    i++;
-    strip.show();
-
+    MDNS.begin(settings.get_hostname());
     MDNS.addService("esp", "tcp", 8080); // Announce esp tcp service on port 8080
 
     Serial.println("Sending mDNS query");
@@ -443,7 +432,7 @@ void setup()
             Serial.print(":");
             Serial.print(MDNS.port(j));
             Serial.println(")");
-            strip.setPixelColor(i, 0x00FFFF);
+            strip.setPixelColor(i, 0xFFFF00);
             i++;
         }
         strip.show();
@@ -456,6 +445,7 @@ void setup()
     strip.show();
     delay(100);
     strip.setBrightness(settings.get_brightness());
+
     Serial.println("Setup finished");
 }
 
@@ -547,16 +537,8 @@ void loop()
         zeit.set_seconds(second(epochTime));
         zeit.set_minutes(minute(epochTime));
         zeit.set_hours(hour(epochTime));
-        // zeit.set_dayMonth(timeClient.getDay());
-        //Serial.print("Date: " + String(zeit.get_dayMonth()));
-        //Serial.print("." + String(zeit.get_month()));
-        //Serial.print("." + String(zeit.get_calendarYear()));
-        //Serial.print(" " + String(zeit.get_hours()));
-        //Serial.print(":" + String(zeit.get_seconds()));
-        //Serial.print(":" + String(zeit.get_minutes()));
-        //Serial.println();
 
-        //if (zeit.summertime_EU(2022, 4, 13, 13, 1))
+        // if (zeit.summertime_EU(2022, 4, 13, 13, 1))
         if (zeit.summertime_EU(zeit.get_calendarYear(), zeit.get_month(), zeit.get_dayMonth(), zeit.get_hours(), 1))
         {
             timeClient.setTimeOffset(7200);
@@ -569,7 +551,6 @@ void loop()
         }
     }
 
-    // offhours
     curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
     offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
     offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
@@ -587,7 +568,6 @@ void loop()
         strip.setBrightness(settings.get_brightness());
     }
 
-    // lichteffekte
     switch (settings.get_colorMode())
     {
     case 0:
@@ -650,9 +630,10 @@ void loop()
     }
 
     // blendet alles aus was nicht gebraucht wird um die Uhrzeit anzuzeigen
+    led_map = zeit.update();
     for (int i = 0; i <= led_count - 1; i++)
     {
-        if (zeit.update()[i] == '0')
+        if (led_map[i] == false)
         {
             strip.setPixelColor(i, 0x000000);
         }

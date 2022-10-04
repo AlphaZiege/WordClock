@@ -11,6 +11,7 @@ private:
     String weather, zeitsystem;
     int seconds = 0, minutes = 0, hours = 0, dayMonth = 0, dayWeek = 0, month = 0, calendarYear = 0;
     int betterhours;
+    std::array<bool, 110> table = {0};
 
     void make_betterhours(); //wenn 1:30 dann muss halb *2* und nicht halb 1 stehen
 
@@ -108,7 +109,9 @@ public:
             return false;
     }
 
-    String update();
+    String update_legacy();
+    
+    std::array<bool, 110> update();
 };
 
 #endif

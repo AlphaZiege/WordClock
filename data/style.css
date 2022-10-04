@@ -1,24 +1,24 @@
 html {
-  --text-color: #222;
-  --text2-color: #eee;
-  --bkg-color: #eceff1;
-  --accent: #1d3557;
-  --accent2: #457b9d;
+  --text-color: #eee;
+  --text2-color: #222;
+  --bkg-color: #121212;
+  --accent: #004e64;
+  --accent2: #92dce5;
   --accent3: #9a94bc;
-  --highlight: #ddd;
+  --highlight: #222222;
   --live-signal: #f00;
   --shadow: rgba(0, 0, 0, 0.24);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   html {
-    --text-color: #eee;
-    --text2-color: #222;
-    --bkg-color: #121212;
-    --accent: #004e64;
-    --accent2: #92dce5;
+    --text-color: #222;
+    --text2-color: #eee;
+    --bkg-color: #eceff1;
+    --accent: #1d3557;
+    --accent2: #457b9d;
     --accent3: #9a94bc;
-    --highlight: #222222;
+    --highlight: #ddd;
     --live-signal: #f00;
     --shadow: rgba(0, 0, 0, 0.24);
   }
@@ -43,7 +43,9 @@ button {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  width: 20em;
+  width: 40vw;
+  margin: 0 auto;
+  max-width: 20em;
 }
 
 button:hover,
@@ -71,8 +73,10 @@ select {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  width: 20em;
   user-select: var(--accent);
+  width: 40vw;
+  margin: 0 auto;
+  max-width: 20em;
 }
 
 input {
@@ -85,7 +89,9 @@ input {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  width: 16em;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 16em;
 }
 
 table {
@@ -99,6 +105,9 @@ th {
   border: 1px solid var(--highlight);
   padding: 8px;
   color: var(--text-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 }
 
 tr:hover {
@@ -111,6 +120,10 @@ th {
   text-align: left;
   background-color: var(--accent);
   color: #eee;
+}
+
+table {
+  table-layout: fixed;
 }
 
 .dot {

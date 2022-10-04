@@ -84,6 +84,7 @@ function fillData() {
             document.getElementById('Free_Memory').value = out.Free_Memory;
             document.getElementById('CPU_Speed').value = out.CPU_Speed;
             document.getElementById('Uptime').value = msToTime(out.Uptime);
+            document.getElementById('ipaddr').value = out.ipaddr;
             document.title = out.ClockName;
             return true;
         })

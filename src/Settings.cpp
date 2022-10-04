@@ -1,14 +1,12 @@
 #include <ArduinoJson.h>
-#include <FastLED.h>
 #include <NTPClient.h>
 #include <Read_Write.h>
 #include <Settings.h>
 #include <Zeit.h>
+#include <ESP8266WiFi.h>
 
 const int led_count = 110;
 
-extern CFastLED FastLED;
-extern CRGB leds[led_count];
 extern DynamicJsonDocument doc;
 extern NTPClient timeClient;
 extern Read_write storage;
@@ -57,6 +55,7 @@ void Settings::generateJson(String version)
     doc["OffhoursEnd_m"] = offhours_end_m;
     doc["OffhoursBrightness"] = offhours_brightness;
 
+    doc["ipaddr"] = WiFi.localIP();
     doc["version"] = version;
     doc["Uptime"] = millis();
     doc["ntp_time"] = String(timeClient.getFormattedTime());

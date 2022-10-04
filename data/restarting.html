@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,12 +9,30 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <title>Restarting...</title>
 </head>
+
 <body onload="load()">
     <script type="text/javascript">
         function redirect(url) {
             window.location.href = url;
         }
-
+        
+        function getHostname() {
+            let url = '/data?getJSON';
+            
+            fetch(url)
+            .then(res => res.json())
+            .then((out) => {
+                document.cookie = out.ClockName;
+                document.title = out.ClockName;
+                return true;
+            })
+            .catch(err => {
+                throw err
+            });
+            return false;
+        }
+        getHostname();
+        
         function commit(variable, value) {
             var xhttp = new XMLHttpRequest();
             var url = "/data?" + variable + "=" + value;
@@ -41,9 +60,9 @@
         function load() {
             commit('crash',);
             var intervalId = setInterval(function () {
-                if (status){
+                if (status) {
                     document.documentElement.style.setProperty('--live-signal', '#0f0');
-                    redirect("/");
+                    window.location.replace("/");
                 }
                 else document.documentElement.style.setProperty('--live-signal', '#f00');
                 status = false;
@@ -55,4 +74,5 @@
     <h1>Restarting...</h1>
     <div class="loader"></div>
 </body>
+
 </html>
