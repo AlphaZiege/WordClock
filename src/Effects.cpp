@@ -7,15 +7,6 @@ const int led_count = 110;
 extern Adafruit_NeoPixel strip;
 extern Settings settings;
 
-// rainbowcycle
-struct colors
-{
-    uint8_t r = 255;
-    uint8_t g;
-    uint8_t b;
-};
-colors Pixel_0;
-
 void Effects::setAllLEDs(int r, int g, int b)
 {
     for (int i = 0; i < led_count; i++)
@@ -553,5 +544,73 @@ void Effects::rain()
         }
 
         timestamp = millis();
+    }
+}
+
+void Effects::noise()
+{
+    noiseColor.r = settings.get_noise_red();
+    noiseColor.g = settings.get_noise_green();
+    noiseColor.b = settings.get_noise_blue();
+    noiseDelay = settings.get_noise_delay();
+    noiseRange = settings.get_noise_range();
+    rangeUpper = 100 + noiseRange;
+    rangeLower = 100 - noiseRange;
+    rangeLower = (rangeLower < 0 ? 0 : rangeLower);
+
+    for (int i = 0; i < 110; i++)
+    {
+        if (pixels[i].transitionFinished)
+        {
+            pixels[i].transitionDuration = random(noiseDelay * 0.75, noiseDelay * 1.5);
+            pixels[i].transitionFinished = false;
+            pixels[i].stepTime = pixels[i].transitionDuration / 20;
+            pixels[i].currentStep = 0;
+
+            pixels[i].oldcolor = pixels[i].color;
+            pixels[i].color = noisyColor(noiseColor);
+        }
+        if (pixels[i].timestamp + pixels[i].transitionDuration < millis())
+        {
+            pixels[i].transitionFinished = true;
+            pixels[i].timestamp = millis();
+        }
+    }
+
+    for (int i = 0; i < 110; i++)
+    {
+        FadeCalc(pixels[i]);
+        strip.setPixelColor(i, pixels[i].currentColor.r, pixels[i].currentColor.g, pixels[i].currentColor.b);
+    }
+}
+
+Effects::colors Effects::noisyColor(colors normalColor)
+{
+    int r, g, b;
+    r = random(normalColor.r * rangeLower, normalColor.r * rangeUpper) / 100;
+    g = random(normalColor.g * rangeLower, normalColor.g * rangeUpper) / 100;
+    b = random(normalColor.b * rangeLower, normalColor.b * rangeUpper) / 100;
+    r = (r > 255 ? 255 : r);
+    g = (g > 255 ? 255 : g);
+    b = (b > 255 ? 255 : b);
+    return {r, g, b};
+}
+
+void Effects::FadeCalc(noiseColors &pixel)
+{
+    if (pixel.timestamp2 + pixel.stepTime < millis())
+    {
+        pixel.currentStep++;
+        int diffColor_r;
+        int diffColor_g;
+        int diffColor_b;
+
+        diffColor_r = pixel.color.r - pixel.oldcolor.r;
+        diffColor_g = pixel.color.g - pixel.oldcolor.g;
+        diffColor_b = pixel.color.b - pixel.oldcolor.b;
+        pixel.currentColor.r = pixel.oldcolor.r + (diffColor_r * ((float)pixel.currentStep / 20));
+        pixel.currentColor.g = pixel.oldcolor.g + (diffColor_g * ((float)pixel.currentStep / 20));
+        pixel.currentColor.b = pixel.oldcolor.b + (diffColor_b * ((float)pixel.currentStep / 20));
+        pixel.timestamp2 = millis();
     }
 }

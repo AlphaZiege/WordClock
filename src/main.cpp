@@ -245,6 +245,27 @@ void setup()
             settings.set_spiral_delay(inputVar.toInt());
         }
 
+        else if (inputName == "noise_redval")
+        {
+            settings.set_noise_red(inputVar.toInt());
+        }
+        else if (inputName == "noise_greenval")
+        {
+            settings.set_noise_green(inputVar.toInt());
+        }
+        else if (inputName == "noise_blueval")
+        {
+            settings.set_noise_blue(inputVar.toInt());
+        }
+        else if (inputName == "noise_delay")
+        {
+            settings.set_noise_delay(inputVar.toInt());
+        }
+        else if (inputName == "noise_range")
+        {
+            settings.set_noise_range(inputVar.toInt());
+        }
+
         else if (inputName == "wlan_ssid")
         {
             settings.set_wlan_ssid(inputVar);
@@ -600,6 +621,10 @@ void loop()
 
     case 7:
         effects.rain();
+        break;
+
+    case 8:
+        effects.noise();
         break;
 
     case 100:

@@ -91,6 +91,7 @@
                     <option value="5">Explosion</option>
                     <option value="6">Spiral</option>
                     <option value="7">Rain</option>
+                    <option value="8">Noise</option>
                     <option value="100">Snake</option>
                     <option value="103">TicTacToe</option>
                     <!--<option value="420">Void</option>-->
@@ -240,6 +241,38 @@
             <td>Delay</td>
             <td><input id="ExplosionDelay" onChange="commit('explosion_delay', this.value);" type="number" min="0"></td>
         </tr>
+
+        <!--Noise Color-->
+        <tr>
+            <th>Noise Color</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>Red</td>
+            <td><input id="NoiseRed" onChange="commit('noise_redval', this.value);" type="number" min="0"
+                    max="255"></td>
+        </tr>
+        <tr>
+            <td>Green</td>
+            <td><input id="NoiseGreen" onChange="commit('noise_greenval', this.value);" type="number" min="0"
+                    max="255"></td>
+        </tr>
+        <tr>
+            <td>Blue</td>
+            <td><input id="NoiseBlue" onChange="commit('noise_blueval', this.value);" type="number" min="0"
+                    max="255"></td>
+        </tr>
+        <tr>
+            <td>Delay</td>
+            <td><input id="NoiseDelay" onChange="commit('noise_delay', this.value);" type="number" min="0"
+                    ></td>
+        </tr>
+        <tr>
+            <td>Range (in %)</td>
+            <td><input id="NoiseRange" onChange="commit('noise_range', this.value);" type="number" min="0"
+                    max="100"></td>
+        </tr>
+        
 
         <!--Spiral Color-->
         <tr>

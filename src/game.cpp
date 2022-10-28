@@ -107,12 +107,10 @@ void Snake::Calc()
     if (settings.get_SC_DELAY() == 333)
     {
         settings.set_SC_DELAY(0);
-        Serial.println("sssss");
     }
     if (head.XPos == 0 && head.YPos == 0)
     {
         settings.set_SC_DELAY(420);
-        Serial.println("yyyy");
     }
 }
 

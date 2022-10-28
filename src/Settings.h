@@ -59,6 +59,13 @@ private:
         spiral_blue2,
         spiral_delay;
 
+    //noise
+    int noise_redval,
+        noise_greenval,
+        noise_blueval,
+        noise_delay,
+        noise_range;
+
     //wlan
     String wlan1_ssid, wlan1_pw;
 
@@ -379,6 +386,48 @@ public:
     int get_spiral_delay()
     {
         return spiral_delay;
+    }
+
+    //noise
+    void set_noise_red(int val)
+    {
+        noise_redval = val;
+    }
+    int get_noise_red()
+    {
+        return noise_redval;
+    }
+    void set_noise_green(int val)
+    {
+        noise_greenval = val;
+    }
+    int get_noise_green()
+    {
+        return noise_greenval;
+    } 
+    void set_noise_blue(int val)
+    {
+        noise_blueval = val;
+    }
+    int get_noise_blue()
+    {
+        return noise_blueval;
+    }   
+    void set_noise_delay(int val)
+    {
+        noise_delay = val;
+    }
+    int get_noise_delay()
+    {
+        return noise_delay;
+    }
+    void set_noise_range(int val)
+    {
+        noise_range = val;
+    }
+    int get_noise_range()
+    {
+        return noise_range;
     }
 
     //wlan

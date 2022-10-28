@@ -70,6 +70,11 @@ function fillData() {
             document.getElementById('SpiralGreen2').value = out.SpiralGreen2;
             document.getElementById('SpiralBlue2').value = out.SpiralBlue2;
             document.getElementById('SpiralDelay').value = out.SpiralDelay;
+            document.getElementById('NoiseRed').value = out.NoiseRed;
+            document.getElementById('NoiseGreen').value = out.NoiseGreen;
+            document.getElementById('NoiseBlue').value = out.NoiseBlue;
+            document.getElementById('NoiseDelay').value = out.NoiseDelay;
+            document.getElementById('NoiseRange').value = out.NoiseRange;
             document.getElementById('Wlan_ssid').value = out.Wlan_ssid;
             document.getElementById('OffhoursBegin_h').value = out.OffhoursBegin_h;
             document.getElementById('OffhoursBegin_m').value = out.OffhoursBegin_m;

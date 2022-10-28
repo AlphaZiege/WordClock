@@ -43,6 +43,11 @@ private:
 #define addr_offhours_brightness 30
 #define addr_offhours_begin_m 31
 #define addr_offhours_end_m 32
+#define addr_noise_red 33
+#define addr_noise_green 34
+#define addr_noise_blue 35
+#define addr_noise_delay 36
+#define addr_noise_range 37
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
@@ -194,6 +199,26 @@ public:
   uint8_t get_spiral_delay()
   {
     return EEPROM.read(addr_spiral_delay);
+  }
+  uint8_t get_noise_red()
+  {
+    return EEPROM.read(addr_noise_red);
+  }
+  uint8_t get_noise_green()
+  {
+    return EEPROM.read(addr_noise_green);
+  }
+  uint8_t get_noise_blue()
+  {
+    return EEPROM.read(addr_noise_blue);
+  }
+  uint8_t get_noise_delay()
+  {
+    return EEPROM.read(addr_noise_delay);
+  }
+  uint8_t get_noise_range()
+  {
+    return EEPROM.read(addr_noise_range);
   }
   String get_wlan_ssid()
   {

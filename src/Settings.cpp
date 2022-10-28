@@ -48,6 +48,11 @@ void Settings::generateJson(String version)
     doc["SpiralGreen2"] = spiral_green2;
     doc["SpiralBlue2"] = spiral_blue2;
     doc["SpiralDelay"] = spiral_delay;
+    doc["NoiseRed"] = noise_redval;
+    doc["NoiseGreen"] = noise_greenval;
+    doc["NoiseBlue"] = noise_blueval;
+    doc["NoiseDelay"] = noise_delay;
+    doc["NoiseRange"] = noise_range;
     doc["Wlan_ssid"] = wlan1_ssid;
     doc["OffhoursBegin_h"] = offhours_begin_h;
     doc["OffhoursEnd_h"] = offhours_end_h;
