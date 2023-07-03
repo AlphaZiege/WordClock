@@ -10,7 +10,7 @@ So code für Wordclock lol
 
 3. Open this repository in VS Code
 
-4. If first time, upload `/stuff/init/main.cpp` via PlatformIO or Arduino IDE to initialize
+4. If first time, upload `/stuff/init/init.ino` via PlatformIO or Arduino IDE to initialize
 
 5. Press Ctrl+Shift+P and select "PlatformIO: Upload"
 
