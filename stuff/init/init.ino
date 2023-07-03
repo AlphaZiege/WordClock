@@ -39,6 +39,12 @@ Adafruit_NeoPixel strip(110, LED_PIN, NEO_GRB + NEO_KHZ800);
 #define addr_offhours_brightness 30
 #define addr_offhours_begin_m 31
 #define addr_offhours_end_m 32
+#define addr_noise_red 33
+#define addr_noise_green 34
+#define addr_noise_blue 35
+#define addr_noise_delay 36
+#define addr_noise_range 37
+#define addr_color_night_mode 38
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
@@ -109,6 +115,13 @@ void setup()
     EEPROM.write(addr_offhours_begin_m, 30);
     EEPROM.write(addr_offhours_end_h, 8);
     EEPROM.write(addr_offhours_end_m, 0);
+    EEPROM.write(addr_noise_red, 40);
+    EEPROM.write(addr_noise_green, 5);
+    EEPROM.write(addr_noise_blue, 175);
+    EEPROM.write(addr_noise_delay, 255);
+    EEPROM.write(addr_noise_range, 20);
+    EEPROM.write(addr_color_night_mode, 4);
+    
     String random4char = String(random(0x0, 0xF), HEX);
     delay(random(2, 10));
     random4char += String(random(0x0, 0xF), HEX);

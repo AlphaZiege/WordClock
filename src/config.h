@@ -1,4 +1,4 @@
-const String version = "0.3.4";
+const String version = "0.3.5";
 
 //Pin belegungen
 #define LED_PIN D6 //LED-Pin

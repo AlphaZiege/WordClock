@@ -142,10 +142,14 @@ void setup()
         inputName = request->getParam(0)->name();
         Serial.println("-------------------------");
         Serial.println(inputName + ": " + inputVar);
-        
+
         if (inputName == "colorMode") // sortiert nach Variablen und macht mit denen dann was
         {
             settings.set_colorMode(inputVar.toInt());
+        }
+        else if (inputName == "colorNightMode")
+        {
+            settings.set_colorNightMode(inputVar.toInt());
         }
 
         else if (inputName == "sc_redval")
@@ -572,24 +576,11 @@ void loop()
         }
     }
 
-    curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
-    offBegin_time = (settings.get_offhours_begin_h() * 60) + (settings.get_offhours_begin_m());
-    offEnd_time = (settings.get_offhours_end_h() * 60) + (settings.get_offhours_end_m());
+    settings.calcOffHours();
 
-    if (curr_time > offBegin_time && curr_time < offEnd_time)
-    {
-        strip.setBrightness(settings.get_offhours_brightness());
-    }
-    else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
-    {
-        strip.setBrightness(settings.get_offhours_brightness());
-    }
-    else
-    {
-        strip.setBrightness(settings.get_brightness());
-    }
+    strip.setBrightness(settings.get_currentBrightness());
 
-    switch (settings.get_colorMode())
+    switch (settings.get_CurrentColorMode())
     {
     case 0:
         effects.staticColor();

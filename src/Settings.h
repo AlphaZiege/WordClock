@@ -9,10 +9,13 @@ class Settings
 private:
     String hostname;
 
-    //modes
-    int colorMode;
+    // modes
+    int colorMode, colorNightMode;
 
-    //overall settings
+    // offhours
+    bool isOffHours;
+
+    // overall settings
     int timeType /*timos kack oder normal*/,
         clockType /*analog / digital idk*/,
         DcfWlanMode /*dcf oder wlan als Uhrzeitsquelle*/,
@@ -23,25 +26,25 @@ private:
         offhours_end_m /*nachtzeit aus*/,
         offhours_brightness /*alternative helligkeit für nachtzeit*/;
 
-    //solid color
+    // solid color
     int SC_RED,
         SC_GREEN,
         SC_BLUE,
         SC_DELAY;
 
-    //uint32_t solidColor = 155255255;
+    // uint32_t solidColor = 155255255;
 
-    //breathe
+    // breathe
     int breathe_delay;
     int breathe_red,
         breathe_green,
         breathe_blue;
 
-    //rainbowCycle
+    // rainbowCycle
     int rainbowcycle_verzoegerung,
         rainbowcycle_farbsprung;
 
-    //explosion
+    // explosion
     int explosion_red,
         explosion_green,
         explosion_blue,
@@ -50,7 +53,7 @@ private:
         explosion_blue2,
         explosion_delay;
 
-    //spiral
+    // spiral
     int spiral_red,
         spiral_green,
         spiral_blue,
@@ -59,34 +62,38 @@ private:
         spiral_blue2,
         spiral_delay;
 
-    //noise
+    // noise
     int noise_redval,
         noise_greenval,
         noise_blueval,
         noise_delay,
         noise_range;
 
-    //wlan
+    // wlan
     String wlan1_ssid, wlan1_pw;
 
-    //snake
-    int snake_dir = 0; //0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
+    // snake
+    int snake_dir = 0; // 0 = noDir, 1 = up, 2 = left, 3 = right, 4 = down
     int tictactoe_field = 0;
 
 public:
-    void update(); //wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
+    void update(); // wird immer dann aufgerufen wenn es eine änderung aus der Appperspektive gab
 
     void generateJson(String version);
 
-    //hostname
-    void set_hostname(String yes){
+    void calcOffHours();
+
+    // hostname
+    void set_hostname(String yes)
+    {
         hostname = yes;
     }
-    String get_hostname(){
+    String get_hostname()
+    {
         return hostname;
     }
 
-    //modes z.B. breathe oder rainbow
+    // modes z.B. breathe oder rainbow
     void set_colorMode(int yes)
     {
         colorMode = yes;
@@ -95,8 +102,24 @@ public:
     {
         return colorMode;
     }
+    int get_ColorNightMode()
+    {
+        return colorNightMode;
+    }
+    int get_CurrentColorMode()
+    {
+        if (!isOffHours)
+            return colorMode;
+        else
+            return colorNightMode;
+    }
 
-    //overall settings
+    void set_colorNightMode(int yes)
+    {
+        colorNightMode = yes;
+    }
+
+    // overall settings
     void set_timeType(int yes)
     {
         timeType = yes;
@@ -129,6 +152,12 @@ public:
     {
         return brigthness;
     }
+    int get_currentBrightness(){
+        if (!isOffHours)
+            return brigthness;
+        else
+            return offhours_brightness;
+    }
     void set_offhours_begin_h(int yes)
     {
         offhours_begin_h = yes;
@@ -145,7 +174,7 @@ public:
     {
         return offhours_end_h;
     }
-    
+
     void set_offhours_begin_m(int yes)
     {
         offhours_begin_m = yes;
@@ -171,9 +200,7 @@ public:
         return offhours_brightness;
     }
 
-
-
-    //solid color vars
+    // solid color vars
     void set_SC_RED(int red)
     {
         SC_RED = red;
@@ -207,7 +234,7 @@ public:
         return SC_DELAY;
     }
 
-    //breathe
+    // breathe
     void set_breathe_RED(int red)
     {
         breathe_red = red;
@@ -254,7 +281,7 @@ public:
             return breathe_red;
     }
 
-    //rainbowcycle
+    // rainbowcycle
     void set_rainbowcycle_verzoegerung(int yes)
     {
         rainbowcycle_verzoegerung = yes;
@@ -272,7 +299,7 @@ public:
         return rainbowcycle_farbsprung;
     }
 
-    //explosion
+    // explosion
     void set_explosion_red(int red)
     {
         explosion_red = red;
@@ -330,7 +357,7 @@ public:
         return explosion_delay;
     }
 
-    //spiral
+    // spiral
     void set_spiral_red(int red)
     {
         spiral_red = red;
@@ -388,7 +415,7 @@ public:
         return spiral_delay;
     }
 
-    //noise
+    // noise
     void set_noise_red(int val)
     {
         noise_redval = val;
@@ -404,7 +431,7 @@ public:
     int get_noise_green()
     {
         return noise_greenval;
-    } 
+    }
     void set_noise_blue(int val)
     {
         noise_blueval = val;
@@ -412,7 +439,7 @@ public:
     int get_noise_blue()
     {
         return noise_blueval;
-    }   
+    }
     void set_noise_delay(int val)
     {
         noise_delay = val;
@@ -430,7 +457,7 @@ public:
         return noise_range;
     }
 
-    //wlan
+    // wlan
     void set_wlan_ssid(String ssid)
     {
         wlan1_ssid = ssid;
@@ -448,7 +475,7 @@ public:
         return wlan1_pw;
     }
 
-    //snake
+    // snake
     void set_snake_dir(int dir)
     {
         snake_dir = dir;
@@ -458,7 +485,7 @@ public:
         return snake_dir;
     }
 
-    //tictactoe
+    // tictactoe
     void set_tictactoe_field(int dir)
     {
         tictactoe_field = dir;

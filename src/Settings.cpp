@@ -16,11 +16,30 @@ void Settings::update() //wird immer dann aufgerufen wenn es eine änderung aus 
 {
 }
 
+void Settings::calcOffHours(){
+    int curr_time = (zeit.get_hours() * 60) + (zeit.get_minutes());
+        int offBegin_time = (get_offhours_begin_h() * 60) + (get_offhours_begin_m());
+        int offEnd_time = (get_offhours_end_h() * 60) + (get_offhours_end_m());
+        if (curr_time > offBegin_time && curr_time < offEnd_time)
+        {
+            isOffHours = true;
+        }
+        else if (offBegin_time > offEnd_time && (curr_time > offBegin_time || curr_time < offEnd_time))
+        {
+            isOffHours = true;
+        }
+        else
+        {
+            isOffHours = false;
+        }
+}
+
 void Settings::generateJson(String version)
 {
     doc["ClockName"] = hostname;
 
     doc["ColorMode"] = colorMode;
+    doc["ColorNightMode"] = colorNightMode;
     doc["timeType"] = timeType;
     doc["clockType"] = clockType;
     doc["DcfWlanMode"] = DcfWlanMode;

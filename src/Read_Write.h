@@ -48,6 +48,7 @@ private:
 #define addr_noise_blue 35
 #define addr_noise_delay 36
 #define addr_noise_range 37
+#define addr_color_night_mode 38
 
 #define addr_wlan1_ssid 200
 #define addr_wlan1_pw 300
@@ -251,6 +252,9 @@ public:
   String get_hostname()
   {
     return readStringFromEEPROM(addr_hostname);
+  }
+  uint8_t get_color_night_mode(){
+    return EEPROM.read(addr_color_night_mode);
   }
 };
 #endif

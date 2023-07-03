@@ -35,6 +35,7 @@ function fillData() {
         .then(res => res.json())
         .then((out) => {
             document.getElementById('ColorMode').value = out.ColorMode;
+            document.getElementById('ColorNightMode').value = out.ColorNightMode;
             document.getElementById('timeType').value = out.timeType;
             let element = document.getElementById("ForceTime");
             let hidden = element.getAttribute("hidden");
